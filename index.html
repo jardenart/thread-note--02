@@ -6,8 +6,8 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0a0a0f">
-<title>THRENOTE — Threads×note 収益化</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<title>TNCompass — Threads×note 収益化</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
 :root {
@@ -21,23 +21,49 @@
   --coral:#ff6b8a;--coral-dim:rgba(255,107,138,0.12);
   --blue:#5bb8ff;--blue-dim:rgba(91,184,255,0.12);
   --r:12px;--r2:18px;
-  --fd:'Syne',sans-serif;--fb:'DM Sans',sans-serif;
+  --fd:'Syne',sans-serif;
+  --fb:'DM Sans',sans-serif;
+  --fn:'Space Grotesk',sans-serif; /* 数字専用フォント */
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:var(--fb);background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:.5}
 
 .screen{display:none;animation:fi .3s ease}.screen.active{display:block}
+#scr-home.active{display:flex}
 @keyframes fi{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:translateY(0)}}
+@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
+
+/* ── SAFE AREA ── */
+.safe-top{height:env(safe-area-inset-top)}
+
+/* ── HOME SCREEN ── */
+#scr-home{background:radial-gradient(ellipse 90% 60% at 50% -5%,rgba(124,106,255,0.2) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 85% 85%,rgba(61,219,168,0.1) 0%,transparent 55%),var(--bg);min-height:100dvh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:40px 24px 60px}
+.home-logo-wrap{display:flex;flex-direction:column;align-items:center;margin-bottom:40px}
+.home-logo-svg{margin-bottom:16px}
+.home-app-name{font-family:var(--fd);font-size:28px;font-weight:800;letter-spacing:.06em;background:linear-gradient(130deg,#fff 0%,var(--accent2) 50%,var(--green) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+.home-tagline{font-size:13px;color:var(--text2);margin-top:6px;text-align:center;line-height:1.6}
+.home-menu{width:100%;max-width:360px;display:flex;flex-direction:column;gap:12px}
+.home-btn{width:100%;padding:18px 20px;border-radius:var(--r2);cursor:pointer;display:flex;align-items:center;gap:14px;transition:all .2s;border:none;text-align:left;font-family:var(--fb)}
+.home-btn:active{transform:scale(.98)}
+.home-btn-primary{background:linear-gradient(135deg,var(--accent),#9b6aff);box-shadow:0 4px 20px var(--accent-glow)}
+.home-btn-secondary{background:var(--card);border:1px solid var(--border2)}
+.home-btn-tertiary{background:transparent;border:1px solid var(--border)}
+.home-btn-icon{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.home-btn-texts{flex:1}
+.home-btn-title{font-size:15px;font-weight:500;color:var(--text)}
+.home-btn-sub{font-size:11px;color:var(--text2);margin-top:2px}
+.home-btn-primary .home-btn-title{color:white}
+.home-btn-primary .home-btn-sub{color:rgba(255,255,255,.7)}
 
 /* ── ONB ── */
 #scr-onb{background:radial-gradient(ellipse 80% 55% at 50% -5%,rgba(124,106,255,0.16) 0%,transparent 65%),radial-gradient(ellipse 45% 35% at 88% 82%,rgba(61,219,168,0.07) 0%,transparent 55%),var(--bg);min-height:100dvh;padding-bottom:60px}
-.onb-top{padding:clamp(40px,10vw,68px) 24px 32px;text-align:center}
-.onb-logo{font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:.28em;color:var(--accent2);text-transform:uppercase;margin-bottom:22px;opacity:.75}
-.onb-h1{font-family:var(--fd);font-size:clamp(24px,7vw,38px);font-weight:800;line-height:1.15;margin-bottom:10px}
+.onb-top{padding:clamp(36px,8vw,60px) 24px 28px;text-align:center}
+.onb-logo-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:20px}
+.onb-h1{font-family:var(--fd);font-size:clamp(22px,6vw,34px);font-weight:800;line-height:1.15;margin-bottom:10px}
 .onb-h1 em{font-style:normal;background:linear-gradient(130deg,var(--accent2),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
-.onb-sub{font-size:14px;color:var(--text2);line-height:1.7}
-.dots{display:flex;justify-content:center;gap:6px;padding:0 24px 22px}
+.onb-sub{font-size:13px;color:var(--text2);line-height:1.7}
+.dots{display:flex;justify-content:center;gap:6px;padding:0 24px 20px}
 .dot{width:6px;height:6px;border-radius:50%;background:var(--border2);transition:all .3s}
 .dot.on{width:20px;border-radius:3px;background:var(--accent)}
 .dot.done{background:var(--green)}
@@ -87,34 +113,33 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 /* ── BOTTOM NAV ── */
 .bnav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,10,15,.93);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:8px 0 max(8px,env(safe-area-inset-bottom));display:none;z-index:100}
 .bnav.vis{display:flex;justify-content:space-around}
-.ni{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 10px;cursor:pointer;color:var(--text3);transition:color .2s;font-size:10px;font-weight:500;background:none;border:none;font-family:var(--fb)}
+.ni{display:flex;flex-direction:column;align-items:center;gap:3px;padding:4px 8px;cursor:pointer;color:var(--text3);transition:color .2s;font-size:9px;font-weight:500;background:none;border:none;font-family:var(--fb)}
 .ni.on{color:var(--accent2)}
 .ni svg{width:20px;height:20px}
 
 /* ── MAIN ── */
-.ms{display:none;padding:18px 16px calc(78px + env(safe-area-inset-bottom));animation:fi .3s ease}
+.ms{display:none;padding:16px 16px calc(78px + env(safe-area-inset-bottom));animation:fi .3s ease}
 .ms.on{display:block}
-.ph{padding:14px 0 16px;display:flex;justify-content:space-between;align-items:center}
-.ph-title{font-family:var(--fd);font-size:21px;font-weight:800}
+.ph{padding:12px 0 14px;display:flex;justify-content:space-between;align-items:center}
+.ph-title{font-family:var(--fd);font-size:20px;font-weight:800}
 .ph-sub{font-size:12px;color:var(--text2);margin-top:2px}
-.safe-top{height:env(safe-area-inset-top)}
 
 /* dashboard */
-.hero{background:linear-gradient(135deg,rgba(124,106,255,.18),rgba(61,219,168,.09));border:1px solid rgba(124,106,255,.28);border-radius:var(--r2);padding:20px;margin-bottom:12px;position:relative;overflow:hidden}
-.hero::after{content:'';position:absolute;top:-35px;right:-35px;width:130px;height:130px;background:radial-gradient(circle,rgba(124,106,255,.18),transparent 70%);pointer-events:none}
-.hero-lbl{font-size:10px;color:var(--accent2);font-weight:500;letter-spacing:.09em;text-transform:uppercase;margin-bottom:7px}
-.hero-val{font-family:var(--fd);font-size:42px;font-weight:800;line-height:1}
-.hero-val span{font-size:16px;font-weight:400;color:var(--text2);margin-left:3px}
-.pbar{width:100%;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;margin:11px 0 0}
+.hero{background:linear-gradient(135deg,rgba(124,106,255,.18),rgba(61,219,168,.09));border:1px solid rgba(124,106,255,.28);border-radius:var(--r2);padding:18px;margin-bottom:11px;position:relative;overflow:hidden}
+.hero::after{content:'';position:absolute;top:-30px;right:-30px;width:110px;height:110px;background:radial-gradient(circle,rgba(124,106,255,.18),transparent 70%);pointer-events:none}
+.hero-lbl{font-size:10px;color:var(--accent2);font-weight:500;letter-spacing:.09em;text-transform:uppercase;margin-bottom:6px}
+.hero-val{font-family:var(--fn);font-size:44px;font-weight:700;line-height:1;letter-spacing:-.02em}
+.hero-val span{font-size:16px;font-weight:400;color:var(--text2);margin-left:2px;font-family:var(--fb)}
+.pbar{width:100%;height:5px;background:var(--bg3);border-radius:3px;overflow:hidden;margin:10px 0 0}
 .pfill{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--accent),var(--green));transition:width .5s ease}
-.sg{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:12px}
-.sc{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:13px}
-.sl{font-size:10px;color:var(--text3);font-weight:500;letter-spacing:.06em;text-transform:uppercase;margin-bottom:5px}
-.sv{font-family:var(--fd);font-size:21px;font-weight:700}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:11px}
+.sc{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:12px}
+.sl{font-size:10px;color:var(--text3);font-weight:500;letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+.sv{font-family:var(--fn);font-size:22px;font-weight:600;letter-spacing:-.01em}
 .su{font-size:11px;color:var(--text2);margin-top:2px}
-.sec-t{font-family:var(--fd);font-size:13px;font-weight:700;letter-spacing:.04em;margin-bottom:10px;color:var(--text2)}
-.wb{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:14px;margin-bottom:12px}
-.wbh{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.sec-t{font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:.05em;margin-bottom:9px;color:var(--text2);text-transform:uppercase}
+.wb{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:13px;margin-bottom:11px}
+.wbh{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
 .wbadge{font-family:var(--fd);font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;background:var(--accent-glow);color:var(--accent2);padding:3px 9px;border-radius:20px}
 .tl{display:flex;flex-direction:column;gap:6px}
 .ti{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:var(--bg2);border-radius:8px;font-size:12px;cursor:pointer;transition:background .2s}
@@ -127,147 +152,11 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .tt-nt{background:rgba(61,219,168,.12);color:var(--green)}
 .tt-cu{background:rgba(255,181,71,.12);color:var(--amber)}
 
-/* curriculum */
-.ws{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);margin-bottom:9px;overflow:hidden}
-.wsh{padding:14px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
-.wsh:active{background:var(--card2)}
-.wnum{font-family:var(--fd);font-size:10px;font-weight:700;color:var(--text2);letter-spacing:.06em}
-.wtitle{font-size:13px;font-weight:500;margin-top:2px}
-.wchv{color:var(--text3);font-size:11px;transition:transform .2s}
-.ws.open .wchv{transform:rotate(180deg)}
-.wsb{display:none;padding:0 14px 14px;border-top:1px solid var(--border)}
-.ws.open .wsb{display:block}
-.ssl{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;margin:12px 0 7px;display:flex;align-items:center;justify-content:space-between}
-.ewb{font-size:10px;padding:3px 9px;background:var(--card3);border:1px solid var(--border2);border-radius:20px;color:var(--text2);cursor:pointer;font-family:var(--fb)}
-.ewb:active{background:var(--accent-glow);color:var(--accent2)}
-.si{display:flex;align-items:flex-start;gap:8px;padding:7px 9px;background:var(--bg2);border-radius:7px;font-size:12px;margin-bottom:5px;cursor:pointer;transition:background .2s}
-.si:last-child{margin-bottom:0}
-.si:active{background:var(--card2)}
-.si.done .si-txt{text-decoration:line-through;color:var(--text3)}
-.si-ck{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .2s}
-.si.done .si-ck{background:var(--green);border-color:var(--green)}
-.si-custom{background:rgba(255,181,71,.07);border-left:2px solid var(--amber)}
-.si-custom .si-txt{color:var(--amber)}
-.si-custom .si-ck{border-color:var(--amber)}
-.si-custom.done .si-ck{background:var(--amber);border-color:var(--amber)}
-.si-custom.done .si-txt{color:var(--text3)}
-
-/* ── NOTE WORKS TAB ── */
-.nw-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px}
-.add-work-btn{padding:8px 16px;background:linear-gradient(135deg,var(--accent),#9b6aff);border:none;border-radius:20px;color:white;font-family:var(--fd);font-size:12px;font-weight:700;cursor:pointer;box-shadow:0 2px 10px var(--accent-glow)}
-.add-work-btn:active{transform:scale(.97)}
-.work-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:16px;margin-bottom:10px}
-.work-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}
-.work-title{font-family:var(--fd);font-size:15px;font-weight:700}
-.work-actions{display:flex;gap:7px}
-.work-edit-btn,.work-del-btn{padding:5px 11px;border-radius:16px;font-size:11px;cursor:pointer;border:1px solid var(--border2);font-family:var(--fb);transition:all .2s}
-.work-edit-btn{background:var(--card2);color:var(--text2)}
-.work-edit-btn:active{background:var(--accent-glow);color:var(--accent2);border-color:var(--accent)}
-.work-del-btn{background:transparent;color:var(--text3)}
-.work-del-btn:active{background:var(--coral-dim);color:var(--coral);border-color:var(--coral)}
-.price-history{display:flex;flex-direction:column;gap:5px}
-.price-row{display:flex;justify-content:space-between;align-items:center;padding:7px 10px;background:var(--bg2);border-radius:8px;font-size:12px}
-.price-row.current{background:rgba(61,219,168,.08);border:1px solid rgba(61,219,168,.2)}
-.price-badge{font-size:10px;padding:2px 7px;border-radius:12px;background:rgba(61,219,168,.15);color:var(--green);font-weight:500}
-.price-change-btn{font-size:11px;padding:5px 12px;background:var(--card2);border:1px solid var(--border2);border-radius:16px;color:var(--text2);cursor:pointer;font-family:var(--fb);margin-top:8px;width:100%;transition:all .2s}
-.price-change-btn:active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber)}
-.work-total{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-top:1px solid var(--border);margin-top:10px;font-size:12px;color:var(--text2)}
-.work-total-val{font-family:var(--fd);font-size:14px;font-weight:700;color:var(--green)}
-
-/* ── INPUT ── */
-.week-pills{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:14px;scrollbar-width:none}
-.week-pills::-webkit-scrollbar{display:none}
-.wpill{padding:6px 13px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);color:var(--text2);font-family:var(--fd);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0}
-.wpill.on{border-color:var(--accent);color:var(--accent2);background:rgba(124,106,255,.1)}
-.icard{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:16px;margin-bottom:10px}
-.icard-t{font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:7px}
-.idot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
-.idot-th{background:var(--accent)}
-.idot-nt{background:var(--green)}
-.irow{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
-.irow:last-child{border-bottom:none}
-.irow-lbl{font-size:13px;flex:1}
-.irow-lbl small{display:block;font-size:10px;color:var(--text3);margin-top:1px}
-.irow-inp{background:var(--bg2);border:1.5px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-family:var(--fb);font-size:14px;width:100px;text-align:right;outline:none;transition:border-color .2s}
-.irow-inp:focus{border-color:var(--accent)}
-.irow-rev{font-family:var(--fd);font-size:12px;font-weight:700;color:var(--green);min-width:70px;text-align:right}
-.week-rev-total{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:rgba(61,219,168,.07);border:1px solid rgba(61,219,168,.2);border-radius:10px;margin-top:10px}
-.week-rev-total-lbl{font-size:12px;color:var(--text2)}
-.week-rev-total-val{font-family:var(--fd);font-size:16px;font-weight:700;color:var(--green)}
-.memo-area{width:100%;padding:10px 12px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:var(--fb);font-size:13px;outline:none;resize:vertical;min-height:70px;transition:border-color .2s;line-height:1.6}
-.memo-area:focus{border-color:var(--accent)}
-.memo-area::placeholder{color:var(--text3)}
-.save-btn{width:100%;padding:14px;background:linear-gradient(135deg,var(--green),rgba(61,219,168,.65));border:none;border-radius:var(--r2);color:#071a10;font-family:var(--fd);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(61,219,168,.18);margin-top:4px}
-.save-btn:active{transform:scale(.98)}
-.no-works-hint{text-align:center;padding:20px;color:var(--text3);font-size:13px;background:var(--card);border:1px dashed var(--border2);border-radius:var(--r2);margin-bottom:10px}
-
-/* ── GRAPH ── */
-.ctoggle{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:12px}
-.cpill{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);color:var(--text3);font-size:11px;font-weight:500;cursor:pointer;transition:all .2s}
-.cpill.on{border-color:currentColor}
-.cpill.on.c-acc{color:var(--accent2);background:rgba(124,106,255,.1)}
-.cpill.on.c-grn{color:var(--green);background:var(--green-dim)}
-.cpill.on.c-amb{color:var(--amber);background:var(--amber-dim)}
-.cpill.on.c-blu{color:var(--blue);background:var(--blue-dim)}
-.cwrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:13px;margin-bottom:11px}
-.share-card{background:linear-gradient(135deg,rgba(124,106,255,.13),rgba(61,219,168,.07));border:1px solid rgba(124,106,255,.22);border-radius:var(--r2);padding:17px;margin-bottom:11px}
-.share-t{font-family:var(--fd);font-size:12px;font-weight:700;letter-spacing:.06em;color:var(--accent2);margin-bottom:11px}
-.share-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:12px}
-.shi{text-align:center;padding:7px}
-.shi-v{font-family:var(--fd);font-size:19px;font-weight:800}
-.shi-l{font-size:10px;color:var(--text2);margin-top:2px}
-.share-note-txt{font-size:11px;color:var(--text3);text-align:center;line-height:1.6;margin-bottom:11px}
-.copy-btn{width:100%;padding:11px;background:var(--card2);border:1.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:var(--fb);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .2s}
-.copy-btn:active{background:var(--card3)}
-
-/* ── MODAL (汎用) ── */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;align-items:flex-end;justify-content:center}
-.modal-bg.vis{display:flex}
-.modal-sheet{background:var(--bg2);border-radius:22px 22px 0 0;border:1px solid var(--border2);border-bottom:none;width:100%;max-height:88dvh;overflow-y:auto;padding:22px 20px calc(22px + env(safe-area-inset-bottom));animation:slideUp .3s ease}
-@keyframes slideUp{from{transform:translateY(100%)}to{transform:translateY(0)}}
-.modal-handle{width:34px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 18px}
-.modal-title{font-family:var(--fd);font-size:16px;font-weight:700;margin-bottom:18px}
-.modal-sec{margin-bottom:18px}
-.modal-sec-t{font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.07em;text-transform:uppercase;margin-bottom:9px}
-.modal-opt{display:flex;align-items:center;gap:10px;padding:9px 11px;background:var(--card);border:1px solid var(--border);border-radius:9px;cursor:pointer;margin-bottom:5px;font-size:13px;transition:background .2s}
-.modal-opt:active{background:var(--card2)}
-.modal-opt input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
-.modal-custom-item{display:flex;align-items:center;gap:7px;margin-bottom:5px}
-.modal-custom-inp{flex:1;padding:9px 12px;background:var(--card);border:1.5px solid var(--border2);border-radius:9px;color:var(--text);font-family:var(--fb);font-size:13px;outline:none;transition:border-color .2s}
-.modal-custom-inp:focus{border-color:var(--accent)}
-.modal-custom-inp::placeholder{color:var(--text3)}
-.modal-del-btn{padding:7px 11px;background:transparent;border:1px solid var(--border2);border-radius:7px;color:var(--text3);font-size:11px;cursor:pointer;white-space:nowrap}
-.modal-del-btn:active{background:var(--coral-dim);color:var(--coral)}
-.modal-add-btn{width:100%;padding:10px;background:var(--card);border:1.5px dashed var(--border2);border-radius:9px;color:var(--text2);font-size:13px;cursor:pointer;margin-top:4px;font-family:var(--fb)}
-.modal-add-btn:active{border-color:var(--accent);color:var(--accent2)}
-.modal-count{font-size:11px;color:var(--text3);margin-top:4px}
-.modal-err{font-size:11px;color:var(--coral);margin-top:3px;min-height:14px}
-.modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:18px}
-.m-cancel{padding:12px;background:transparent;border:1.5px solid var(--border2);border-radius:var(--r2);color:var(--text2);font-family:var(--fb);font-size:14px;cursor:pointer}
-.m-save{padding:12px;background:linear-gradient(135deg,var(--accent),#9b6aff);border:none;border-radius:var(--r2);color:white;font-family:var(--fd);font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 3px 14px var(--accent-glow)}
-.m-save:active{transform:scale(.98)}
-.divider{height:1px;background:var(--border);margin:14px 0}
-.modal-inp{width:100%;padding:11px 13px;background:var(--card);border:1.5px solid var(--border2);border-radius:10px;color:var(--text);font-family:var(--fb);font-size:15px;outline:none;transition:border-color .2s}
-.modal-inp:focus{border-color:var(--accent)}
-.modal-inp::placeholder{color:var(--text3)}
-.modal-inp-label{font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px;margin-top:12px;display:block}
-
-/* phase badges */
-.pb{display:inline-block;padding:2px 8px;border-radius:11px;font-size:10px;font-weight:600;letter-spacing:.04em}
-.pb1{background:rgba(61,219,168,.15);color:var(--green)}
-.pb2{background:rgba(91,184,255,.15);color:var(--blue)}
-.pb3{background:rgba(255,181,71,.15);color:var(--amber)}
-.pb4{background:rgba(255,107,138,.15);color:var(--coral)}
-
-/* toast */
-.toast{position:fixed;bottom:94px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--card2);border:1px solid var(--border2);border-radius:30px;padding:8px 16px;font-size:13px;color:var(--text);opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap}
-.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
-
 /* DAY tasks */
-.day-section{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:14px;margin-bottom:12px}
-.day-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.day-section{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:13px;margin-bottom:11px}
+.day-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:9px}
 .day-date{font-size:11px;font-weight:500;color:var(--green);letter-spacing:.06em;text-transform:uppercase}
-.day-pct{font-family:var(--fd);font-size:13px;font-weight:700;color:var(--green)}
+.day-pct{font-family:var(--fn);font-size:13px;font-weight:600;color:var(--green)}
 .day-task{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;background:var(--bg2);border-radius:8px;font-size:12px;margin-bottom:5px;cursor:pointer;transition:background .2s}
 .day-task:last-child{margin-bottom:0}
 .day-task:active{background:var(--card2)}
@@ -282,30 +171,293 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .day-add-btn{width:100%;padding:9px;background:transparent;border:1.5px dashed var(--border2);border-radius:8px;color:var(--text3);font-size:12px;cursor:pointer;margin-top:8px;font-family:var(--fb);transition:all .2s}
 .day-add-btn:active{border-color:var(--accent);color:var(--accent2)}
 
-/* carryover popup — full-screen overlay using normal flow trick */
+/* curriculum */
+.ws{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);margin-bottom:9px;overflow:hidden}
+.wsh{padding:13px;cursor:pointer;display:flex;justify-content:space-between;align-items:center}
+.wsh:active{background:var(--card2)}
+.wnum{font-family:var(--fd);font-size:10px;font-weight:700;color:var(--text2);letter-spacing:.06em}
+.wtitle{font-size:13px;font-weight:500;margin-top:2px}
+.wchv{color:var(--text3);font-size:11px;transition:transform .2s}
+.ws.open .wchv{transform:rotate(180deg)}
+.wsb{display:none;padding:0 13px 13px;border-top:1px solid var(--border)}
+.ws.open .wsb{display:block}
+.ssl{font-size:10px;font-weight:500;letter-spacing:.07em;text-transform:uppercase;margin:11px 0 7px;display:flex;align-items:center;justify-content:space-between}
+.ewb{font-size:10px;padding:3px 9px;background:var(--card3);border:1px solid var(--border2);border-radius:20px;color:var(--text2);cursor:pointer;font-family:var(--fb)}
+.ewb:active{background:var(--accent-glow);color:var(--accent2)}
+.si{display:flex;align-items:flex-start;gap:8px;padding:7px 9px;background:var(--bg2);border-radius:7px;font-size:12px;margin-bottom:5px;cursor:pointer;transition:background .2s}
+.si:last-child{margin-bottom:0}
+.si:active{background:var(--card2)}
+.si.done .si-txt{text-decoration:line-through;color:var(--text3)}
+.si-ck{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--border2);flex-shrink:0;display:flex;align-items:center;justify-content:center;margin-top:1px;transition:all .2s}
+.si.done .si-ck{background:var(--green);border-color:var(--green)}
+.si-custom{background:rgba(255,181,71,.07);border-left:2px solid var(--amber)}
+.si-custom .si-txt{color:var(--amber)}
+.si-custom .si-ck{border-color:var(--amber)}
+.si-custom.done .si-ck{background:var(--amber);border-color:var(--amber)}
+.si-custom.done .si-txt{color:var(--text3)}
+
+/* note works */
+.nw-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px}
+.add-work-btn{padding:8px 14px;background:linear-gradient(135deg,var(--accent),#9b6aff);border:none;border-radius:20px;color:white;font-family:var(--fd);font-size:11px;font-weight:700;cursor:pointer;box-shadow:0 2px 10px var(--accent-glow)}
+.add-work-btn:active{transform:scale(.97)}
+.work-card{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:15px;margin-bottom:9px}
+.work-card-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:11px}
+.work-title{font-family:var(--fd);font-size:14px;font-weight:700}
+.work-actions{display:flex;gap:6px}
+.work-edit-btn,.work-del-btn{padding:4px 10px;border-radius:14px;font-size:11px;cursor:pointer;border:1px solid var(--border2);font-family:var(--fb);transition:all .2s}
+.work-edit-btn{background:var(--card2);color:var(--text2)}
+.work-edit-btn:active{background:var(--accent-glow);color:var(--accent2);border-color:var(--accent)}
+.work-del-btn{background:transparent;color:var(--text3)}
+.work-del-btn:active{background:var(--coral-dim);color:var(--coral);border-color:var(--coral)}
+.price-history{display:flex;flex-direction:column;gap:5px}
+.price-row{display:flex;justify-content:space-between;align-items:center;padding:6px 9px;background:var(--bg2);border-radius:7px;font-size:12px}
+.price-row.current{background:rgba(61,219,168,.08);border:1px solid rgba(61,219,168,.2)}
+.price-badge{font-size:10px;padding:2px 6px;border-radius:11px;background:rgba(61,219,168,.15);color:var(--green);font-weight:500}
+.price-change-btn{font-size:11px;padding:5px 11px;background:var(--card2);border:1px solid var(--border2);border-radius:14px;color:var(--text2);cursor:pointer;font-family:var(--fb);margin-top:7px;width:100%;transition:all .2s}
+.price-change-btn:active{background:var(--amber-dim);color:var(--amber);border-color:var(--amber)}
+.work-total{display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-top:1px solid var(--border);margin-top:9px;font-size:12px;color:var(--text2)}
+.work-total-val{font-family:var(--fn);font-size:14px;font-weight:600;color:var(--green)}
+
+/* input */
+.week-pills{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;margin-bottom:13px;scrollbar-width:none}
+.week-pills::-webkit-scrollbar{display:none}
+.wpill{padding:6px 13px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);color:var(--text2);font-family:var(--fd);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0}
+.wpill.on{border-color:var(--accent);color:var(--accent2);background:rgba(124,106,255,.1)}
+.icard{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:15px;margin-bottom:10px}
+.icard-t{font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:11px;display:flex;align-items:center;gap:7px}
+.idot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.idot-th{background:var(--accent)}
+.idot-nt{background:var(--green)}
+.irow{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border)}
+.irow:last-child{border-bottom:none}
+.irow-lbl{font-size:13px;flex:1}
+.irow-lbl small{display:block;font-size:10px;color:var(--text3);margin-top:1px}
+.irow-inp{background:var(--bg2);border:1.5px solid var(--border2);border-radius:8px;padding:7px 10px;color:var(--text);font-family:var(--fn);font-size:14px;width:100px;text-align:right;outline:none;transition:border-color .2s}
+.irow-inp:focus{border-color:var(--accent)}
+.irow-rev{font-family:var(--fn);font-size:12px;font-weight:600;color:var(--green);min-width:70px;text-align:right}
+.week-rev-total{display:flex;justify-content:space-between;align-items:center;padding:9px 11px;background:rgba(61,219,168,.07);border:1px solid rgba(61,219,168,.2);border-radius:9px;margin-top:9px}
+.week-rev-total-lbl{font-size:12px;color:var(--text2)}
+.week-rev-total-val{font-family:var(--fn);font-size:16px;font-weight:600;color:var(--green)}
+.memo-area{width:100%;padding:10px 12px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:var(--fb);font-size:13px;outline:none;resize:vertical;min-height:70px;transition:border-color .2s;line-height:1.6}
+.memo-area:focus{border-color:var(--accent)}
+.memo-area::placeholder{color:var(--text3)}
+.save-btn{width:100%;padding:13px;background:linear-gradient(135deg,var(--green),rgba(61,219,168,.65));border:none;border-radius:var(--r2);color:#071a10;font-family:var(--fd);font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:0 4px 16px rgba(61,219,168,.18);margin-top:4px}
+.save-btn:active{transform:scale(.98)}
+.no-works-hint{text-align:center;padding:18px;color:var(--text3);font-size:13px;background:var(--card);border:1px dashed var(--border2);border-radius:var(--r2);margin-bottom:9px}
+
+/* graph */
+.ctoggle{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:11px}
+.cpill{padding:5px 11px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);color:var(--text3);font-size:11px;font-weight:500;cursor:pointer;transition:all .2s}
+.cpill.on{border-color:currentColor}
+.cpill.on.c-acc{color:var(--accent2);background:rgba(124,106,255,.1)}
+.cpill.on.c-grn{color:var(--green);background:var(--green-dim)}
+.cpill.on.c-amb{color:var(--amber);background:var(--amber-dim)}
+.cpill.on.c-blu{color:var(--blue);background:var(--blue-dim)}
+.cwrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:12px;margin-bottom:11px}
+.share-card{background:linear-gradient(135deg,rgba(124,106,255,.13),rgba(61,219,168,.07));border:1px solid rgba(124,106,255,.22);border-radius:var(--r2);padding:16px;margin-bottom:11px}
+.share-t{font-family:var(--fd);font-size:11px;font-weight:700;letter-spacing:.06em;color:var(--accent2);margin-bottom:10px;text-transform:uppercase}
+.share-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px;margin-bottom:12px}
+.shi{text-align:center;padding:6px}
+.shi-v{font-family:var(--fn);font-size:20px;font-weight:600;letter-spacing:-.01em}
+.shi-l{font-size:10px;color:var(--text2);margin-top:2px}
+.share-note-txt{font-size:11px;color:var(--text3);text-align:center;line-height:1.6;margin-bottom:11px}
+.copy-btn{width:100%;padding:11px;background:var(--card2);border:1.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:var(--fb);font-size:13px;font-weight:500;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:7px;transition:background .2s}
+.copy-btn:active{background:var(--card3)}
+.share-tmpl-wrap{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:14px;margin-bottom:11px}
+.share-tmpl-lbl{font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:8px;display:flex;justify-content:space-between;align-items:center}
+.tmpl-reset-btn{font-size:10px;padding:3px 8px;background:transparent;border:1px solid var(--border2);border-radius:8px;color:var(--text3);cursor:pointer;font-family:var(--fb)}
+.tmpl-reset-btn:active{color:var(--coral)}
+.share-tmpl-area{width:100%;padding:10px 12px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:var(--fb);font-size:12px;outline:none;resize:vertical;min-height:130px;transition:border-color .2s;line-height:1.7}
+.share-tmpl-area:focus{border-color:var(--accent)}
+.share-tmpl-hint{font-size:11px;color:var(--text3);margin-top:6px;line-height:1.7}
+
+/* settings tab */
+.settings-item{background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:14px 16px;margin-bottom:9px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background .2s}
+.settings-item:active{background:var(--card2)}
+.settings-item-lbl{font-size:14px;font-weight:500}
+.settings-item-sub{font-size:11px;color:var(--text2);margin-top:2px}
+.settings-item-arrow{color:var(--text3);font-size:16px}
+.settings-danger{border-color:rgba(255,107,138,.3)}
+.settings-danger .settings-item-lbl{color:var(--coral)}
+
+/* modal */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:200;align-items:flex-end;justify-content:center}
+.modal-bg.vis{display:flex}
+.modal-sheet{background:var(--bg2);border-radius:22px 22px 0 0;border:1px solid var(--border2);border-bottom:none;width:100%;max-height:88dvh;overflow-y:auto;padding:22px 20px calc(22px + env(safe-area-inset-bottom));animation:slideUp .3s ease}
+.modal-handle{width:34px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 16px}
+.modal-title{font-family:var(--fd);font-size:16px;font-weight:700;margin-bottom:16px}
+.modal-sec{margin-bottom:17px}
+.modal-sec-t{font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.07em;text-transform:uppercase;margin-bottom:8px}
+.modal-opt{display:flex;align-items:center;gap:10px;padding:9px 11px;background:var(--card);border:1px solid var(--border);border-radius:9px;cursor:pointer;margin-bottom:5px;font-size:13px;transition:background .2s}
+.modal-opt:active{background:var(--card2)}
+.modal-opt input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
+.modal-custom-item{display:flex;align-items:center;gap:7px;margin-bottom:5px}
+.modal-custom-inp{flex:1;padding:9px 12px;background:var(--card);border:1.5px solid var(--border2);border-radius:9px;color:var(--text);font-family:var(--fb);font-size:13px;outline:none;transition:border-color .2s}
+.modal-custom-inp:focus{border-color:var(--accent)}
+.modal-custom-inp::placeholder{color:var(--text3)}
+.modal-del-btn{padding:7px 11px;background:transparent;border:1px solid var(--border2);border-radius:7px;color:var(--text3);font-size:11px;cursor:pointer;white-space:nowrap}
+.modal-del-btn:active{background:var(--coral-dim);color:var(--coral)}
+.modal-add-btn{width:100%;padding:10px;background:var(--card);border:1.5px dashed var(--border2);border-radius:9px;color:var(--text2);font-size:13px;cursor:pointer;margin-top:4px;font-family:var(--fb)}
+.modal-add-btn:active{border-color:var(--accent);color:var(--accent2)}
+.modal-count{font-size:11px;color:var(--text3);margin-top:4px}
+.modal-err{font-size:11px;color:var(--coral);margin-top:3px;min-height:14px}
+.modal-btns{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:17px}
+.m-cancel{padding:12px;background:transparent;border:1.5px solid var(--border2);border-radius:var(--r2);color:var(--text2);font-family:var(--fb);font-size:14px;cursor:pointer}
+.m-save{padding:12px;background:linear-gradient(135deg,var(--accent),#9b6aff);border:none;border-radius:var(--r2);color:white;font-family:var(--fd);font-size:14px;font-weight:700;cursor:pointer;box-shadow:0 3px 14px var(--accent-glow)}
+.m-save:active{transform:scale(.98)}
+.divider{height:1px;background:var(--border);margin:13px 0}
+.modal-inp{width:100%;padding:11px 13px;background:var(--card);border:1.5px solid var(--border2);border-radius:10px;color:var(--text);font-family:var(--fb);font-size:15px;outline:none;transition:border-color .2s}
+.modal-inp:focus{border-color:var(--accent)}
+.modal-inp::placeholder{color:var(--text3)}
+.modal-inp-label{font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.05em;text-transform:uppercase;margin-bottom:6px;margin-top:12px;display:block}
+
+/* phase badges */
+.pb{display:inline-block;padding:2px 8px;border-radius:11px;font-size:10px;font-weight:600;letter-spacing:.04em}
+.pb1{background:rgba(61,219,168,.15);color:var(--green)}
+.pb2{background:rgba(91,184,255,.15);color:var(--blue)}
+.pb3{background:rgba(255,181,71,.15);color:var(--amber)}
+.pb4{background:rgba(255,107,138,.15);color:var(--coral)}
+
+/* carryover popup */
 .popup-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:300;align-items:flex-end;justify-content:center}
 .popup-overlay.vis{display:flex}
 .popup-sheet{background:var(--bg2);border-radius:22px 22px 0 0;border:1px solid var(--border2);border-bottom:none;width:100%;max-height:80dvh;overflow-y:auto;padding:22px 20px calc(22px + env(safe-area-inset-bottom));animation:slideUp .3s ease}
 .popup-handle{width:34px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 16px}
 .popup-title{font-family:var(--fd);font-size:16px;font-weight:700;margin-bottom:6px}
-.popup-sub{font-size:13px;color:var(--text2);margin-bottom:16px;line-height:1.6}
+.popup-sub{font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.6}
 .popup-task-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--card);border:1px solid var(--border);border-radius:10px;cursor:pointer;margin-bottom:6px;font-size:13px;transition:all .2s}
 .popup-task-item.selected{border-color:var(--accent);background:rgba(124,106,255,.08)}
 .popup-task-item input[type=checkbox]{width:16px;height:16px;accent-color:var(--accent);cursor:pointer;flex-shrink:0}
-.popup-btns{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:16px}
+.popup-btns{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:15px}
 .popup-discard{padding:12px;background:transparent;border:1.5px solid var(--border2);border-radius:var(--r2);color:var(--text2);font-family:var(--fb);font-size:14px;cursor:pointer}
 .popup-carry{padding:12px;background:linear-gradient(135deg,var(--amber),#e8940a);border:none;border-radius:var(--r2);color:#1a0e00;font-family:var(--fd);font-size:14px;font-weight:700;cursor:pointer}
 .popup-carry:active{transform:scale(.98)}
+
+/* ── GUIDED TOUR (説明書) ── */
+.tour-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.82);z-index:400;align-items:flex-end;justify-content:center}
+.tour-overlay.vis{display:flex}
+.tour-sheet{
+  background:var(--bg2);border-radius:24px 24px 0 0;
+  border:1px solid var(--border2);border-bottom:none;
+  width:100%;max-height:88dvh;overflow-y:auto;
+  padding:22px 20px calc(22px + env(safe-area-inset-bottom));
+  animation:slideUp .3s ease;
+}
+.tour-handle{width:34px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 16px}
+.tour-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.tour-step-badge{font-size:10px;font-weight:500;color:var(--text3);letter-spacing:.06em;text-transform:uppercase}
+.tour-close-btn{padding:4px 12px;background:var(--card2);border:1px solid var(--border2);border-radius:20px;color:var(--text2);font-size:12px;cursor:pointer;font-family:var(--fb)}
+/* 横並びレイアウト */
+.tour-content{display:flex;gap:14px;align-items:flex-start;margin-bottom:16px}
+.tour-text{flex:1;min-width:0}
+.tour-title{font-family:var(--fd);font-size:15px;font-weight:700;margin-bottom:8px;background:linear-gradient(130deg,var(--accent2),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.3}
+.tour-body{font-size:12px;color:var(--text2);line-height:1.85}
+.tour-body b{color:var(--text);font-weight:500}
+.tour-highlight{display:inline-block;background:rgba(124,106,255,.12);border:1px solid rgba(124,106,255,.3);border-radius:4px;padding:1px 6px;font-size:10px;color:var(--accent2);font-weight:500}
+/* SVGミニUI図 */
+.tour-mockup{flex-shrink:0;width:130px}
+.tour-mockup svg{width:130px;height:auto;display:block;border-radius:10px;overflow:hidden}
+/* ナビ */
+.tour-nav{display:flex;align-items:center;gap:8px}
+.tour-prev-btn{padding:9px 14px;background:var(--card2);border:1px solid var(--border2);border-radius:20px;color:var(--text2);font-size:12px;cursor:pointer;font-family:var(--fb)}
+.tour-next-btn{flex:1;padding:10px;background:linear-gradient(135deg,var(--accent),#9b6aff);border:none;border-radius:20px;color:white;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--fd);box-shadow:0 2px 12px var(--accent-glow)}
+.tour-next-btn:active{transform:scale(.98)}
+.tour-dots-row{display:flex;gap:5px}
+.tour-dot2{width:5px;height:5px;border-radius:50%;background:var(--border2);transition:all .3s}
+.tour-dot2.on{width:14px;border-radius:3px;background:var(--accent)}
+
+/* reset confirm modal */
+.reset-confirm-sheet{background:var(--bg2);border-radius:22px 22px 0 0;border:1px solid rgba(255,107,138,.3);border-bottom:none;width:100%;padding:24px 20px calc(24px + env(safe-area-inset-bottom));animation:slideUp .3s ease}
+.reset-confirm-icon{font-size:32px;text-align:center;margin-bottom:12px}
+.reset-confirm-title{font-family:var(--fd);font-size:17px;font-weight:700;text-align:center;margin-bottom:8px;color:var(--coral)}
+.reset-confirm-body{font-size:13px;color:var(--text2);text-align:center;line-height:1.7;margin-bottom:20px}
+.reset-confirm-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.reset-cancel{padding:13px;background:transparent;border:1.5px solid var(--border2);border-radius:var(--r2);color:var(--text2);font-family:var(--fb);font-size:14px;cursor:pointer}
+.reset-go{padding:13px;background:var(--coral);border:none;border-radius:var(--r2);color:white;font-family:var(--fd);font-size:14px;font-weight:700;cursor:pointer}
+.toast{position:fixed;bottom:94px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--card2);border:1px solid var(--border2);border-radius:30px;padding:8px 16px;font-size:13px;color:var(--text);opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
 <div class="toast" id="toast"></div>
 
+<!-- ══ HOME SCREEN ══ -->
+<div class="screen active" id="scr-home">
+  <div class="safe-top"></div>
+  <div class="home-logo-wrap">
+    <!-- TNCompass ロゴ SVG -->
+    <svg class="home-logo-svg" width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <linearGradient id="lg1" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#a08fff"/>
+          <stop offset="100%" stop-color="#3ddba8"/>
+        </linearGradient>
+        <linearGradient id="lg2" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stop-color="#7c6aff"/>
+          <stop offset="100%" stop-color="#3ddba8"/>
+        </linearGradient>
+      </defs>
+      <!-- 外枠 -->
+      <rect width="80" height="80" rx="20" fill="url(#lg2)" opacity=".15"/>
+      <rect x="1" y="1" width="78" height="78" rx="19" stroke="url(#lg1)" stroke-width="1.5" fill="none" opacity=".5"/>
+      <!-- コンパス針 -->
+      <circle cx="40" cy="40" r="18" stroke="url(#lg1)" stroke-width="1.5" fill="none"/>
+      <circle cx="40" cy="40" r="3" fill="url(#lg1)"/>
+      <!-- 北針（紫） -->
+      <path d="M40 40 L36 22 L40 27 L44 22 Z" fill="#a08fff"/>
+      <!-- 南針（緑）-->
+      <path d="M40 40 L44 58 L40 53 L36 58 Z" fill="#3ddba8" opacity=".7"/>
+      <!-- 目盛り -->
+      <line x1="40" y1="20" x2="40" y2="16" stroke="url(#lg1)" stroke-width="1.5" stroke-linecap="round"/>
+      <line x1="40" y1="60" x2="40" y2="64" stroke="url(#lg1)" stroke-width="1.5" stroke-linecap="round" opacity=".5"/>
+      <line x1="20" y1="40" x2="16" y2="40" stroke="url(#lg1)" stroke-width="1.5" stroke-linecap="round" opacity=".5"/>
+      <line x1="60" y1="40" x2="64" y2="40" stroke="url(#lg1)" stroke-width="1.5" stroke-linecap="round" opacity=".5"/>
+      <!-- T・N 文字 -->
+      <text x="13" y="46" font-family="'Syne',sans-serif" font-weight="800" font-size="11" fill="#a08fff" opacity=".9">T</text>
+      <text x="60" y="46" font-family="'Syne',sans-serif" font-weight="800" font-size="11" fill="#3ddba8" opacity=".9">N</text>
+    </svg>
+    <div class="home-app-name">TNCompass</div>
+    <div class="home-tagline">Threads × note 収益化カリキュラム</div>
+  </div>
+  <div class="home-menu">
+    <button class="home-btn home-btn-primary" id="btn-new" onclick="startNewCurriculum()">
+      <div class="home-btn-icon" style="background:rgba(255,255,255,.15)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      </div>
+      <div class="home-btn-texts">
+        <div class="home-btn-title">新しくカリキュラムをつくる</div>
+        <div class="home-btn-sub">難易度・note・目標を設定してスタート</div>
+      </div>
+    </button>
+    <button class="home-btn home-btn-secondary" id="btn-existing" onclick="loadExisting()" style="display:none">
+      <div class="home-btn-icon" style="background:rgba(124,106,255,.15)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#a08fff" stroke-width="2"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg>
+      </div>
+      <div class="home-btn-texts">
+        <div class="home-btn-title">既存カリキュラムを続ける</div>
+        <div class="home-btn-sub" id="existing-sub">前回の続きから</div>
+      </div>
+    </button>
+    <button class="home-btn home-btn-tertiary" onclick="showManual()">
+      <div class="home-btn-icon" style="background:rgba(255,255,255,.06)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#8888aa" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </div>
+      <div class="home-btn-texts">
+        <div class="home-btn-title" style="color:var(--text2)">アプリ説明書</div>
+        <div class="home-btn-sub">使い方ガイド・各機能の説明</div>
+      </div>
+    </button>
+  </div>
+</div>
+
 <!-- ══ ONBOARDING ══ -->
-<div class="screen active" id="scr-onb">
+<div class="screen" id="scr-onb">
   <div class="safe-top"></div>
   <div class="onb-top">
-    <div class="onb-logo">THRENOTE</div>
+    <div class="onb-logo-row">
+      <svg width="28" height="28" viewBox="0 0 80 80" fill="none"><defs><linearGradient id="olg" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#a08fff"/><stop offset="100%" stop-color="#3ddba8"/></linearGradient></defs><rect width="80" height="80" rx="20" fill="url(#olg)" opacity=".2"/><circle cx="40" cy="40" r="18" stroke="url(#olg)" stroke-width="2" fill="none"/><circle cx="40" cy="40" r="3" fill="url(#olg)"/><path d="M40 40 L36 22 L40 27 L44 22 Z" fill="#a08fff"/><path d="M40 40 L44 58 L40 53 L36 58 Z" fill="#3ddba8" opacity=".7"/></svg>
+      <span style="font-family:var(--fd);font-size:16px;font-weight:800;background:linear-gradient(130deg,var(--accent2),var(--green));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text">TNCompass</span>
+    </div>
     <h1 class="onb-h1">Threads×noteで<br><em>収益を作る</em><br>カリキュラム</h1>
     <p class="onb-sub">難易度・note作品・目標を設定するだけ。<br>カリキュラムが自動で生成されます。</p>
   </div>
@@ -313,7 +465,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
   <!-- Step 0: 難易度 -->
   <div class="onb-step on" id="stp0">
-    <p style="font-size:13px;color:var(--text2);margin-bottom:13px;text-align:center">運用ペースを選んでください</p>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:12px;text-align:center">運用ペースを選んでください</p>
     <div class="diff-grid">
       <div class="dc" data-d="slow" onclick="selDiff(this)"><span class="dc-em">🌱</span><div class="dc-name">ゆっくり</div><div class="dc-period">12ヶ月間</div><div class="dc-desc">週1〜3投稿<br>無理なく継続</div></div>
       <div class="dc" data-d="normal" onclick="selDiff(this)"><span class="dc-em">🔥</span><div class="dc-name">コツコツ</div><div class="dc-period">6ヶ月間</div><div class="dc-desc">週5〜10投稿<br>習慣化しながら成長</div></div>
@@ -321,50 +473,31 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div class="dc" data-d="vfast" onclick="selDiff(this)"><span class="dc-em">🚀</span><div class="dc-name">バリバリ</div><div class="dc-period">2ヶ月間</div><div class="dc-desc">毎日20投稿以上<br>全力短期集中</div></div>
     </div>
     <button class="btn-p" onclick="goStp(1)">次へ</button>
+    <button class="btn-s" onclick="goHome()">← ホームに戻る</button>
   </div>
 
   <!-- Step 1: note作品登録 -->
   <div class="onb-step" id="stp1">
     <p style="font-size:13px;color:var(--text2);margin-bottom:4px;text-align:center">販売するnoteを登録してください</p>
-    <p style="font-size:11px;color:var(--text3);margin-bottom:16px;text-align:center">あとから追加・変更もできます</p>
-
-    <!-- 登録済み作品リスト -->
+    <p style="font-size:11px;color:var(--text3);margin-bottom:14px;text-align:center">あとから追加・変更もできます</p>
     <div id="onb-works-list">
-      <div style="text-align:center;padding:20px 16px;color:var(--text3);font-size:13px;background:var(--card);border:1px dashed var(--border);border-radius:var(--r2);margin-bottom:12px;line-height:1.7">
-        登録された作品はまだありません<br>
-        <span style="font-size:11px">下のフォームから追加してください</span>
-      </div>
+      <div style="text-align:center;padding:18px 16px;color:var(--text3);font-size:13px;background:var(--card);border:1px dashed var(--border);border-radius:var(--r2);margin-bottom:11px;line-height:1.7">登録された作品はまだありません<br><span style="font-size:11px">下のフォームから追加してください</span></div>
     </div>
-
-    <!-- 新規追加フォーム -->
-    <div style="background:var(--card);border:1px solid var(--border2);border-radius:var(--r2);padding:16px;margin-bottom:14px">
-      <div style="font-size:11px;font-weight:500;color:var(--accent2);letter-spacing:.07em;text-transform:uppercase;margin-bottom:12px">＋ 作品を追加</div>
-      <div class="field" style="margin-bottom:10px">
-        <label>作品名</label>
-        <input type="text" id="onb-work-name" placeholder="例：Threads完全攻略マニュアル">
-      </div>
-      <div class="field" style="margin-bottom:12px">
-        <label>販売価格</label>
-        <div class="pfi"><span>¥</span><input type="number" id="onb-work-price" placeholder="980" inputmode="numeric"></div>
-      </div>
-      <button onclick="addOnbWork()" style="width:100%;padding:12px;background:linear-gradient(135deg,rgba(124,106,255,.15),rgba(61,219,168,.08));border:1.5px solid rgba(124,106,255,.35);border-radius:var(--r);color:var(--accent2);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--fb);transition:all .2s;letter-spacing:.02em">
-        この作品を追加する →
-      </button>
+    <div style="background:var(--card);border:1px solid var(--border2);border-radius:var(--r2);padding:14px;margin-bottom:13px">
+      <div style="font-size:11px;font-weight:500;color:var(--accent2);letter-spacing:.07em;text-transform:uppercase;margin-bottom:11px">＋ 作品を追加</div>
+      <div class="field" style="margin-bottom:10px"><label>作品名</label><input type="text" id="onb-work-name" placeholder="例：Threads完全攻略マニュアル"></div>
+      <div class="field" style="margin-bottom:11px"><label>販売価格</label><div class="pfi"><span>¥</span><input type="number" id="onb-work-price" placeholder="980" inputmode="numeric"></div></div>
+      <button onclick="addOnbWork()" style="width:100%;padding:11px;background:linear-gradient(135deg,rgba(124,106,255,.15),rgba(61,219,168,.08));border:1.5px solid rgba(124,106,255,.35);border-radius:var(--r);color:var(--accent2);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--fb);transition:all .2s">この作品を追加する →</button>
     </div>
-
     <button class="btn-s" onclick="goStp(0)" style="margin-top:0">← 戻る</button>
     <div style="height:10px"></div>
-    <button class="btn-p" id="btn-stp1-next" onclick="goStp(2)">次へ</button>
+    <button class="btn-p" id="btn-stp1-next" onclick="goStp(2)">次へ（スキップも可）</button>
   </div>
 
   <!-- Step 2: 目標設定 -->
   <div class="onb-step" id="stp2">
-    <p style="font-size:13px;color:var(--text2);margin-bottom:16px;text-align:center">目標売上を設定してください</p>
-    <div class="field">
-      <label>目標売上金額</label>
-      <div class="pfi"><span>¥</span><input type="number" id="inp-rev" placeholder="100000" inputmode="numeric" oninput="calcT()"></div>
-      <div class="fcalc" id="fcalc" style="display:none"></div>
-    </div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:14px;text-align:center">目標売上を設定してください</p>
+    <div class="field"><label>目標売上金額</label><div class="pfi"><span>¥</span><input type="number" id="inp-rev" placeholder="100000" inputmode="numeric" oninput="calcT()"></div><div class="fcalc" id="fcalc" style="display:none"></div></div>
     <button class="btn-s" onclick="goStp(1)">← 戻る</button>
     <div style="height:10px"></div>
     <button class="btn-p" onclick="goStp(3)">次へ</button>
@@ -372,7 +505,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
   <!-- Step 3: 開始日 -->
   <div class="onb-step" id="stp3">
-    <p style="font-size:13px;color:var(--text2);margin-bottom:16px;text-align:center">開始日を設定してください</p>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:14px;text-align:center">開始日を設定してください</p>
     <div class="field"><label>開始日</label><input type="date" id="inp-start"></div>
     <div class="field"><label>プランサマリー</label><div class="plan-box" id="plan-box"></div></div>
     <button class="btn-s" onclick="goStp(2)">← 戻る</button>
@@ -393,9 +526,9 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     </div>
     <div class="hero">
       <div class="hero-lbl">全体達成率</div>
-      <div style="display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap">
+      <div style="display:flex;align-items:flex-end;gap:11px;flex-wrap:wrap">
         <div class="hero-val" id="db-pct">0<span>%</span></div>
-        <div style="padding-bottom:5px">
+        <div style="padding-bottom:4px">
           <div style="font-size:13px;color:var(--text2)" id="db-dleft"></div>
           <div style="font-size:11px;color:var(--text3)" id="db-edate"></div>
         </div>
@@ -414,7 +547,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
         <span class="day-date" id="day-date-lbl"></span>
         <span class="day-pct" id="day-pct-lbl">0%</span>
       </div>
-      <div class="pbar" style="margin-bottom:11px"><div class="pfill" id="day-pbar" style="width:0%"></div></div>
+      <div class="pbar" style="margin-bottom:10px"><div class="pfill" id="day-pbar" style="width:0%"></div></div>
       <div id="day-tasks-list"></div>
       <button class="day-add-btn" onclick="openDayAddModal()">＋ カスタムタスクを追加</button>
     </div>
@@ -422,9 +555,9 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div class="wb">
       <div class="wbh">
         <span class="wbadge" id="db-wlbl">WEEK 1</span>
-        <span id="db-wpct" style="font-family:var(--fd);font-size:13px;font-weight:700;color:var(--green)">0%</span>
+        <span id="db-wpct" style="font-family:var(--fn);font-size:13px;font-weight:600;color:var(--green)">0%</span>
       </div>
-      <div class="pbar" style="margin-bottom:11px"><div class="pfill" id="db-wbar" style="width:0%"></div></div>
+      <div class="pbar" style="margin-bottom:10px"><div class="pfill" id="db-wbar" style="width:0%"></div></div>
       <div class="tl" id="db-tasks"></div>
     </div>
   </div>
@@ -437,13 +570,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
   <!-- NOTE WORKS -->
   <div class="ms" id="tab-notes">
-    <div class="ph">
-      <div><div class="ph-title">note管理</div><div class="ph-sub">作品と価格を管理する</div></div>
-    </div>
-    <div class="nw-header">
-      <span style="font-size:13px;color:var(--text2)" id="works-count"></span>
-      <button class="add-work-btn" onclick="openWorkModal()">＋ 作品を追加</button>
-    </div>
+    <div class="ph"><div><div class="ph-title">note管理</div><div class="ph-sub">作品と価格を管理する</div></div></div>
+    <div class="nw-header"><span style="font-size:13px;color:var(--text2)" id="works-count"></span><button class="add-work-btn" onclick="openWorkModal()">＋ 作品を追加</button></div>
     <div id="works-list"></div>
   </div>
 
@@ -468,15 +596,51 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div class="share-t">📸 シェア用サマリー</div>
       <div class="share-grid" id="share-stats"></div>
       <div class="share-note-txt" id="share-note"></div>
-      <button class="copy-btn" onclick="copyShare()">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
-        Threadsに投稿するテキストをコピー
-      </button>
+    </div>
+    <!-- 投稿テンプレート編集 -->
+    <div class="share-tmpl-wrap">
+      <div class="share-tmpl-lbl">
+        <span>投稿テンプレート</span>
+        <button class="tmpl-reset-btn" onclick="resetTemplate()">デフォルトに戻す</button>
+      </div>
+      <textarea class="share-tmpl-area" id="share-template" placeholder="投稿テンプレートを入力..." oninput="onTemplateInput()"></textarea>
+      <div class="share-tmpl-hint">
+        使えるタグ：<br>
+        <code style="font-size:10px;color:var(--accent2)">{week}</code> 現在のWeek番号　<code style="font-size:10px;color:var(--accent2)">{total_weeks}</code> 総週数<br>
+        <code style="font-size:10px;color:var(--accent2)">{followers}</code> フォロワー数　<code style="font-size:10px;color:var(--accent2)">{sales}</code> 累計販売数<br>
+        <code style="font-size:10px;color:var(--accent2)">{revenue}</code> 累計売上　<code style="font-size:10px;color:var(--accent2)">{plan}</code> プラン名<br>
+        <code style="font-size:10px;color:var(--accent2)">{works}</code> 販売中のnote一覧
+      </div>
+    </div>
+    <button class="copy-btn" onclick="copyShare()">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+      Threadsに投稿するテキストをコピー
+    </button>
+  </div>
+
+  <!-- SETTINGS -->
+  <div class="ms" id="tab-settings">
+    <div class="ph"><div><div class="ph-title">設定</div><div class="ph-sub">アプリの管理</div></div></div>
+    <div id="settings-plan-info" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:14px;margin-bottom:16px"></div>
+    <div class="sec-t">カリキュラム</div>
+    <div class="settings-item" onclick="confirmReset()">
+      <div><div class="settings-item-lbl" style="color:var(--coral)">カリキュラムをリセット</div><div class="settings-item-sub">全データを削除してホームに戻る</div></div>
+      <span class="settings-item-arrow">›</span>
+    </div>
+    <div class="settings-item" onclick="goHome()">
+      <div><div class="settings-item-lbl">ホームに戻る</div><div class="settings-item-sub">データは保持されます</div></div>
+      <span class="settings-item-arrow">›</span>
+    </div>
+    <div style="height:16px"></div>
+    <div class="sec-t">このアプリについて</div>
+    <div class="settings-item" onclick="showTutorial()">
+      <div><div class="settings-item-lbl">アプリ説明書</div><div class="settings-item-sub">使い方ガイド・各機能の説明</div></div>
+      <span class="settings-item-arrow">›</span>
     </div>
   </div>
 </div>
 
-<!-- BOTTOM NAV (5タブ) -->
+<!-- BOTTOM NAV (6タブ) -->
 <nav class="bnav" id="bnav">
   <button class="ni on" onclick="swTab('dashboard',this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
@@ -488,7 +652,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   </button>
   <button class="ni" onclick="swTab('notes',this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="12" y1="18" x2="12" y2="12"/><line x1="9" y1="15" x2="15" y2="15"/></svg>
-    note管理
+    note
   </button>
   <button class="ni" onclick="swTab('input',this)">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 5v14M5 12h14"/></svg>
@@ -498,73 +662,24 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
     グラフ
   </button>
+  <button class="ni" onclick="swTab('settings',this)">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 012.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 2.83l-.06.06A1.65 1.65 0 0019.4 9a1.65 1.65 0 001.51 1H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg>
+    設定
+  </button>
 </nav>
 
-<!-- ══ CARRYOVER POPUP ══ -->
-<div class="popup-overlay" id="popup-carryover">
-  <div class="popup-sheet">
-    <div class="popup-handle"></div>
-    <div class="popup-title">未消化のタスクがあります</div>
-    <div class="popup-sub" id="popup-sub">先週終わらなかったタスクを次の週に持ち越しますか？<br>持ち越したいタスクを選んでください。</div>
-    <div id="popup-task-list"></div>
-    <div class="popup-btns">
-      <button class="popup-discard" onclick="discardCarryover()">破棄してリセット</button>
-      <button class="popup-carry" onclick="doCarryover()">選択して持ち越す</button>
-    </div>
-  </div>
-</div>
-
-<!-- ══ MODAL: カスタムDAYタスク追加 ══ -->
-<div class="modal-bg" id="modal-day-add">
-  <div class="modal-sheet">
-    <div class="modal-handle"></div>
-    <div class="modal-title">カスタムタスクを追加</div>
-    <span class="modal-inp-label">タスク内容</span>
-    <input class="modal-inp" type="text" id="day-custom-inp" placeholder="例：今日の気づきをメモする">
-    <div class="modal-btns">
-      <button class="m-cancel" onclick="closeModal('modal-day-add')">キャンセル</button>
-      <button class="m-save" onclick="addCustomDayTask()">追加する</button>
-    </div>
-  </div>
-</div>
+<!-- ══ MODALS ══ -->
 <div class="modal-bg" id="modal-strategy">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
     <div class="modal-title">Week <span id="modal-wnum"></span> の施策を変更</div>
-    <div class="modal-sec">
-      <div class="modal-sec-t">Threads施策（1〜6個）</div>
-      <div id="modal-th-list"></div>
-      <div class="modal-count">選択中: <span id="modal-th-cnt">0</span>/6</div>
-      <div class="modal-err" id="modal-th-err"></div>
-    </div>
-    <div class="modal-sec">
-      <div class="modal-sec-t">カスタムThreads施策</div>
-      <div id="modal-cth-existing"></div>
-      <div class="divider"></div>
-      <div id="modal-cth-new"></div>
-      <button class="modal-add-btn" onclick="addCthInput()">＋ 新しいカスタムThreads施策を追加</button>
-    </div>
-    <div class="modal-sec">
-      <div class="modal-sec-t">note施策（1〜6個）</div>
-      <div id="modal-nt-list"></div>
-      <div class="modal-count">選択中: <span id="modal-nt-cnt">0</span>/6</div>
-      <div class="modal-err" id="modal-nt-err"></div>
-    </div>
-    <div class="modal-sec">
-      <div class="modal-sec-t">カスタムnote施策</div>
-      <div id="modal-cnt-existing"></div>
-      <div class="divider"></div>
-      <div id="modal-cnt-new"></div>
-      <button class="modal-add-btn" onclick="addCntInput()">＋ 新しいカスタムnote施策を追加</button>
-    </div>
-    <div class="modal-btns">
-      <button class="m-cancel" onclick="closeModal('modal-strategy')">キャンセル</button>
-      <button class="m-save" onclick="saveStrategyModal()">保存する</button>
-    </div>
+    <div class="modal-sec"><div class="modal-sec-t">Threads施策（1〜6個）</div><div id="modal-th-list"></div><div class="modal-count">選択中: <span id="modal-th-cnt">0</span>/6</div><div class="modal-err" id="modal-th-err"></div></div>
+    <div class="modal-sec"><div class="modal-sec-t">カスタムThreads施策</div><div id="modal-cth-existing"></div><div class="divider"></div><div id="modal-cth-new"></div><button class="modal-add-btn" onclick="addCthInput()">＋ 新しいカスタムThreads施策を追加</button></div>
+    <div class="modal-sec"><div class="modal-sec-t">note施策（1〜6個）</div><div id="modal-nt-list"></div><div class="modal-count">選択中: <span id="modal-nt-cnt">0</span>/6</div><div class="modal-err" id="modal-nt-err"></div></div>
+    <div class="modal-sec"><div class="modal-sec-t">カスタムnote施策</div><div id="modal-cnt-existing"></div><div class="divider"></div><div id="modal-cnt-new"></div><button class="modal-add-btn" onclick="addCntInput()">＋ 新しいカスタムnote施策を追加</button></div>
+    <div class="modal-btns"><button class="m-cancel" onclick="closeModal('modal-strategy')">キャンセル</button><button class="m-save" onclick="saveStrategyModal()">保存する</button></div>
   </div>
 </div>
-
-<!-- ══ MODAL: note作品追加・編集 ══ -->
 <div class="modal-bg" id="modal-work">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
@@ -573,157 +688,713 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <input class="modal-inp" type="text" id="work-inp-name" placeholder="例：Threads完全攻略マニュアル">
     <span class="modal-inp-label">販売価格（¥）</span>
     <input class="modal-inp" type="number" id="work-inp-price" placeholder="980" inputmode="numeric">
-    <div class="modal-btns">
-      <button class="m-cancel" onclick="closeModal('modal-work')">キャンセル</button>
-      <button class="m-save" onclick="saveWork()">保存する</button>
-    </div>
+    <div class="modal-btns"><button class="m-cancel" onclick="closeModal('modal-work')">キャンセル</button><button class="m-save" onclick="saveWork()">保存する</button></div>
   </div>
 </div>
-
-<!-- ══ MODAL: 価格変更 ══ -->
 <div class="modal-bg" id="modal-price">
   <div class="modal-sheet">
     <div class="modal-handle"></div>
     <div class="modal-title">価格を変更する</div>
-    <p style="font-size:13px;color:var(--text2);margin-bottom:14px;line-height:1.7">変更日以降の週から新しい価格が反映されます。<br>過去のデータはそのまま保持されます。</p>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:13px;line-height:1.7">変更日以降の週から新しい価格が反映されます。</p>
     <span class="modal-inp-label">作品名</span>
-    <div style="font-size:14px;font-weight:500;padding:10px 0;color:var(--text)" id="price-modal-work-name"></div>
+    <div style="font-size:14px;font-weight:500;padding:9px 0;color:var(--text)" id="price-modal-work-name"></div>
     <span class="modal-inp-label">新しい価格（¥）</span>
     <input class="modal-inp" type="number" id="price-inp" placeholder="1480" inputmode="numeric">
-    <span class="modal-inp-label">変更日（この日以降の週に適用）</span>
+    <span class="modal-inp-label">変更日</span>
     <input class="modal-inp" type="date" id="price-inp-date" style="margin-top:0">
-    <div class="modal-btns">
-      <button class="m-cancel" onclick="closeModal('modal-price')">キャンセル</button>
-      <button class="m-save" onclick="savePrice()">変更を保存</button>
+    <div class="modal-btns"><button class="m-cancel" onclick="closeModal('modal-price')">キャンセル</button><button class="m-save" onclick="savePrice()">変更を保存</button></div>
+  </div>
+</div>
+<div class="modal-bg" id="modal-day-add">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div class="modal-title">カスタムタスクを追加</div>
+    <span class="modal-inp-label">タスク内容</span>
+    <input class="modal-inp" type="text" id="day-custom-inp" placeholder="例：今日の気づきをメモする">
+    <div class="modal-btns"><button class="m-cancel" onclick="closeModal('modal-day-add')">キャンセル</button><button class="m-save" onclick="addCustomDayTask()">追加する</button></div>
+  </div>
+</div>
+
+<!-- ══ RESET CONFIRM MODAL ══ -->
+<div class="modal-bg" id="modal-reset">
+  <div class="reset-confirm-sheet">
+    <div class="reset-confirm-icon">🗑️</div>
+    <div class="reset-confirm-title">カリキュラムをリセット</div>
+    <div class="reset-confirm-body">
+      カリキュラム・記録・note作品など<br>
+      <b style="color:#ff6b8a">すべてのデータが削除</b>されます。<br><br>
+      この操作は元に戻せません。<br>本当にリセットしますか？
+    </div>
+    <div class="reset-confirm-btns">
+      <button class="reset-cancel" onclick="closeModal('modal-reset')">いいえ、戻る</button>
+      <button class="reset-go" onclick="doReset()">はい、削除する</button>
     </div>
   </div>
 </div>
 
+<!-- ══ CARRYOVER POPUP ══ -->
+<div class="popup-overlay" id="popup-carryover">
+  <div class="popup-sheet">
+    <div class="popup-handle"></div>
+    <div class="popup-title">未消化のタスクがあります</div>
+    <div class="popup-sub" id="popup-sub"></div>
+    <div id="popup-task-list"></div>
+    <div class="popup-btns">
+      <button class="popup-discard" onclick="discardCarryover()">破棄してリセット</button>
+      <button class="popup-carry" onclick="doCarryover()">選択して持ち越す</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ GUIDED TOUR ══ -->
+<div class="tour-overlay" id="tour-overlay">
+  <div class="tour-sheet">
+    <div class="tour-handle"></div>
+    <div class="tour-header">
+      <span class="tour-step-badge" id="tour-step-label"></span>
+      <button class="tour-close-btn" onclick="closeTour()">✕ 閉じる</button>
+    </div>
+    <div class="tour-content">
+      <div class="tour-text">
+        <div class="tour-title" id="tour-title"></div>
+        <div class="tour-body" id="tour-body"></div>
+      </div>
+      <div class="tour-mockup" id="tour-mockup"></div>
+    </div>
+    <div class="tour-nav">
+      <button class="tour-prev-btn" id="tour-prev" onclick="tourPrev()">← 前へ</button>
+      <div class="tour-dots-row" id="tour-dots2"></div>
+      <button class="tour-next-btn" id="tour-next" onclick="tourNext()">次へ →</button>
+    </div>
+  </div>
+</div>
 <script>
+// ══ GUIDED TOUR ══
+const TOUR_STEPS = [
+  {
+    imgUrl:'',
+    label:'はじめに (1/6)',
+    title:'🧭 TNCompassへようこそ',
+    body:'<b>Threads × note のW運用</b>で収益を作るカリキュラム管理アプリです。<br><br>難易度を選ぶだけで専用カリキュラムが自動生成されます。',
+    svg:`<svg viewBox="0 0 160 280" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+<defs>
+  <linearGradient id="gl0" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7c6aff" stop-opacity=".25"/><stop offset="100%" stop-color="#0a0a0f" stop-opacity="0"/></linearGradient>
+  <linearGradient id="gln" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#a08fff"/><stop offset="100%" stop-color="#3ddba8"/></linearGradient>
+</defs>
+<!-- phone frame -->
+<rect width="160" height="280" rx="18" fill="#0a0a0f"/>
+<rect x="4" y="4" width="152" height="272" rx="15" fill="#0a0a0f"/>
+<!-- bg gradient -->
+<ellipse cx="80" cy="40" rx="80" ry="55" fill="url(#gl0)"/>
+<!-- logo mark -->
+<circle cx="80" cy="72" r="26" stroke="#7c6aff" stroke-width="1.5" fill="none" opacity=".5"/>
+<circle cx="80" cy="72" r="4" fill="#7c6aff"/>
+<path d="M80 72 L76.5 50 L80 56 L83.5 50 Z" fill="#a08fff"/>
+<path d="M80 72 L83.5 94 L80 88 L76.5 94 Z" fill="#3ddba8" opacity=".8"/>
+<line x1="80" y1="47" x2="80" y2="44" stroke="#a08fff" stroke-width="1.5" stroke-linecap="round"/>
+<line x1="80" y1="97" x2="80" y2="100" stroke="#3ddba8" stroke-width="1.5" stroke-linecap="round" opacity=".5"/>
+<line x1="55" y1="72" x2="52" y2="72" stroke="#a08fff" stroke-width="1.5" stroke-linecap="round" opacity=".5"/>
+<line x1="105" y1="72" x2="108" y2="72" stroke="#a08fff" stroke-width="1.5" stroke-linecap="round" opacity=".5"/>
+<text x="42" y="76" fill="#a08fff" font-size="8" font-weight="700">T</text>
+<text x="110" y="76" fill="#3ddba8" font-size="8" font-weight="700">N</text>
+<!-- app name -->
+<text x="80" y="116" text-anchor="middle" fill="url(#gln)" font-size="14" font-weight="700" letter-spacing="2">TNCompass</text>
+<text x="80" y="128" text-anchor="middle" fill="#8888aa" font-size="7">Threads × note 収益化カリキュラム</text>
+<!-- new button -->
+<rect x="20" y="142" width="120" height="30" rx="15" fill="#7c6aff" opacity=".9"/>
+<rect x="32" y="151" width="8" height="8" rx="4" fill="white" opacity=".5"/>
+<text x="80" y="161" text-anchor="middle" fill="white" font-size="9" font-weight="700">新しくカリキュラムをつくる</text>
+<text x="80" y="171" text-anchor="middle" fill="rgba(255,255,255,.6)" font-size="6">難易度・note・目標を設定してスタート</text>
+<!-- existing button -->
+<rect x="20" y="178" width="120" height="30" rx="15" fill="#16161f" stroke="#2d2d40" stroke-width="1"/>
+<text x="80" y="196" text-anchor="middle" fill="#8888aa" font-size="9">既存カリキュラムを続ける</text>
+<!-- manual button -->
+<rect x="20" y="214" width="120" height="26" rx="13" fill="none" stroke="#1e1e2e" stroke-width="1"/>
+<text x="80" y="231" text-anchor="middle" fill="#55556a" font-size="8">アプリ説明書</text>
+</svg>`
+  },
+  {
+    imgUrl:'',
+    label:'Step 1 / 5',
+    title:'📊 ダッシュボード',
+    body:'達成率・フォロワー数・売上をひと目で確認。<br><br><b>今日のタスク</b>が毎日自動生成されチェックするとWEEK進捗に連動します。',
+    svg:`<svg viewBox="0 0 160 310" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+<defs>
+  <linearGradient id="gp" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#7c6aff"/><stop offset="100%" stop-color="#3ddba8"/></linearGradient>
+  <linearGradient id="gh" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#7c6aff" stop-opacity=".2"/><stop offset="100%" stop-color="#3ddba8" stop-opacity=".1"/></linearGradient>
+</defs>
+<rect width="160" height="310" rx="18" fill="#0a0a0f"/>
+<rect x="4" y="4" width="152" height="302" rx="15" fill="#0a0a0f"/>
+<!-- header -->
+<text x="14" y="28" fill="#f0f0f8" font-size="12" font-weight="700">ダッシュボード</text>
+<text x="14" y="38" fill="#55556a" font-size="6">2024/4/15 · Week 3</text>
+<rect x="108" y="20" width="38" height="14" rx="7" fill="#1e1e2e" stroke="#2d2d40" stroke-width=".5"/>
+<text x="127" y="29" text-anchor="middle" fill="#ffb547" font-size="7">⚡ ガツガツ</text>
+<!-- hero card -->
+<rect x="10" y="46" width="140" height="56" rx="10" fill="url(#gh)" stroke="#7c6aff" stroke-width=".8" opacity=".9"/>
+<text x="18" y="59" fill="#a08fff" font-size="6" letter-spacing="1">全体達成率</text>
+<text x="18" y="80" fill="#f0f0f8" font-size="24" font-weight="700">68<tspan font-size="10" fill="#8888aa">%</tspan></text>
+<text x="70" y="68" fill="#8888aa" font-size="6">残り 86 日</text>
+<text x="70" y="76" fill="#55556a" font-size="5">終了予定: 2024/7/15</text>
+<!-- progress bar -->
+<rect x="18" y="94" width="124" height="4" rx="2" fill="#1a1a26"/>
+<rect x="18" y="94" width="84" height="4" rx="2" fill="url(#gp)"/>
+<!-- stats grid -->
+<rect x="10" y="108" width="67" height="32" rx="8" fill="#16161f" stroke="#ffffff07" stroke-width=".5"/>
+<rect x="83" y="108" width="67" height="32" rx="8" fill="#16161f" stroke="#ffffff07" stroke-width=".5"/>
+<text x="16" y="118" fill="#55556a" font-size="5" letter-spacing=".5">フォロワー</text>
+<text x="16" y="133" fill="#f0f0f8" font-size="12" font-weight="600">1,240</text>
+<text x="16" y="138" fill="#8888aa" font-size="5">人</text>
+<text x="89" y="118" fill="#55556a" font-size="5" letter-spacing=".5">note売上</text>
+<text x="89" y="133" fill="#f0f0f8" font-size="11" font-weight="600">¥9,800</text>
+<text x="89" y="138" fill="#8888aa" font-size="5">累計</text>
+<!-- today tasks section -->
+<text x="14" y="154" fill="#8888aa" font-size="6" font-weight="600" letter-spacing="1">今日のタスク</text>
+<rect x="10" y="160" width="140" height="106" rx="10" fill="#16161f" stroke="#ffffff07" stroke-width=".5"/>
+<!-- day header -->
+<text x="18" y="173" fill="#3ddba8" font-size="6" letter-spacing=".5">4月15日（月）</text>
+<text x="130" y="173" text-anchor="end" fill="#3ddba8" font-size="7" font-weight="600">60%</text>
+<rect x="18" y="176" width="124" height="3" rx="1.5" fill="#1a1a26"/>
+<rect x="18" y="176" width="74" height="3" rx="1.5" fill="url(#gp)"/>
+<!-- task 1 done -->
+<rect x="14" y="184" width="132" height="18" rx="6" fill="#12121a"/>
+<rect x="19" y="188" width="10" height="10" rx="3" fill="#3ddba8"/>
+<path d="M21 193 L23.5 196 L28 190" fill="none" stroke="#071a10" stroke-width="1.5" stroke-linecap="round"/>
+<text x="33" y="196" fill="#55556a" font-size="6.5" text-decoration="line-through">毎日5投稿以上</text>
+<rect x="108" y="188" width="30" height="10" rx="5" fill="rgba(124,106,255,.15)"/>
+<text x="123" y="195" text-anchor="middle" fill="#a08fff" font-size="5">Threads</text>
+<!-- task 2 done -->
+<rect x="14" y="205" width="132" height="18" rx="6" fill="#12121a"/>
+<rect x="19" y="209" width="10" height="10" rx="3" fill="#3ddba8"/>
+<path d="M21 214 L23.5 217 L28 211" fill="none" stroke="#071a10" stroke-width="1.5" stroke-linecap="round"/>
+<text x="33" y="217" fill="#55556a" font-size="6.5" text-decoration="line-through">AIと壁打ち（10分）</text>
+<!-- task 3 pending -->
+<rect x="14" y="226" width="132" height="18" rx="6" fill="#12121a"/>
+<rect x="19" y="230" width="10" height="10" rx="3" fill="none" stroke="#2d2d40" stroke-width="1"/>
+<text x="33" y="238" fill="#f0f0f8" font-size="6.5">有料note執筆</text>
+<rect x="108" y="230" width="30" height="10" rx="5" fill="rgba(61,219,168,.12)"/>
+<text x="123" y="237" text-anchor="middle" fill="#3ddba8" font-size="5">note</text>
+<!-- task 4 carryover -->
+<rect x="14" y="247" width="132" height="16" rx="6" fill="#12121a"/>
+<rect x="14" y="247" width="2.5" height="16" rx="1" fill="#ffb547"/>
+<text x="22" y="258" fill="#ffb547" font-size="6.5">！リプ10回以上投稿</text>
+<!-- bottom nav -->
+<rect x="0" y="295" width="160" height="15" rx="0" fill="#12121a" stroke="#ffffff07" stroke-width=".3"/>
+<rect x="0" y="294" width="160" height="1" fill="#ffffff10"/>
+<text x="16" y="304" text-anchor="middle" fill="#a08fff" font-size="5">●</text>
+<text x="51" y="304" text-anchor="middle" fill="#55556a" font-size="5">✓</text>
+<text x="86" y="304" text-anchor="middle" fill="#55556a" font-size="5">♪</text>
+<text x="121" y="304" text-anchor="middle" fill="#55556a" font-size="5">+</text>
+<text x="144" y="304" text-anchor="middle" fill="#55556a" font-size="5">〜</text>
+</svg>`
+  },
+  {
+    imgUrl:'',
+    label:'Step 2 / 5',
+    title:'✅ カリキュラム（タスク）',
+    body:'週ごとの<b>Threads施策・note施策</b>が自動生成。<br><br>タップでチェック消化。「施策を変更」で週ごとにカスタマイズ・カスタム施策の追加もできます。',
+    svg:`<svg viewBox="0 0 160 310" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+<defs><linearGradient id="gp2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#7c6aff"/><stop offset="100%" stop-color="#3ddba8"/></linearGradient></defs>
+<rect width="160" height="310" rx="18" fill="#0a0a0f"/>
+<rect x="4" y="4" width="152" height="302" rx="15" fill="#0a0a0f"/>
+<!-- header -->
+<text x="14" y="28" fill="#f0f0f8" font-size="12" font-weight="700">カリキュラム</text>
+<text x="14" y="38" fill="#55556a" font-size="6">⚡ ガツガツプラン · 全17週</text>
+<!-- week 3 open (current) -->
+<rect x="10" y="46" width="140" height="130" rx="10" fill="#16161f" stroke="#ffffff07" stroke-width=".5"/>
+<!-- week header -->
+<text x="18" y="60" fill="#a08fff" font-size="6" letter-spacing=".5">▶ 今週 · WEEK 3</text>
+<rect x="96" y="54" width="28" height="8" rx="4" fill="rgba(255,181,71,.15)"/>
+<text x="110" y="60" text-anchor="middle" fill="#ffb547" font-size="5">Phase 2</text>
+<text x="18" y="70" fill="#f0f0f8" font-size="7.5" font-weight="500">タスク 5個</text>
+<text x="138" y="70" text-anchor="end" fill="#a08fff" font-size="8" font-weight="600">60%</text>
+<text x="148" y="70" fill="#55556a" font-size="8">▲</text>
+<!-- progress bar -->
+<rect x="18" y="74" width="124" height="3" rx="1.5" fill="#1a1a26"/>
+<rect x="18" y="74" width="74" height="3" rx="1.5" fill="url(#gp2)"/>
+<!-- threads label -->
+<text x="18" y="86" fill="#a08fff" font-size="5.5" letter-spacing=".5">THREADS施策</text>
+<text x="130" y="86" text-anchor="end" fill="#55556a" font-size="5.5" cursor="pointer">施策を変更</text>
+<!-- tasks -->
+<rect x="14" y="90" width="132" height="14" rx="5" fill="#12121a"/>
+<rect x="18" y="94" width="9" height="9" rx="2.5" fill="#3ddba8"/>
+<path d="M20 98.5 L22 101 L26 96" fill="none" stroke="#071a10" stroke-width="1.2" stroke-linecap="round"/>
+<text x="31" y="100" fill="#55556a" font-size="6" text-decoration="line-through">毎日10投稿以上</text>
+<rect x="14" y="107" width="132" height="14" rx="5" fill="#12121a"/>
+<rect x="18" y="111" width="9" height="9" rx="2.5" fill="none" stroke="#2d2d40" stroke-width="1"/>
+<text x="31" y="117" fill="#f0f0f8" font-size="6">投稿分析言語化（言語化欄に記載）</text>
+<rect x="14" y="124" width="132" height="14" rx="5" fill="#12121a"/>
+<rect x="18" y="128" width="9" height="9" rx="2.5" fill="none" stroke="#2d2d40" stroke-width="1"/>
+<text x="31" y="134" fill="#f0f0f8" font-size="6">AIと壁打ち（10分）</text>
+<!-- note label -->
+<text x="18" y="150" fill="#3ddba8" font-size="5.5" letter-spacing=".5">NOTE施策</text>
+<rect x="14" y="154" width="132" height="14" rx="5" fill="#12121a"/>
+<rect x="18" y="158" width="9" height="9" rx="2.5" fill="none" stroke="#2d2d40" stroke-width="1"/>
+<text x="31" y="164" fill="#f0f0f8" font-size="6">有料note執筆</text>
+<!-- custom task -->
+<rect x="14" y="171" width="132" height="14" rx="5" fill="rgba(255,181,71,.07)"/>
+<rect x="14" y="171" width="2" height="14" fill="#ffb547" rx="1"/>
+<rect x="18" y="175" width="9" height="9" rx="2.5" fill="none" stroke="#ffb547" stroke-width="1"/>
+<text x="31" y="181" fill="#ffb547" font-size="6">🔧 SNSトレンド調査</text>
+<!-- week 4 closed -->
+<rect x="10" y="184" width="140" height="28" rx="10" fill="#16161f" stroke="#ffffff07" stroke-width=".5"/>
+<text x="18" y="196" fill="#55556a" font-size="6" letter-spacing=".5">WEEK 4</text>
+<rect x="96" y="190" width="28" height="8" rx="4" fill="rgba(255,181,71,.15)"/>
+<text x="110" y="196" text-anchor="middle" fill="#ffb547" font-size="5">Phase 2</text>
+<text x="18" y="206" fill="#8888aa" font-size="7">タスク 5個</text>
+<text x="138" y="206" text-anchor="end" fill="#55556a" font-size="8" font-weight="600">0%</text>
+<text x="148" y="206" fill="#55556a" font-size="8">▼</text>
+<!-- week 5 closed -->
+<rect x="10" y="218" width="140" height="28" rx="10" fill="#16161f" stroke="#ffffff07" stroke-width=".5"/>
+<text x="18" y="230" fill="#55556a" font-size="6" letter-spacing=".5">WEEK 5</text>
+<rect x="96" y="224" width="28" height="8" rx="4" fill="rgba(91,184,255,.15)"/>
+<text x="110" y="230" text-anchor="middle" fill="#5bb8ff" font-size="5">Phase 3</text>
+<text x="18" y="240" fill="#8888aa" font-size="7">タスク 4個</text>
+<text x="138" y="240" text-anchor="end" fill="#55556a" font-size="8" font-weight="600">0%</text>
+<text x="148" y="240" fill="#55556a" font-size="8">▼</text>
+<!-- bottom nav -->
+<rect x="0" y="295" width="160" height="15" rx="0" fill="#12121a"/>
+<rect x="0" y="294" width="160" height="1" fill="#ffffff10"/>
+<text x="16" y="304" text-anchor="middle" fill="#55556a" font-size="5">●</text>
+<text x="51" y="304" text-anchor="middle" fill="#a08fff" font-size="5">✓</text>
+</svg>`
+  },
+  {
+    imgUrl:'',
+    label:'Step 3 / 5',
+    title:'📝 note管理',
+    body:'販売中のnote作品を登録。<b>複数作品対応</b>。<br><br>価格変更すると変更日以降の週だけ新価格が適用。過去データはそのまま保持されます。',
+    svg:`<svg viewBox="0 0 160 310" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+<rect width="160" height="310" rx="18" fill="#0a0a0f"/>
+<rect x="4" y="4" width="152" height="302" rx="15" fill="#0a0a0f"/>
+<!-- header -->
+<text x="14" y="28" fill="#f0f0f8" font-size="12" font-weight="700">note管理</text>
+<text x="14" y="38" fill="#55556a" font-size="6">作品と価格を管理する</text>
+<rect x="98" y="20" width="52" height="16" rx="8" fill="#7c6aff" opacity=".85"/>
+<text x="124" y="31" text-anchor="middle" fill="white" font-size="7" font-weight="700">＋ 作品を追加</text>
+<!-- work card 1 -->
+<rect x="10" y="46" width="140" height="88" rx="10" fill="#16161f" stroke="#ffffff07" stroke-width=".5"/>
+<text x="18" y="60" fill="#f0f0f8" font-size="9" font-weight="700">Threads完全攻略マニュアル</text>
+<text x="18" y="70" fill="#8888aa" font-size="6">現在の価格: ¥980</text>
+<rect x="100" y="55" width="22" height="10" rx="5" fill="#1e1e2e" stroke="#2d2d40" stroke-width=".5"/>
+<text x="111" y="62" text-anchor="middle" fill="#8888aa" font-size="5.5">編集</text>
+<rect x="125" y="55" width="18" height="10" rx="5" fill="transparent" stroke="#2d2d40" stroke-width=".5"/>
+<text x="134" y="62" text-anchor="middle" fill="#55556a" font-size="5.5">削除</text>
+<!-- price label -->
+<text x="18" y="82" fill="#55556a" font-size="5" letter-spacing=".5">価格履歴</text>
+<!-- price row current -->
+<rect x="14" y="86" width="132" height="16" rx="5" fill="#0d2018" stroke="#3ddba830" stroke-width=".5"/>
+<text x="20" y="96" fill="#f0f0f8" font-size="6.5">¥980</text>
+<text x="75" y="96" text-anchor="middle" fill="#55556a" font-size="5.5">Week 1〜現在</text>
+<rect x="118" y="89" width="22" height="10" rx="5" fill="#0f3826" stroke="#3ddba840" stroke-width=".5"/>
+<text x="129" y="96" text-anchor="middle" fill="#3ddba8" font-size="5">現在</text>
+<!-- price change button -->
+<rect x="14" y="106" width="132" height="14" rx="7" fill="#1e1e2e" stroke="#2d2d40" stroke-width=".5"/>
+<text x="80" y="115" text-anchor="middle" fill="#8888aa" font-size="6">＋ 価格を変更する</text>
+<!-- totals -->
+<rect x="14" y="124" width="132" height="1" fill="#ffffff08"/>
+<text x="20" y="135" fill="#8888aa" font-size="6">累計販売 12本</text>
+<text x="140" y="135" text-anchor="end" fill="#3ddba8" font-size="9" font-weight="600">¥11,760</text>
+<!-- work card 2 -->
+<rect x="10" y="142" width="140" height="75" rx="10" fill="#16161f" stroke="#ffffff07" stroke-width=".5"/>
+<text x="18" y="157" fill="#f0f0f8" font-size="9" font-weight="700">note運用実践ガイド</text>
+<text x="18" y="167" fill="#8888aa" font-size="6">現在の価格: ¥1,480</text>
+<rect x="100" y="152" width="22" height="10" rx="5" fill="#1e1e2e" stroke="#2d2d40" stroke-width=".5"/>
+<text x="111" y="159" text-anchor="middle" fill="#8888aa" font-size="5.5">編集</text>
+<!-- price rows -->
+<rect x="14" y="172" width="132" height="13" rx="4" fill="#12121a"/>
+<text x="20" y="181" fill="#8888aa" font-size="6">¥980</text>
+<text x="75" y="181" text-anchor="middle" fill="#55556a" font-size="5.5">Week 1〜4</text>
+<rect x="14" y="188" width="132" height="13" rx="4" fill="#0d2018" stroke="#3ddba830" stroke-width=".5"/>
+<text x="20" y="197" fill="#f0f0f8" font-size="6">¥1,480</text>
+<text x="75" y="197" text-anchor="middle" fill="#55556a" font-size="5.5">Week 5〜現在</text>
+<rect x="118" y="189" width="22" height="10" rx="5" fill="#0f3826" stroke="#3ddba840" stroke-width=".5"/>
+<text x="129" y="196" text-anchor="middle" fill="#3ddba8" font-size="5">現在</text>
+<rect x="14" y="204" width="132" height="1" fill="#ffffff08"/>
+<text x="20" y="213" fill="#8888aa" font-size="6">累計販売 5本</text>
+<text x="140" y="213" text-anchor="end" fill="#3ddba8" font-size="9" font-weight="600">¥8,820</text>
+<!-- bottom nav -->
+<rect x="0" y="295" width="160" height="15" rx="0" fill="#12121a"/>
+<rect x="0" y="294" width="160" height="1" fill="#ffffff10"/>
+<text x="86" y="304" text-anchor="middle" fill="#a08fff" font-size="5">♪</text>
+</svg>`
+  },
+  {
+    imgUrl:'',
+    label:'Step 4 / 5',
+    title:'➕ 数値入力（記録）',
+    body:'週ごとの実績を記録します。<br><br>・フォロワー数・閲覧数<br>・作品別の販売数<br>・振り返りメモ<br><br>入力で売上が自動計算されグラフに反映されます。',
+    svg:`<svg viewBox="0 0 160 310" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+<rect width="160" height="310" rx="18" fill="#0a0a0f"/>
+<rect x="4" y="4" width="152" height="302" rx="15" fill="#0a0a0f"/>
+<!-- header -->
+<text x="14" y="28" fill="#f0f0f8" font-size="12" font-weight="700">数値入力</text>
+<text x="14" y="38" fill="#55556a" font-size="6">週ごとの実績を記録する</text>
+<!-- week pills -->
+<rect x="10" y="46" width="36" height="12" rx="6" fill="rgba(124,106,255,.1)" stroke="#7c6aff" stroke-width="1"/>
+<text x="28" y="55" text-anchor="middle" fill="#a08fff" font-size="6" font-weight="600">Week 3</text>
+<rect x="50" y="46" width="36" height="12" rx="6" fill="#16161f" stroke="#1e1e2e" stroke-width=".5"/>
+<text x="68" y="55" text-anchor="middle" fill="#55556a" font-size="6">Week 4</text>
+<rect x="90" y="46" width="36" height="12" rx="6" fill="#16161f" stroke="#1e1e2e" stroke-width=".5"/>
+<text x="108" y="55" text-anchor="middle" fill="#55556a" font-size="6">Week 5</text>
+<!-- threads card -->
+<rect x="10" y="64" width="140" height="54" rx="10" fill="#16161f" stroke="#ffffff07" stroke-width=".5"/>
+<circle cx="20" cy="76" r="5" fill="#7c6aff"/>
+<text x="28" y="79" fill="#8888aa" font-size="5.5" letter-spacing=".5">THREADS実績</text>
+<rect x="14" y="84" width="132" height=".5" fill="#ffffff08"/>
+<text x="18" y="96" fill="#f0f0f8" font-size="6.5">フォロワー数</text>
+<rect x="102" y="89" width="42" height="13" rx="5" fill="#12121a" stroke="#2d2d40" stroke-width=".5"/>
+<text x="139" y="98" text-anchor="end" fill="#f0f0f8" font-size="7">1,240</text>
+<rect x="14" y="104" width="132" height=".5" fill="#ffffff08"/>
+<text x="18" y="114" fill="#f0f0f8" font-size="6.5">閲覧数（合計）</text>
+<rect x="102" y="107" width="42" height="13" rx="5" fill="#12121a" stroke="#2d2d40" stroke-width=".5"/>
+<text x="139" y="116" text-anchor="end" fill="#f0f0f8" font-size="7">8,500</text>
+<!-- note card -->
+<rect x="10" y="124" width="140" height="78" rx="10" fill="#16161f" stroke="#ffffff07" stroke-width=".5"/>
+<circle cx="20" cy="136" r="5" fill="#3ddba8"/>
+<text x="28" y="139" fill="#8888aa" font-size="5.5" letter-spacing=".5">NOTE販売実績（作品別）</text>
+<rect x="14" y="144" width="132" height=".5" fill="#ffffff08"/>
+<!-- work 1 row -->
+<text x="18" y="155" fill="#f0f0f8" font-size="6">Threads完全攻略マニュアル</text>
+<text x="18" y="162" fill="#55556a" font-size="5">¥980/本</text>
+<text x="100" y="158" text-anchor="end" fill="#3ddba8" font-size="6" font-weight="600">¥1,960</text>
+<rect x="102" y="151" width="42" height="13" rx="5" fill="#12121a" stroke="#2d2d40" stroke-width=".5"/>
+<text x="139" y="160" text-anchor="end" fill="#f0f0f8" font-size="7">2</text>
+<rect x="14" y="167" width="132" height=".5" fill="#ffffff08"/>
+<!-- work 2 row -->
+<text x="18" y="178" fill="#f0f0f8" font-size="6">note運用実践ガイド</text>
+<text x="18" y="185" fill="#55556a" font-size="5">¥1,480/本</text>
+<text x="100" y="181" text-anchor="end" fill="#3ddba8" font-size="6" font-weight="600">¥2,960</text>
+<rect x="102" y="174" width="42" height="13" rx="5" fill="#12121a" stroke="#2d2d40" stroke-width=".5"/>
+<text x="139" y="183" text-anchor="end" fill="#f0f0f8" font-size="7">2</text>
+<!-- total -->
+<rect x="14" y="192" width="132" height="6" rx="3" fill="#0d2018" stroke="#3ddba830" stroke-width=".5"/>
+<text x="20" y="197" fill="#8888aa" font-size="5">週の売上合計</text>
+<text x="140" y="197" text-anchor="end" fill="#3ddba8" font-size="6" font-weight="600">¥4,920</text>
+<!-- save btn -->
+<rect x="10" y="208" width="140" height="22" rx="11" fill="#3ddba8" opacity=".8"/>
+<text x="80" y="222" text-anchor="middle" fill="#071a10" font-size="8" font-weight="700">Week 3 の数値を保存</text>
+<!-- bottom nav -->
+<rect x="0" y="295" width="160" height="15" rx="0" fill="#12121a"/>
+<rect x="0" y="294" width="160" height="1" fill="#ffffff10"/>
+<text x="121" y="304" text-anchor="middle" fill="#a08fff" font-size="5">+</text>
+</svg>`
+  },
+  {
+    imgUrl:'',
+    label:'Step 5 / 5',
+    title:'📈 グラフ＆シェア',
+    body:'フォロワー・販売数・売上の推移グラフを確認。<br><br>投稿テンプレートを編集して<b>「コピー」</b>するとThreadsにそのまま投稿できます。<span class="tour-highlight">{week}</span> <span class="tour-highlight">{revenue}</span> などのタグで数値が自動入力されます。',
+    svg:`<svg viewBox="0 0 160 310" xmlns="http://www.w3.org/2000/svg" font-family="sans-serif">
+<defs>
+  <linearGradient id="gln2" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#a08fff"/><stop offset="100%" stop-color="#3ddba8"/></linearGradient>
+</defs>
+<rect width="160" height="310" rx="18" fill="#0a0a0f"/>
+<rect x="4" y="4" width="152" height="302" rx="15" fill="#0a0a0f"/>
+<!-- header -->
+<text x="14" y="28" fill="#f0f0f8" font-size="12" font-weight="700">グラフ＆シェア</text>
+<text x="14" y="38" fill="#55556a" font-size="6">進捗を可視化する</text>
+<!-- toggle pills -->
+<rect x="10" y="44" width="36" height="11" rx="5.5" fill="rgba(124,106,255,.1)" stroke="#7c6aff" stroke-width="1"/>
+<text x="28" y="52" text-anchor="middle" fill="#a08fff" font-size="5.5">フォロワー</text>
+<rect x="50" y="44" width="30" height="11" rx="5.5" fill="rgba(61,219,168,.12)" stroke="#3ddba8" stroke-width="1"/>
+<text x="65" y="52" text-anchor="middle" fill="#3ddba8" font-size="5.5">販売数</text>
+<rect x="84" y="44" width="22" height="11" rx="5.5" fill="rgba(255,181,71,.12)" stroke="#ffb547" stroke-width="1"/>
+<text x="95" y="52" text-anchor="middle" fill="#ffb547" font-size="5.5">売上</text>
+<!-- chart area -->
+<rect x="10" y="60" width="140" height="90" rx="10" fill="#16161f" stroke="#ffffff07" stroke-width=".5"/>
+<!-- grid lines -->
+<line x1="20" y1="70" x2="20" y2="140" stroke="#ffffff08" stroke-width=".5"/>
+<line x1="20" y1="140" x2="142" y2="140" stroke="#ffffff08" stroke-width=".5"/>
+<line x1="20" y1="120" x2="142" y2="120" stroke="#ffffff05" stroke-width=".5"/>
+<line x1="20" y1="100" x2="142" y2="100" stroke="#ffffff05" stroke-width=".5"/>
+<line x1="20" y1="80" x2="142" y2="80" stroke="#ffffff05" stroke-width=".5"/>
+<!-- x labels -->
+<text x="20" y="148" text-anchor="middle" fill="#55556a" font-size="4.5">W1</text>
+<text x="44" y="148" text-anchor="middle" fill="#55556a" font-size="4.5">W2</text>
+<text x="68" y="148" text-anchor="middle" fill="#55556a" font-size="4.5">W3</text>
+<text x="92" y="148" text-anchor="middle" fill="#55556a" font-size="4.5">W4</text>
+<text x="116" y="148" text-anchor="middle" fill="#55556a" font-size="4.5">W5</text>
+<text x="140" y="148" text-anchor="middle" fill="#55556a" font-size="4.5">W6</text>
+<!-- followers line purple -->
+<polyline points="20,136 44,128 68,118 92,104 116,88 140,72" fill="none" stroke="#7c6aff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>
+<circle cx="20" cy="136" r="2.5" fill="#7c6aff"/>
+<circle cx="44" cy="128" r="2.5" fill="#7c6aff"/>
+<circle cx="68" cy="118" r="2.5" fill="#7c6aff"/>
+<circle cx="92" cy="104" r="2.5" fill="#7c6aff"/>
+<circle cx="116" cy="88" r="2.5" fill="#7c6aff"/>
+<circle cx="140" cy="72" r="3.5" fill="#7c6aff" stroke="white" stroke-width="1"/>
+<!-- sales line green -->
+<polyline points="20,140 44,138 68,132 92,122 116,112 140,98" fill="none" stroke="#3ddba8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>
+<circle cx="140" cy="98" r="3.5" fill="#3ddba8" stroke="white" stroke-width="1"/>
+<!-- revenue line amber -->
+<polyline points="20,140 44,139 68,136 92,128 116,118 140,106" fill="none" stroke="#ffb547" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" opacity=".75"/>
+<!-- share summary card -->
+<rect x="10" y="158" width="140" height="58" rx="10" fill="rgba(30,16,48,.9)" stroke="rgba(124,106,255,.3)" stroke-width=".8"/>
+<text x="18" y="170" fill="#a08fff" font-size="5.5" letter-spacing=".5">📸 シェア用サマリー</text>
+<rect x="14" y="174" width="62" height="22" rx="5" fill="#12121a"/>
+<text x="20" y="183" fill="#a08fff" font-size="5">フォロワー数</text>
+<text x="20" y="193" fill="#a08fff" font-size="9" font-weight="600">1,240</text>
+<rect x="82" y="174" width="62" height="22" rx="5" fill="#12121a"/>
+<text x="88" y="183" fill="#3ddba8" font-size="5">note販売数（本）</text>
+<text x="88" y="193" fill="#3ddba8" font-size="9" font-weight="600">12</text>
+<rect x="14" y="200" width="62" height="22" rx="5" fill="#12121a"/>
+<text x="20" y="209" fill="#ffb547" font-size="5">累計売上</text>
+<text x="20" y="219" fill="#ffb547" font-size="8" font-weight="600">¥9,800</text>
+<rect x="82" y="200" width="62" height="22" rx="5" fill="#12121a"/>
+<text x="88" y="209" fill="#ff6b8a" font-size="5">タスク達成率</text>
+<text x="88" y="219" fill="#ff6b8a" font-size="9" font-weight="600">68%</text>
+<!-- template area -->
+<rect x="10" y="222" width="140" height="44" rx="10" fill="#16161f" stroke="#ffffff07" stroke-width=".5"/>
+<text x="18" y="233" fill="#8888aa" font-size="5.5" letter-spacing=".5">投稿テンプレート</text>
+<rect x="118" y="227" width="26" height="9" rx="4" fill="transparent" stroke="#2d2d40" stroke-width=".5"/>
+<text x="131" y="233" text-anchor="middle" fill="#55556a" font-size="4.5">リセット</text>
+<rect x="14" y="237" width="132" height="22" rx="5" fill="#12121a" stroke="#2d2d40" stroke-width=".5"/>
+<text x="18" y="246" fill="#8888aa" font-size="5.5">【Threads×note 運用記録 Week {week}】</text>
+<text x="18" y="253" fill="#55556a" font-size="5">フォロワー：{followers}　売上：{revenue}</text>
+<!-- copy button -->
+<rect x="10" y="272" width="140" height="18" rx="9" fill="#1e1e2e" stroke="#2d2d40" stroke-width=".5"/>
+<text x="80" y="283" text-anchor="middle" fill="#f0f0f8" font-size="6.5">Threadsに投稿するテキストをコピー</text>
+<!-- bottom nav -->
+<rect x="0" y="295" width="160" height="15" rx="0" fill="#12121a"/>
+<rect x="0" y="294" width="160" height="1" fill="#ffffff10"/>
+<text x="144" y="304" text-anchor="middle" fill="#a08fff" font-size="5">〜</text>
+</svg>`
+  }
+];
+
+let tourStep = 0;
+
+function showTutorial(){
+  tourStep = 0;
+  renderTourStep();
+  document.getElementById('tour-overlay').classList.add('vis');
+}
+
+function closeTour(){
+  document.getElementById('tour-overlay').classList.remove('vis');
+  S.tutorialDone = true;
+  saveS();
+}
+
+function tourNext(){
+  if(tourStep >= TOUR_STEPS.length - 1){ closeTour(); return; }
+  tourStep++;
+  renderTourStep();
+}
+
+function tourPrev(){
+  if(tourStep <= 0) return;
+  tourStep--;
+  renderTourStep();
+}
+
+function renderTourStep(){
+  const step = TOUR_STEPS[tourStep];
+  document.getElementById('tour-step-label').textContent = step.label;
+  document.getElementById('tour-title').textContent = step.title;
+  document.getElementById('tour-body').innerHTML = step.body;
+  // 画像があれば<img>、なければSVGフォールバック
+  const mockupEl = document.getElementById('tour-mockup');
+  if(step.imgUrl){
+    mockupEl.innerHTML = `<img src="${step.imgUrl}" alt="${step.title}" style="width:130px;border-radius:10px;display:block;object-fit:cover">`;
+  } else {
+    mockupEl.innerHTML = step.svg || '';
+  }
+  // 前へボタン
+  document.getElementById('tour-prev').style.visibility = tourStep === 0 ? 'hidden' : 'visible';
+  // 次へボタン
+  document.getElementById('tour-next').textContent =
+    tourStep >= TOUR_STEPS.length - 1 ? '完了 ✓' : '次へ →';
+  // ドット
+  document.getElementById('tour-dots2').innerHTML =
+    TOUR_STEPS.map((_,i) =>
+      `<div class="tour-dot2 ${i===tourStep?'on':''}"></div>`
+    ).join('');
+}
+
+// ── RESET ──
+function confirmReset(){ openModal('modal-reset'); }
+
+function doReset(){
+  localStorage.removeItem('tncompass_v1');
+  S = {};
+  closeModal('modal-reset');
+  document.getElementById('bnav').classList.remove('vis');
+  showScreen('scr-home');
+  initHome();
+  showToast('リセットしました');
+}
+
 // ══ MASTER DATA ══
 const THREADS_ALL=['プロフィール改善','毎日1-3投稿','毎日5投稿以上','毎日10投稿以上','毎日20投稿以上','リプ5回以上投稿','リプ10回以上投稿','リプ20回以上投稿','固定投稿見直し','投稿分析言語化（言語化欄に記載）','ゴースト投稿','引用投稿1回以上','Threads投稿内容についてAIと壁打ち（10分）','Threadsで導線投稿（1日〜2日で1回）'];
 const NOTE_ALL=['プロフィール改善','無料note執筆','無料noteリリース','有料note執筆','有料note予告','有料noteリリース','無料noteリライト','有料noteの無料部分リライト','有料部分リライト','コンテンツSEO対策（タイトル、冒頭文）','次回作テーマをAIと壁打ち（10分）'];
 const DIFF_CFG={slow:{label:'ゆっくり',emoji:'🌱',months:12,color:'var(--green)'},normal:{label:'コツコツ',emoji:'🔥',months:6,color:'var(--blue)'},fast:{label:'ガツガツ',emoji:'⚡',months:4,color:'var(--amber)'},vfast:{label:'バリバリ',emoji:'🚀',months:2,color:'var(--coral)'}};
 const PHASE_NAMES={'1':'Phase 1: 基礎構築','2':'Phase 2: 展開初期','3':'Phase 3: 本展開','4':'Phase 4: 最適化'};
 const PHASE_CLS={'1':'pb1','2':'pb2','3':'pb3','4':'pb4'};
+const DEFAULT_TEMPLATE=`【Threads×note 運用記録 Week {week}】
+
+{plan}プラン（進行中）
+フォロワー：{followers}人
+note販売：{sales}本
+累計売上：{revenue}
+{works}
+目標に向かって進んでいます✊
+#Threads運用 #note収益化`;
+
+const WEEK_TO_DAY_FREQ={'プロフィール改善':1,'毎日1-3投稿':7,'毎日5投稿以上':7,'毎日10投稿以上':7,'毎日20投稿以上':7,'リプ5回以上投稿':7,'リプ10回以上投稿':7,'リプ20回以上投稿':7,'固定投稿見直し':3,'投稿分析言語化（言語化欄に記載）':3,'ゴースト投稿':7,'引用投稿1回以上':3,'Threads投稿内容についてAIと壁打ち（10分）':3,'Threadsで導線投稿（1日〜2日で1回）':3,'無料note執筆':1,'無料noteリリース':1,'有料note執筆':1,'有料note予告':1,'有料noteリリース':1,'無料noteリライト':1,'有料noteの無料部分リライト':1,'有料部分リライト':1,'コンテンツSEO対策（タイトル、冒頭文）':1,'次回作テーマをAIと壁打ち（10分）':1};
 
 // ══ STATE ══
 let S={};
-let selDiffKey=null;
-let curStep=0;
-let editIdx=null;
-let editWorkId=null;
-let priceWorkId=null;
-let modalThChecked=[];
-let modalNtChecked=[];
-let modalCthChecked=[];
-let modalCntChecked=[];
+let selDiffKey=null,curStep=0,editIdx=null,editWorkId=null,priceWorkId=null;
+let modalThChecked=[],modalNtChecked=[],modalCthChecked=[],modalCntChecked=[];
 let inputWeek=0;
 const CS={followers:true,sales:true,revenue:true,views:false};
 let mainChart=null;
+let onbWorks=[];
+let carryoverTasks=[],carryoverTargetWeek=0,carryoverSelected=new Set();
 
-function loadS(){try{S=JSON.parse(localStorage.getItem('threnote_v3')||'{}')}catch(e){S={}}}
-function saveS(){localStorage.setItem('threnote_v3',JSON.stringify(S))}
+function loadS(){try{S=JSON.parse(localStorage.getItem('tncompass_v1')||'{}')}catch(e){S={}}}
+function saveS(){localStorage.setItem('tncompass_v1',JSON.stringify(S))}
+function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
+function todayStr(){return new Date().toISOString().split('T')[0]}
 
-// ══ NOTE WORKS ══
-// S.noteWorks = [{id, name, priceHistory:[{price, fromWeek}]}]
-// priceHistory はweekインデックスで管理。fromWeek=0から有効な最初の価格。
-// 週wのwork価格 = priceHistoryの中でfromWeek<=wの最大fromWeekのprice
-
-function getWorkPrice(work, weekIdx){
-  if(!work.priceHistory||work.priceHistory.length===0) return 0;
-  let price=work.priceHistory[0].price;
-  for(const ph of work.priceHistory){
-    if(ph.fromWeek<=weekIdx) price=ph.price;
+// ══ HOME ══
+function initHome(){
+  const existing = S.curriculum && S.diff && S.startDate;
+  const btnNew = document.getElementById('btn-new');
+  const btnEx  = document.getElementById('btn-existing');
+  if(existing){
+    // カリキュラムがあれば「続ける」だけ表示
+    btnNew.style.display = 'none';
+    btnEx.style.display  = 'flex';
+    const cfg = DIFF_CFG[S.diff];
+    const cw  = getCurWeek();
+    document.getElementById('existing-sub').textContent =
+      `${cfg.emoji} ${cfg.label}プラン · Week ${cw+1}/${S.weeks}`;
+  } else {
+    // なければ「新しく作る」だけ表示
+    btnNew.style.display = 'flex';
+    btnEx.style.display  = 'none';
   }
-  return price;
 }
 
-function currentWorkPrice(work){
-  if(!work.priceHistory||work.priceHistory.length===0) return 0;
-  return work.priceHistory[work.priceHistory.length-1].price;
+function startNewCurriculum(){
+  if(S.curriculum && S.diff){
+    if(!confirm('新しいカリキュラムを作ると現在のデータが上書きされます。続けますか？')) return;
+  }
+  selDiffKey=null; curStep=0; onbWorks=[];
+  // ドットリセット
+  [0,1,2,3].forEach(i=>{
+    const d=document.getElementById('d'+i);
+    if(d) d.className='dot'+(i===0?' on':'');
+  });
+  // ステップリセット
+  document.querySelectorAll('.onb-step').forEach(s=>s.classList.remove('on'));
+  document.getElementById('stp0').classList.add('on');
+  // 難易度選択リセット
+  document.querySelectorAll('.dc').forEach(c=>c.classList.remove('sel'));
+  // 画面切り替え
+  document.querySelectorAll('.screen').forEach(s=>{
+    s.classList.remove('active');
+    s.style.display='none';
+  });
+  const onb=document.getElementById('scr-onb');
+  onb.classList.add('active');
+  onb.style.display='block';
 }
 
-// ══ ONBOARDING NOTE WORKS (一時保存) ══
-let onbWorks = []; // [{id, name, price}]
+function showScreen(id){
+  document.querySelectorAll('.screen').forEach(s=>{
+    s.classList.remove('active');
+    s.style.display='none';
+  });
+  const el=document.getElementById(id);
+  el.classList.add('active');
+  el.style.display = id==='scr-home' ? 'flex' : 'block';
+}
+
+function loadExisting(){
+  if(S.curriculum && S.diff && S.startDate){ launchApp(); }
+}
+
+function goHome(){
+  showScreen('scr-home');
+  document.getElementById('bnav').classList.remove('vis');
+  initHome();
+}
+
+function showManual(){ showTutorial(); }
+
+function confirmReset(){
+  if(confirm('カリキュラムを完全にリセットします。\n全データが削除されます。よろしいですか？')){
+    localStorage.removeItem('tncompass_v1');
+    S={};
+    document.getElementById('bnav').classList.remove('vis');
+    showScreen('scr-home');
+    initHome();
+    showToast('リセットしました');
+  }
+}
+
+function renderSettingsInfo(){
+  if(!S.diff) return;
+  const cfg=DIFF_CFG[S.diff];
+  const cw=getCurWeek();
+  const totalRev=calcTotalRevenue();
+  document.getElementById('settings-plan-info').innerHTML=`
+    <div style="font-size:11px;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px">現在のプラン</div>
+    <div style="font-size:16px;font-weight:500;margin-bottom:6px">${cfg.emoji} ${cfg.label}プラン</div>
+    <div style="font-size:12px;color:var(--text2);line-height:1.8">開始日：${S.startDate}<br>終了予定：${S.endDate}<br>進捗：Week ${cw+1} / ${S.weeks}<br>累計売上：<span style="color:var(--green);font-family:var(--fn)">¥${totalRev.toLocaleString()}</span></div>`;
+}
+
+// ══ ONBOARDING ══
+let onbWorksLocal=[];
 
 function renderOnbWorksList(){
-  const el = document.getElementById('onb-works-list');
-  if(!el) return;
-
-  // 「次へ」ボタンのラベルを件数に応じて更新
-  const nextBtn = document.getElementById('btn-stp1-next');
-
-  if(onbWorks.length === 0){
-    el.innerHTML = `
-      <div style="text-align:center;padding:20px 16px;color:var(--text3);font-size:13px;background:var(--card);border:1px dashed var(--border);border-radius:var(--r2);margin-bottom:12px;line-height:1.7">
-        登録された作品はまだありません<br>
-        <span style="font-size:11px">下のフォームから追加してください</span>
-      </div>`;
-    if(nextBtn) nextBtn.textContent = '次へ（スキップも可）';
+  const el=document.getElementById('onb-works-list'); if(!el) return;
+  const nextBtn=document.getElementById('btn-stp1-next');
+  if(onbWorks.length===0){
+    el.innerHTML=`<div style="text-align:center;padding:18px 16px;color:var(--text3);font-size:13px;background:var(--card);border:1px dashed var(--border);border-radius:var(--r2);margin-bottom:11px;line-height:1.7">登録された作品はまだありません<br><span style="font-size:11px">下のフォームから追加してください</span></div>`;
+    if(nextBtn) nextBtn.textContent='次へ（スキップも可）';
     return;
   }
-
-  el.innerHTML = `
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
-      <span style="font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.06em;text-transform:uppercase">登録済みの作品</span>
-      <span style="font-size:11px;padding:3px 10px;border-radius:20px;background:var(--green-dim);color:var(--green);font-weight:600">${onbWorks.length}作品</span>
-    </div>
-    ${onbWorks.map((w,i) => `
-      <div style="display:flex;align-items:center;gap:12px;padding:13px 14px;background:var(--card);border:1px solid var(--border2);border-radius:var(--r);margin-bottom:7px;animation:fi .25s ease">
-        <div style="width:26px;height:26px;border-radius:50%;background:var(--accent-glow);border:1px solid rgba(124,106,255,.3);display:flex;align-items:center;justify-content:center;font-family:var(--fd);font-size:11px;font-weight:700;color:var(--accent2);flex-shrink:0">${i+1}</div>
-        <div style="flex:1;min-width:0">
-          <div style="font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${w.name}</div>
-          <div style="font-size:12px;color:var(--green);margin-top:2px;font-family:var(--fd);font-weight:600">¥${w.price.toLocaleString()}</div>
-        </div>
-        <button onclick="removeOnbWork(${i})" style="padding:5px 10px;background:transparent;border:1px solid var(--border2);border-radius:8px;color:var(--text3);font-size:11px;cursor:pointer;flex-shrink:0;transition:all .2s" onmouseover="this.style.borderColor='var(--coral)';this.style.color='var(--coral)'" onmouseout="this.style.borderColor='var(--border2)';this.style.color='var(--text3)'">削除</button>
-      </div>`).join('')}
-    <div style="height:12px"></div>`;
-
-  if(nextBtn) nextBtn.textContent = `次へ（${onbWorks.length}作品で進む）`;
+  el.innerHTML=`<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px"><span style="font-size:11px;font-weight:500;color:var(--text2);letter-spacing:.06em;text-transform:uppercase">登録済みの作品</span><span style="font-size:11px;padding:3px 9px;border-radius:20px;background:var(--green-dim);color:var(--green);font-weight:600">${onbWorks.length}作品</span></div>`+
+    onbWorks.map((w,i)=>`<div style="display:flex;align-items:center;gap:10px;padding:11px 13px;background:var(--card);border:1px solid var(--border2);border-radius:var(--r);margin-bottom:7px"><div style="width:24px;height:24px;border-radius:50%;background:var(--accent-glow);border:1px solid rgba(124,106,255,.3);display:flex;align-items:center;justify-content:center;font-family:var(--fn);font-size:11px;font-weight:600;color:var(--accent2);flex-shrink:0">${i+1}</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${w.name}</div><div style="font-size:12px;color:var(--green);margin-top:1px;font-family:var(--fn);font-weight:600">¥${w.price.toLocaleString()}</div></div><button onclick="removeOnbWork(${i})" style="padding:4px 9px;background:transparent;border:1px solid var(--border2);border-radius:7px;color:var(--text3);font-size:11px;cursor:pointer">削除</button></div>`).join('')+`<div style="height:10px"></div>`;
+  if(nextBtn) nextBtn.textContent=`次へ（${onbWorks.length}作品で進む）`;
 }
 
 function addOnbWork(){
-  const name = document.getElementById('onb-work-name').value.trim();
-  const price = parseInt(document.getElementById('onb-work-price').value) || 0;
-  if(!name){ showToast('作品名を入力してください'); document.getElementById('onb-work-name').focus(); return; }
-  if(!price){ showToast('価格を入力してください'); document.getElementById('onb-work-price').focus(); return; }
-  onbWorks.push({ id: genId(), name, price });
-  document.getElementById('onb-work-name').value = '';
-  document.getElementById('onb-work-price').value = '';
+  const name=document.getElementById('onb-work-name').value.trim();
+  const price=parseInt(document.getElementById('onb-work-price').value)||0;
+  if(!name){showToast('作品名を入力してください');return}
+  if(!price){showToast('価格を入力してください');return}
+  onbWorks.push({id:genId(),name,price});
+  document.getElementById('onb-work-name').value='';
+  document.getElementById('onb-work-price').value='';
   document.getElementById('onb-work-name').focus();
   renderOnbWorksList();
   showToast(`「${name}」を追加しました ✓`);
 }
+function removeOnbWork(i){onbWorks.splice(i,1);renderOnbWorksList()}
 
-function removeOnbWork(i){
-  onbWorks.splice(i, 1);
-  renderOnbWorksList();
-}
-
-// ══ ONBOARDING NAV ══
 function selDiff(el){
   document.querySelectorAll('.dc').forEach(c=>c.classList.remove('sel'));
   el.classList.add('sel'); selDiffKey=el.dataset.d; calcT();
 }
 
 function goStp(n){
-  if(n===1 && !selDiffKey){ showToast('難易度を選択してください'); return; }
+  if(n===1&&!selDiffKey){showToast('難易度を選択してください');return}
   if(n===3){
     const rev=parseFloat(document.getElementById('inp-rev').value)||0;
-    if(!rev){ showToast('目標売上を入力してください'); return; }
+    if(!rev){showToast('目標売上を入力してください');return}
     renderPlanBox(rev);
-    document.getElementById('inp-start').value = new Date().toISOString().split('T')[0];
+    document.getElementById('inp-start').value=todayStr();
   }
   document.getElementById('stp'+curStep).classList.remove('on');
   curStep=n;
   document.getElementById('stp'+n).classList.add('on');
-  // 4ドット更新
-  [0,1,2,3].forEach(i=>{
-    const d=document.getElementById('d'+i);
-    if(d) d.className='dot'+(i===n?' on':i<n?' done':'');
-  });
-  // note作品リスト表示更新
+  [0,1,2,3].forEach(i=>{const d=document.getElementById('d'+i);if(d) d.className='dot'+(i===n?' on':i<n?' done':'')});
   if(n===1) renderOnbWorksList();
 }
 
@@ -735,7 +1406,7 @@ function calcT(){
   const el=document.getElementById('fcalc');
   if(!rev){el.style.display='none';return}
   el.style.display='block';
-  el.innerHTML=`目標：¥${rev.toLocaleString()}　/ ${cfg.months}ヶ月 ${weeks}週間のプラン`;
+  el.innerHTML=`目標：¥${rev.toLocaleString()}　/ ${cfg.months}ヶ月 ${weeks}週間`;
 }
 
 function calcWeeks(months){
@@ -746,13 +1417,8 @@ function calcWeeks(months){
 function renderPlanBox(rev){
   const cfg=DIFF_CFG[selDiffKey];
   const weeks=calcWeeks(cfg.months);
-  const worksText = onbWorks.length > 0
-    ? onbWorks.map(w=>`${w.name}（¥${w.price.toLocaleString()}）`).join('、')
-    : '未登録（あとから追加できます）';
-  document.getElementById('plan-box').innerHTML=
-    `${cfg.emoji} <b style="color:${cfg.color}">${cfg.label}プラン</b>（${cfg.months}ヶ月 / 全${weeks}週）<br>`+
-    `目標売上：¥${rev.toLocaleString()}<br>`+
-    `登録作品：${worksText}`;
+  const wt=onbWorks.length>0?onbWorks.map(w=>`${w.name}（¥${w.price.toLocaleString()}）`).join('、'):'未登録（あとから追加できます）';
+  document.getElementById('plan-box').innerHTML=`${cfg.emoji} <b style="color:${cfg.color}">${cfg.label}プラン</b>（${cfg.months}ヶ月 / 全${weeks}週）<br>目標売上：¥${rev.toLocaleString()}<br>登録作品：${wt}`;
 }
 
 function startApp(){
@@ -762,80 +1428,52 @@ function startApp(){
   if(!startStr){showToast('開始日を入力してください');return}
   const cfg=DIFF_CFG[selDiffKey];
   const startDate=new Date(startStr+'T00:00:00');
-  const endDate=new Date(startDate); endDate.setMonth(endDate.getMonth()+cfg.months);
+  const endDate=new Date(startDate);endDate.setMonth(endDate.getMonth()+cfg.months);
   const days=Math.floor((endDate-startDate)/(1000*60*60*24))+1;
   const weeks=Math.ceil(days/7);
-  // onbWorksをnoteWorksフォーマットに変換
-  const noteWorks = onbWorks.map(w=>({
-    id: w.id,
-    name: w.name,
-    priceHistory: [{price: w.price, fromWeek: 0, changeDate:''}]
-  }));
-  S={
-    diff:selDiffKey, targetRevenue:rev,
-    startDate:startStr, endDate:endDate.toISOString().split('T')[0],
-    weeks, noteWorks,
-    customThreadsStrategies:[], customNoteStrategies:[],
-    dayTasks:{}, lastSeenDate: startStr,
-    curriculum:buildCurriculum(selDiffKey,startDate,weeks),
-  };
+  const noteWorks=onbWorks.map(w=>({id:w.id,name:w.name,priceHistory:[{price:w.price,fromWeek:0,changeDate:''}]}));
+  S={diff:selDiffKey,targetRevenue:rev,startDate:startStr,endDate:endDate.toISOString().split('T')[0],weeks,noteWorks,customThreadsStrategies:[],customNoteStrategies:[],dayTasks:{},lastSeenDate:startStr,shareTemplate:DEFAULT_TEMPLATE,curriculum:buildCurriculum(selDiffKey,startDate,weeks)};
   saveS(); launchApp();
 }
 
-// ══ CURRICULUM GEN (既存アプリと同一ロジック) ══
+// ══ CURRICULUM GEN ══
 function buildCurriculum(diff,startDate,weeks){
-  const avgWeekly=1; // 目標本数はnote管理から動的計算するためここでは1
+  const avgWeekly=1;
   const curve=calcCurve(diff,weeks,avgWeekly);
-  const cur=[]; let current=new Date(startDate);
+  const cur=[];let current=new Date(startDate);
   for(let i=0;i<weeks;i++){
-    const ws=new Date(current),we=new Date(current); we.setDate(we.getDate()+6);
-    const progress=(i+1)/weeks, phase=getPhase(progress);
-    cur.push({
-      week:i+1, start:fmtDate(ws), end:fmtDate(we),
-      targetRatio:curve[i], phase,
-      difficulty:getDiffLabel(curve[i],avgWeekly),
-      threadsStrategies:getThreadsStrategies(diff,progress,i,weeks),
-      noteStrategies:getNoteStrategies(diff,progress,i,weeks),
-      threadsChecked:[], noteChecked:[],
-      customThreadsStrategies:[], customNoteStrategies:[],
-      customThreadsChecked:[], customNoteChecked:[],
-      followers:0, views:0,
-      workSales:{}, // {workId: count}
-      verbalization:'',
-    });
+    const ws=new Date(current),we=new Date(current);we.setDate(we.getDate()+6);
+    const progress=(i+1)/weeks,phase=getPhase(progress);
+    cur.push({week:i+1,start:fmtDate(ws),end:fmtDate(we),targetRatio:curve[i],phase,difficulty:getDiffLabel(curve[i],avgWeekly),threadsStrategies:getThreadsStrategies(diff,progress,i,weeks),noteStrategies:getNoteStrategies(diff,progress,i,weeks),threadsChecked:[],noteChecked:[],customThreadsStrategies:[],customNoteStrategies:[],customThreadsChecked:[],customNoteChecked:[],followers:0,views:0,workSales:{},verbalization:''});
     current.setDate(current.getDate()+7);
   }
   return cur;
 }
-
 function getPhase(p){return p<.25?'1':p<.5?'2':p<.75?'3':'4'}
 function getDiffLabel(t,avg){if(t===0)return'zero';const r=t/avg;if(r<.7)return'slow';if(r<1.15)return'normal';if(r<1.4)return'fast';return'vfast'}
-
 function getThreadsStrategies(diff,progress,weekIdx,totalWeeks){
   const s=[];
-  if(weekIdx%4===0) s.push('プロフィール改善');
+  if(weekIdx%4===0)s.push('プロフィール改善');
   s.push('投稿分析言語化（言語化欄に記載）');
   s.push('Threads投稿内容についてAIと壁打ち（10分）');
-  if(diff==='slow') s.push('毎日1-3投稿');
-  else if(diff==='normal') s.push(progress<.5?'毎日5投稿以上':'毎日10投稿以上');
-  else if(diff==='fast') s.push(progress<.33?'毎日10投稿以上':progress<.67?'毎日15投稿以上':'毎日20投稿以上');
+  if(diff==='slow')s.push('毎日1-3投稿');
+  else if(diff==='normal')s.push(progress<.5?'毎日5投稿以上':'毎日10投稿以上');
+  else if(diff==='fast')s.push(progress<.33?'毎日10投稿以上':progress<.67?'毎日15投稿以上':'毎日20投稿以上');
   else s.push('毎日20投稿以上');
-  if(progress>.3){ if(diff==='slow') s.push('リプ5回以上投稿'); else if(diff==='normal') s.push('リプ10回以上投稿'); else s.push('リプ20回以上投稿'); }
-  if(weekIdx>0&&weekIdx%4===0) s.push('Threadsで導線投稿（1日〜2日で1回）');
+  if(progress>.3){if(diff==='slow')s.push('リプ5回以上投稿');else if(diff==='normal')s.push('リプ10回以上投稿');else s.push('リプ20回以上投稿')}
+  if(weekIdx>0&&weekIdx%4===0)s.push('Threadsで導線投稿（1日〜2日で1回）');
   return s.slice(0,6);
 }
-
 function getNoteStrategies(diff,progress,weekIdx,totalWeeks){
   const s=[],qw=Math.ceil(totalWeeks/4);
-  if(weekIdx%4===0) s.push('プロフィール改善');
-  if(weekIdx<qw){ s.push('無料note執筆'); if(weekIdx===qw-1) s.push('無料noteリリース'); s.push('次回作テーマをAIと壁打ち（10分）'); return s.slice(0,6); }
-  if(weekIdx<qw*2){ s.push('次回作テーマをAIと壁打ち（10分）'); s.push('有料note執筆'); if(weekIdx===qw*2-1) s.push('有料note予告'); s.push('コンテンツSEO対策（タイトル、冒頭文）'); return s.slice(0,6); }
-  if(weekIdx<qw*3){ s.push(weekIdx===Math.floor(qw*2.5)?'有料noteリリース':'有料note執筆'); s.push('次回作テーマをAIと壁打ち（10分）'); s.push('コンテンツSEO対策（タイトル、冒頭文）'); return s.slice(0,6); }
-  if(diff==='slow') s.push('無料noteリライト'); else if(diff==='normal') s.push('有料noteの無料部分リライト'); else s.push('有料部分リライト');
-  s.push('コンテンツSEO対策（タイトル、冒頭文）'); s.push('次回作テーマをAIと壁打ち（10分）');
+  if(weekIdx%4===0)s.push('プロフィール改善');
+  if(weekIdx<qw){s.push('無料note執筆');if(weekIdx===qw-1)s.push('無料noteリリース');s.push('次回作テーマをAIと壁打ち（10分）');return s.slice(0,6)}
+  if(weekIdx<qw*2){s.push('次回作テーマをAIと壁打ち（10分）');s.push('有料note執筆');if(weekIdx===qw*2-1)s.push('有料note予告');s.push('コンテンツSEO対策（タイトル、冒頭文）');return s.slice(0,6)}
+  if(weekIdx<qw*3){s.push(weekIdx===Math.floor(qw*2.5)?'有料noteリリース':'有料note執筆');s.push('次回作テーマをAIと壁打ち（10分）');s.push('コンテンツSEO対策（タイトル、冒頭文）');return s.slice(0,6)}
+  if(diff==='slow')s.push('無料noteリライト');else if(diff==='normal')s.push('有料noteの無料部分リライト');else s.push('有料部分リライト');
+  s.push('コンテンツSEO対策（タイトル、冒頭文）');s.push('次回作テーマをAIと壁打ち（10分）');
   return s.slice(0,6);
 }
-
 function calcCurve(profile,weeks,avg){
   const fw={slow:4,normal:3,fast:2,vfast:2}[profile];
   const rem=weeks-fw;
@@ -848,42 +1486,39 @@ function calcCurve(profile,weeks,avg){
   }
   return curve;
 }
-
 function fmtDate(d){return`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`}
 
-// ══ 売上集計 ══
-function calcWeekRevenue(weekIdx){
-  const week=S.curriculum[weekIdx];
-  let rev=0;
-  for(const [wid,count] of Object.entries(week.workSales||{})){
-    const work=(S.noteWorks||[]).find(w=>w.id===wid);
-    if(work) rev+=getWorkPrice(work,weekIdx)*count;
-  }
-  return rev;
+// ══ NOTE WORKS ══
+function getWorkPrice(work,weekIdx){
+  if(!work.priceHistory||work.priceHistory.length===0)return 0;
+  let price=work.priceHistory[0].price;
+  for(const ph of work.priceHistory){if(ph.fromWeek<=weekIdx)price=ph.price}
+  return price;
 }
-
-function calcWeekSalesTotal(weekIdx){
-  const week=S.curriculum[weekIdx];
-  return Object.values(week.workSales||{}).reduce((s,v)=>s+v,0);
+function currentWorkPrice(work){
+  if(!work.priceHistory||work.priceHistory.length===0)return 0;
+  return work.priceHistory[work.priceHistory.length-1].price;
 }
-
-function calcTotalRevenue(){
-  return S.curriculum.reduce((s,_,i)=>s+calcWeekRevenue(i),0);
-}
-
-function calcTotalSales(){
-  return S.curriculum.reduce((s,_,i)=>s+calcWeekSalesTotal(i),0);
-}
+function calcWeekRevenue(wi){const w=S.curriculum[wi];let rev=0;for(const[wid,cnt]of Object.entries(w.workSales||{})){const wk=(S.noteWorks||[]).find(x=>x.id===wid);if(wk)rev+=getWorkPrice(wk,wi)*cnt}return rev}
+function calcWeekSalesTotal(wi){return Object.values(S.curriculum[wi].workSales||{}).reduce((s,v)=>s+v,0)}
+function calcTotalRevenue(){return S.curriculum.reduce((s,_,i)=>s+calcWeekRevenue(i),0)}
+function calcTotalSales(){return S.curriculum.reduce((s,_,i)=>s+calcWeekSalesTotal(i),0)}
 
 // ══ LAUNCH ══
 function launchApp(){
-  document.getElementById('scr-onb').classList.remove('active');
-  document.getElementById('scr-main').classList.add('active');
+  showScreen('scr-main');
   document.getElementById('bnav').classList.add('vis');
+  if(!S.lastSeenDate)S.lastSeenDate=todayStr();
+  if(!S.shareTemplate)S.shareTemplate=DEFAULT_TEMPLATE;
   ensureTodayTasks();
   checkWeekRollover();
   renderDayTasks();
-  renderDashboard(); renderCurriculum(); renderWorks(); renderInputForm();
+  renderDashboard();
+  renderCurriculum();
+  renderWorks();
+  renderInputForm();
+  renderSettingsInfo();
+  document.getElementById('share-template').value=S.shareTemplate||DEFAULT_TEMPLATE;
 }
 
 function swTab(name,btn){
@@ -891,20 +1526,21 @@ function swTab(name,btn){
   document.getElementById('tab-'+name).classList.add('on');
   document.querySelectorAll('.ni').forEach(b=>b.classList.remove('on'));
   btn.classList.add('on');
-  if(name==='graph') renderGraph();
-  if(name==='input') renderInputForm();
-  if(name==='notes') renderWorks();
+  if(name==='graph')renderGraph();
+  if(name==='input')renderInputForm();
+  if(name==='notes')renderWorks();
+  if(name==='settings')renderSettingsInfo();
 }
 
 function getCurWeek(){
-  if(!S.startDate) return 0;
+  if(!S.startDate)return 0;
   const diff=Math.floor((new Date()-new Date(S.startDate+'T00:00:00'))/(1000*60*60*24*7));
   return Math.max(0,Math.min(diff,S.weeks-1));
 }
 
 // ══ DASHBOARD ══
 function renderDashboard(){
-  if(!S.curriculum) return;
+  if(!S.curriculum)return;
   const cfg=DIFF_CFG[S.diff];
   const cw=getCurWeek();
   const week=S.curriculum[cw];
@@ -914,16 +1550,11 @@ function renderDashboard(){
   const dLeft=Math.ceil((end-new Date())/(1000*60*60*24));
   document.getElementById('db-dleft').textContent=dLeft>0?`残り ${dLeft} 日`:'期間終了';
   document.getElementById('db-edate').textContent=`終了予定: ${end.toLocaleDateString('ja-JP')}`;
-
   let tot=0,done=0;
-  S.curriculum.forEach(w=>{
-    tot+=(w.threadsStrategies||[]).length+(w.noteStrategies||[]).length+(w.customThreadsStrategies||[]).length+(w.customNoteStrategies||[]).length;
-    done+=(w.threadsChecked||[]).length+(w.noteChecked||[]).length+(w.customThreadsChecked||[]).length+(w.customNoteChecked||[]).length;
-  });
+  S.curriculum.forEach(w=>{tot+=(w.threadsStrategies||[]).length+(w.noteStrategies||[]).length+(w.customThreadsStrategies||[]).length+(w.customNoteStrategies||[]).length;done+=(w.threadsChecked||[]).length+(w.noteChecked||[]).length+(w.customThreadsChecked||[]).length+(w.customNoteChecked||[]).length});
   const pct=tot>0?Math.round(done/tot*100):0;
   document.getElementById('db-pct').innerHTML=`${pct}<span>%</span>`;
   document.getElementById('db-bar').style.width=pct+'%';
-
   const latFw=S.curriculum.reduce((a,w)=>w.followers>0?w.followers:a,0);
   const totalRev=calcTotalRevenue();
   const totalSales=calcTotalSales();
@@ -932,291 +1563,245 @@ function renderDashboard(){
   document.getElementById('db-rev').textContent='¥'+totalRev.toLocaleString();
   document.getElementById('db-sales').textContent=totalSales;
   document.getElementById('db-rem').textContent=rem>0?'¥'+rem.toLocaleString():'達成！🎉';
-
   document.getElementById('db-wlbl').textContent=`WEEK ${cw+1}`;
-  const allTasks=[
-    ...(week.threadsStrategies||[]).map((t,i)=>({text:t,type:'threads',idx:i})),
-    ...(week.noteStrategies||[]).map((t,i)=>({text:t,type:'note',idx:i})),
-    ...(week.customThreadsStrategies||[]).map((t,i)=>({text:t,type:'custom-threads',idx:i})),
-    ...(week.customNoteStrategies||[]).map((t,i)=>({text:t,type:'custom-note',idx:i})),
-  ];
+  const allTasks=[...(week.threadsStrategies||[]).map((t,i)=>({text:t,type:'threads',idx:i})),...(week.noteStrategies||[]).map((t,i)=>({text:t,type:'note',idx:i})),...(week.customThreadsStrategies||[]).map((t,i)=>({text:t,type:'custom-threads',idx:i})),...(week.customNoteStrategies||[]).map((t,i)=>({text:t,type:'custom-note',idx:i}))];
   const doneCount=(week.threadsChecked||[]).length+(week.noteChecked||[]).length+(week.customThreadsChecked||[]).length+(week.customNoteChecked||[]).length;
   const wPct=allTasks.length>0?Math.round(doneCount/allTasks.length*100):0;
   document.getElementById('db-wpct').textContent=wPct+'%';
   document.getElementById('db-wbar').style.width=wPct+'%';
   const tagCls={threads:'tt-th',note:'tt-nt','custom-threads':'tt-cu','custom-note':'tt-cu'};
   const tagLbl={threads:'Threads',note:'note','custom-threads':'カスタム','custom-note':'カスタム'};
-  const isDone=(t)=>{
-    if(t.type==='threads') return(week.threadsChecked||[]).includes(t.idx);
-    if(t.type==='note') return(week.noteChecked||[]).includes(t.idx);
-    if(t.type==='custom-threads') return(week.customThreadsChecked||[]).includes(t.idx);
-    if(t.type==='custom-note') return(week.customNoteChecked||[]).includes(t.idx);
-    return false;
-  };
-  document.getElementById('db-tasks').innerHTML=allTasks.map(t=>`
-    <div class="ti ${isDone(t)?'done':''}" onclick="togDashTask(${cw},'${t.type}',${t.idx})">
-      <div class="tck">${isDone(t)?chkSvg():''}</div>
-      <span class="ttxt">${t.text}</span>
-      <span class="ttag ${tagCls[t.type]}">${tagLbl[t.type]}</span>
-    </div>`).join('');
+  const isDone=t=>{if(t.type==='threads')return(week.threadsChecked||[]).includes(t.idx);if(t.type==='note')return(week.noteChecked||[]).includes(t.idx);if(t.type==='custom-threads')return(week.customThreadsChecked||[]).includes(t.idx);if(t.type==='custom-note')return(week.customNoteChecked||[]).includes(t.idx);return false};
+  document.getElementById('db-tasks').innerHTML=allTasks.map(t=>`<div class="ti ${isDone(t)?'done':''}" onclick="togDashTask(${cw},'${t.type}',${t.idx})"><div class="tck">${isDone(t)?chkSvg():''}</div><span class="ttxt">${t.text}</span><span class="ttag ${tagCls[t.type]}">${tagLbl[t.type]}</span></div>`).join('');
 }
-
 function chkSvg(){return'<svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="#071a10" stroke-width="2.5"><polyline points="2,6 5,9 10,3"/></svg>'}
-
 function togDashTask(wi,type,idx){
   const week=S.curriculum[wi];
   const keyMap={threads:'threadsChecked',note:'noteChecked','custom-threads':'customThreadsChecked','custom-note':'customNoteChecked'};
-  const arr=week[keyMap[type]];
-  const pos=arr.indexOf(idx);if(pos>=0)arr.splice(pos,1);else arr.push(idx);
+  const arr=week[keyMap[type]];const pos=arr.indexOf(idx);if(pos>=0)arr.splice(pos,1);else arr.push(idx);
   saveS();renderDashboard();renderCurriculum();
+}
+
+// ══ DAY TASKS ══
+function shouldRunToday(freq,dateStr){
+  if(freq===7)return true;
+  const dow=new Date(dateStr+'T00:00:00').getDay();
+  if(freq===3)return[1,3,5].includes(dow);
+  if(freq===1)return dow===1;
+  return false;
+}
+function buildDayTasks(weekIdx,dateStr){
+  if(!S.curriculum||weekIdx<0||weekIdx>=S.curriculum.length)return[];
+  const week=S.curriculum[weekIdx];const tasks=[];
+  const all=[...(week.threadsStrategies||[]).map(t=>({text:t,type:'threads'})),...(week.noteStrategies||[]).map(t=>({text:t,type:'note'})),...(week.customThreadsStrategies||[]).map(t=>({text:t,type:'custom-threads'})),...(week.customNoteStrategies||[]).map(t=>({text:t,type:'custom-note'}))];
+  for(const s of all){const freq=WEEK_TO_DAY_FREQ[s.text]||1;if(shouldRunToday(freq,dateStr))tasks.push({id:genId(),text:s.text,done:false,weekIdx,type:s.type,freq,carryover:false})}
+  return tasks;
+}
+function ensureTodayTasks(){
+  if(!S.curriculum)return;
+  const today=todayStr();
+  if(!S.dayTasks)S.dayTasks={};
+  if(!S.dayTasks[today]){S.dayTasks[today]=buildDayTasks(getCurWeek(),today);saveS()}
+}
+function getWeekIdxForDate(dateStr){
+  if(!S.startDate)return 0;
+  const diff=Math.floor((new Date(dateStr+'T00:00:00')-new Date(S.startDate+'T00:00:00'))/(1000*60*60*24*7));
+  return Math.max(0,Math.min(diff,S.weeks-1));
+}
+function checkWeekRollover(){
+  if(!S.curriculum)return;
+  const today=todayStr();const last=S.lastSeenDate;
+  if(!last||last===today)return;
+  const lastWi=getWeekIdxForDate(last),todayWi=getCurWeek();
+  if(lastWi===todayWi)return;
+  const seen=new Set();const incomplete=[];
+  for(const[date,tasks]of Object.entries(S.dayTasks||{})){
+    if(getWeekIdxForDate(date)!==lastWi)continue;
+    for(const t of tasks){if(!t.done&&!seen.has(t.text)){seen.add(t.text);incomplete.push({...t})}}
+  }
+  if(incomplete.length===0){S.lastSeenDate=today;saveS();return}
+  showCarryoverPopup(incomplete,todayWi);
+}
+function showCarryoverPopup(tasks,targetWi){
+  carryoverTasks=tasks;carryoverTargetWeek=targetWi;carryoverSelected=new Set(tasks.map(t=>t.id));
+  document.getElementById('popup-sub').textContent=`先週終わらなかったタスクが${tasks.length}件あります。次の週に持ち越すタスクを選んでください。`;
+  document.getElementById('popup-task-list').innerHTML=tasks.map(t=>`<div class="popup-task-item selected" id="pti-${t.id}" onclick="togCarryoverItem('${t.id}',this)"><input type="checkbox" checked onclick="event.stopPropagation();togCarryoverItem('${t.id}',this.closest('.popup-task-item'))"><span>${t.text}</span></div>`).join('');
+  document.getElementById('popup-carryover').classList.add('vis');
+}
+function togCarryoverItem(id,el){
+  const cb=el.querySelector('input[type=checkbox]');
+  if(carryoverSelected.has(id)){carryoverSelected.delete(id);el.classList.remove('selected');if(cb)cb.checked=false}
+  else{carryoverSelected.add(id);el.classList.add('selected');if(cb)cb.checked=true}
+}
+function doCarryover(){
+  const today=todayStr();
+  if(!S.dayTasks)S.dayTasks={};
+  if(!S.dayTasks[today])S.dayTasks[today]=buildDayTasks(carryoverTargetWeek,today);
+  for(const t of carryoverTasks){
+    if(carryoverSelected.has(t.id)){
+      const exists=S.dayTasks[today].some(dt=>dt.text===t.text);
+      if(!exists)S.dayTasks[today].push({id:genId(),text:t.text,done:false,weekIdx:carryoverTargetWeek,type:t.type,freq:t.freq,carryover:true});
+    }
+  }
+  S.lastSeenDate=today;saveS();
+  document.getElementById('popup-carryover').classList.remove('vis');
+  renderDayTasks();showToast(`${carryoverSelected.size}件を持ち越しました`);
+}
+function discardCarryover(){
+  S.lastSeenDate=todayStr();saveS();
+  document.getElementById('popup-carryover').classList.remove('vis');
+  renderDayTasks();showToast('未消化タスクをリセットしました');
+}
+function renderDayTasks(){
+  if(!S.curriculum)return;
+  ensureTodayTasks();
+  const today=todayStr();const tasks=S.dayTasks[today]||[];
+  const d=new Date();const dayNames=['日','月','火','水','木','金','土'];
+  document.getElementById('day-date-lbl').textContent=`${d.getMonth()+1}月${d.getDate()}日（${dayNames[d.getDay()]}）`;
+  const done=tasks.filter(t=>t.done).length;
+  const pct=tasks.length>0?Math.round(done/tasks.length*100):0;
+  document.getElementById('day-pct-lbl').textContent=pct+'%';
+  document.getElementById('day-pbar').style.width=pct+'%';
+  document.getElementById('day-tasks-list').innerHTML=tasks.length===0
+    ?`<div style="text-align:center;padding:14px;color:var(--text3);font-size:13px">今日のタスクはありません</div>`
+    :tasks.map((t,i)=>`<div class="day-task ${t.done?'done':''} ${t.carryover?'carryover':''}" onclick="togDayTask(${i})"><div class="dt-ck">${t.done?chkSvg():''}</div><span class="dt-txt">${t.carryover?'！ ':''}${t.text}</span></div>`).join('');
+}
+function togDayTask(i){
+  const today=todayStr();const task=S.dayTasks[today][i];task.done=!task.done;
+  syncDayToWeek(task);saveS();renderDayTasks();renderDashboard();
+}
+function syncDayToWeek(dayTask){
+  const week=S.curriculum[dayTask.weekIdx];if(!week)return;
+  const keyMap={'threads':'threadsChecked','note':'noteChecked','custom-threads':'customThreadsChecked','custom-note':'customNoteChecked'};
+  const stratKey=dayTask.type==='threads'?'threadsStrategies':dayTask.type==='note'?'noteStrategies':dayTask.type==='custom-threads'?'customThreadsStrategies':'customNoteStrategies';
+  const arr=week[stratKey]||[];const idx=arr.indexOf(dayTask.text);if(idx<0)return;
+  const checkedArr=week[keyMap[dayTask.type]];if(!checkedArr)return;
+  if(dayTask.done&&!checkedArr.includes(idx))checkedArr.push(idx);
+  else if(!dayTask.done){const p=checkedArr.indexOf(idx);if(p>=0)checkedArr.splice(p,1)}
+}
+function openDayAddModal(){document.getElementById('day-custom-inp').value='';openModal('modal-day-add')}
+function addCustomDayTask(){
+  const text=document.getElementById('day-custom-inp').value.trim();
+  if(!text){showToast('タスク内容を入力してください');return}
+  const today=todayStr();if(!S.dayTasks)S.dayTasks={};if(!S.dayTasks[today])S.dayTasks[today]=[];
+  S.dayTasks[today].push({id:genId(),text,done:false,weekIdx:getCurWeek(),type:'custom-day',freq:1,carryover:false});
+  saveS();closeModal('modal-day-add');renderDayTasks();showToast('カスタムタスクを追加しました ✓');
 }
 
 // ══ CURRICULUM ══
 function renderCurriculum(){
-  if(!S.curriculum) return;
-  const cfg=DIFF_CFG[S.diff];
-  const cw=getCurWeek();
+  if(!S.curriculum)return;
+  const cfg=DIFF_CFG[S.diff];const cw=getCurWeek();
   document.getElementById('cur-sub').textContent=`${cfg.emoji} ${cfg.label}プラン · 全${S.weeks}週`;
   document.getElementById('cur-list').innerHTML=S.curriculum.map((week,idx)=>{
-    const thF=(week.threadsStrategies||[]).filter(Boolean);
-    const ntF=(week.noteStrategies||[]).filter(Boolean);
-    const cthF=(week.customThreadsStrategies||[]).filter(Boolean);
-    const cntF=(week.customNoteStrategies||[]).filter(Boolean);
+    const thF=(week.threadsStrategies||[]).filter(Boolean);const ntF=(week.noteStrategies||[]).filter(Boolean);
+    const cthF=(week.customThreadsStrategies||[]).filter(Boolean);const cntF=(week.customNoteStrategies||[]).filter(Boolean);
     const tot=thF.length+ntF.length+cthF.length+cntF.length;
     const dn=(week.threadsChecked||[]).length+(week.noteChecked||[]).length+(week.customThreadsChecked||[]).length+(week.customNoteChecked||[]).length;
-    const pct=tot>0?Math.round(dn/tot*100):0;
-    const isCur=idx===cw;
-    const mkItem=(t,i,type,done)=>`<div class="si ${done?'done':''} ${type.includes('custom')?'si-custom':''}" onclick="togTask(${idx},'${type}',${i})"><div class="si-ck">${done?chkSvg():''}</div><span class="si-txt">${type.includes('custom')?'🔧 ':''}${t}</span></div>`;
-    return`<div class="ws ${isCur?'open':''}" id="ws${idx}">
-      <div class="wsh" onclick="togWS(${idx})">
-        <div>
-          <div class="wnum">${isCur?'▶ 今週 · ':''}WEEK ${week.week} <span class="pb ${PHASE_CLS[week.phase]}" style="margin-left:4px">${PHASE_NAMES[week.phase]}</span></div>
-          <div class="wtitle" style="color:${pct===100?'var(--green)':'var(--text)'}">${pct===100?'✓ 完了':'タスク '+tot+'個'}</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:9px">
-          <span style="font-family:var(--fd);font-size:12px;font-weight:700;color:${pct>0?'var(--accent2)':'var(--text3)'}">${pct}%</span>
-          <span class="wchv">▼</span>
-        </div>
-      </div>
-      <div class="wsb">
-        <div class="pbar" style="margin:8px 0 13px"><div class="pfill" style="width:${pct}%"></div></div>
-        <div class="ssl"><span style="color:var(--accent2)">Threads施策</span><button class="ewb" onclick="openStrategyModal(${idx})">施策を変更</button></div>
-        ${thF.map((t,i)=>mkItem(t,i,'threads',(week.threadsChecked||[]).includes(i))).join('')}
-        ${cthF.map((t,i)=>mkItem(t,i,'custom-threads',(week.customThreadsChecked||[]).includes(i))).join('')}
-        <div class="ssl" style="margin-top:13px"><span style="color:var(--green)">note施策</span></div>
-        ${ntF.map((t,i)=>mkItem(t,i,'note',(week.noteChecked||[]).includes(i))).join('')}
-        ${cntF.map((t,i)=>mkItem(t,i,'custom-note',(week.customNoteChecked||[]).includes(i))).join('')}
-        <div style="font-size:11px;color:var(--text3);margin-top:9px">${week.start} 〜 ${week.end}</div>
-      </div>
-    </div>`;
+    const pct=tot>0?Math.round(dn/tot*100):0;const isCur=idx===cw;
+    const mkI=(t,i,type,done)=>`<div class="si ${done?'done':''} ${type.includes('custom')?'si-custom':''}" onclick="togTask(${idx},'${type}',${i})"><div class="si-ck">${done?chkSvg():''}</div><span class="si-txt">${type.includes('custom')?'🔧 ':''}${t}</span></div>`;
+    return`<div class="ws ${isCur?'open':''}" id="ws${idx}"><div class="wsh" onclick="togWS(${idx})"><div><div class="wnum">${isCur?'▶ 今週 · ':''}WEEK ${week.week} <span class="pb ${PHASE_CLS[week.phase]}" style="margin-left:4px">${PHASE_NAMES[week.phase]}</span></div><div class="wtitle" style="color:${pct===100?'var(--green)':'var(--text)'}">${pct===100?'✓ 完了':'タスク '+tot+'個'}</div></div><div style="display:flex;align-items:center;gap:9px"><span style="font-family:var(--fn);font-size:12px;font-weight:600;color:${pct>0?'var(--accent2)':'var(--text3)'}">${pct}%</span><span class="wchv">▼</span></div></div><div class="wsb"><div class="pbar" style="margin:7px 0 12px"><div class="pfill" style="width:${pct}%"></div></div><div class="ssl"><span style="color:var(--accent2)">Threads施策</span><button class="ewb" onclick="openStrategyModal(${idx})">施策を変更</button></div>${thF.map((t,i)=>mkI(t,i,'threads',(week.threadsChecked||[]).includes(i))).join('')}${cthF.map((t,i)=>mkI(t,i,'custom-threads',(week.customThreadsChecked||[]).includes(i))).join('')}<div class="ssl" style="margin-top:12px"><span style="color:var(--green)">note施策</span></div>${ntF.map((t,i)=>mkI(t,i,'note',(week.noteChecked||[]).includes(i))).join('')}${cntF.map((t,i)=>mkI(t,i,'custom-note',(week.customNoteChecked||[]).includes(i))).join('')}<div style="font-size:11px;color:var(--text3);margin-top:8px">${week.start} 〜 ${week.end}</div></div></div>`;
   }).join('');
 }
-
 function togWS(idx){document.getElementById('ws'+idx).classList.toggle('open')}
-
 function togTask(wi,type,i){
   const week=S.curriculum[wi];
   const keyMap={threads:'threadsChecked',note:'noteChecked','custom-threads':'customThreadsChecked','custom-note':'customNoteChecked'};
-  const arr=week[keyMap[type]];
-  const pos=arr.indexOf(i);if(pos>=0)arr.splice(pos,1);else arr.push(i);
+  const arr=week[keyMap[type]];const pos=arr.indexOf(i);if(pos>=0)arr.splice(pos,1);else arr.push(i);
   saveS();renderCurriculum();renderDashboard();
 }
 
 // ══ NOTE WORKS ══
-function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
-
 function renderWorks(){
   const works=S.noteWorks||[];
   document.getElementById('works-count').textContent=`${works.length}作品登録中`;
-  if(works.length===0){
-    document.getElementById('works-list').innerHTML=`<div style="text-align:center;padding:40px 20px;color:var(--text3);font-size:14px;background:var(--card);border:1px dashed var(--border2);border-radius:var(--r2)">作品がまだありません<br><span style="font-size:12px;color:var(--text3)">右上の「＋ 作品を追加」から登録してください</span></div>`;
-    return;
-  }
+  if(works.length===0){document.getElementById('works-list').innerHTML=`<div style="text-align:center;padding:36px 20px;color:var(--text3);font-size:14px;background:var(--card);border:1px dashed var(--border2);border-radius:var(--r2)">作品がまだありません</div>`;return}
   document.getElementById('works-list').innerHTML=works.map(work=>{
-    const curPrice=currentWorkPrice(work);
-    const totalSold=S.curriculum.reduce((s,_,i)=>s+(S.curriculum[i].workSales?.[work.id]||0),0);
-    const totalRev=S.curriculum.reduce((s,_,i)=>s+getWorkPrice(work,i)*(S.curriculum[i].workSales?.[work.id]||0),0);
-    const historyRows=work.priceHistory.map((ph,i)=>{
-      const isCur=i===work.priceHistory.length-1;
-      const label=ph.fromWeek===0?'開始時':ph.changeDate?ph.changeDate:'';
-      return`<div class="price-row ${isCur?'current':''}">
-        <span>¥${ph.price.toLocaleString()}</span>
-        <span style="color:var(--text3);font-size:11px">Week ${ph.fromWeek+1}〜${i<work.priceHistory.length-1?'Week '+work.priceHistory[i+1].fromWeek:'現在'}</span>
-        ${isCur?'<span class="price-badge">現在の価格</span>':''}
-      </div>`;
-    }).join('');
-    return`<div class="work-card">
-      <div class="work-card-top">
-        <div><div class="work-title">${work.name}</div><div style="font-size:12px;color:var(--text2);margin-top:3px">現在の価格: ¥${curPrice.toLocaleString()}</div></div>
-        <div class="work-actions">
-          <button class="work-edit-btn" onclick="openWorkModal('${work.id}')">編集</button>
-          <button class="work-del-btn" onclick="deleteWork('${work.id}')">削除</button>
-        </div>
-      </div>
-      <div style="font-size:11px;color:var(--text3);margin-bottom:7px;letter-spacing:.04em;text-transform:uppercase">価格履歴</div>
-      <div class="price-history">${historyRows}</div>
-      <button class="price-change-btn" onclick="openPriceModal('${work.id}')">＋ 価格を変更する</button>
-      <div class="work-total">
-        <span>累計販売 ${totalSold}本</span>
-        <span class="work-total-val">¥${totalRev.toLocaleString()}</span>
-      </div>
-    </div>`;
+    const cp=currentWorkPrice(work);
+    const ts=S.curriculum.reduce((s,_,i)=>s+(S.curriculum[i].workSales?.[work.id]||0),0);
+    const tr=S.curriculum.reduce((s,_,i)=>s+getWorkPrice(work,i)*(S.curriculum[i].workSales?.[work.id]||0),0);
+    const hr=work.priceHistory.map((ph,i)=>{const ic=i===work.priceHistory.length-1;return`<div class="price-row ${ic?'current':''}"><span>¥${ph.price.toLocaleString()}</span><span style="color:var(--text3);font-size:11px">Week ${ph.fromWeek+1}〜${i<work.priceHistory.length-1?'Week '+work.priceHistory[i+1].fromWeek:'現在'}</span>${ic?'<span class="price-badge">現在</span>':''}</div>`}).join('');
+    return`<div class="work-card"><div class="work-card-top"><div><div class="work-title">${work.name}</div><div style="font-size:12px;color:var(--text2);margin-top:2px">現在の価格: <span style="font-family:var(--fn)">¥${cp.toLocaleString()}</span></div></div><div class="work-actions"><button class="work-edit-btn" onclick="openWorkModal('${work.id}')">編集</button><button class="work-del-btn" onclick="deleteWork('${work.id}')">削除</button></div></div><div style="font-size:11px;color:var(--text3);margin-bottom:6px;letter-spacing:.04em;text-transform:uppercase">価格履歴</div><div class="price-history">${hr}</div><button class="price-change-btn" onclick="openPriceModal('${work.id}')">＋ 価格を変更する</button><div class="work-total"><span>累計販売 ${ts}本</span><span class="work-total-val">¥${tr.toLocaleString()}</span></div></div>`;
   }).join('');
 }
-
 function openWorkModal(id){
   editWorkId=id||null;
-  if(id){
-    const work=(S.noteWorks||[]).find(w=>w.id===id);
-    document.getElementById('work-modal-title').textContent='作品を編集';
-    document.getElementById('work-inp-name').value=work.name;
-    document.getElementById('work-inp-price').value=currentWorkPrice(work);
-  } else {
-    document.getElementById('work-modal-title').textContent='note作品を追加';
-    document.getElementById('work-inp-name').value='';
-    document.getElementById('work-inp-price').value='';
-  }
+  if(id){const w=(S.noteWorks||[]).find(x=>x.id===id);document.getElementById('work-modal-title').textContent='作品を編集';document.getElementById('work-inp-name').value=w.name;document.getElementById('work-inp-price').value=currentWorkPrice(w)}
+  else{document.getElementById('work-modal-title').textContent='note作品を追加';document.getElementById('work-inp-name').value='';document.getElementById('work-inp-price').value=''}
   openModal('modal-work');
 }
-
 function saveWork(){
   const name=document.getElementById('work-inp-name').value.trim();
   const price=parseInt(document.getElementById('work-inp-price').value)||0;
   if(!name){showToast('作品名を入力してください');return}
   if(!price){showToast('価格を入力してください');return}
-  if(!S.noteWorks) S.noteWorks=[];
-  if(editWorkId){
-    const work=S.noteWorks.find(w=>w.id===editWorkId);
-    work.name=name;
-    // 価格が変わった場合は新しい履歴を追加
-    if(currentWorkPrice(work)!==price){
-      const cw=getCurWeek();
-      work.priceHistory.push({price,fromWeek:cw,changeDate:new Date().toLocaleDateString('ja-JP')});
-    }
-  } else {
-    S.noteWorks.push({id:genId(),name,priceHistory:[{price,fromWeek:0,changeDate:''}]});
-  }
-  saveS();closeModal('modal-work');renderWorks();renderInputForm();
-  showToast(editWorkId?'作品を更新しました':'作品を追加しました');
+  if(!S.noteWorks)S.noteWorks=[];
+  if(editWorkId){const w=S.noteWorks.find(x=>x.id===editWorkId);w.name=name;if(currentWorkPrice(w)!==price){const cw=getCurWeek();w.priceHistory.push({price,fromWeek:cw,changeDate:new Date().toLocaleDateString('ja-JP')})}}
+  else S.noteWorks.push({id:genId(),name,priceHistory:[{price,fromWeek:0,changeDate:''}]});
+  saveS();closeModal('modal-work');renderWorks();renderInputForm();showToast(editWorkId?'作品を更新しました':'作品を追加しました');
 }
-
 function deleteWork(id){
-  if(!confirm('この作品を削除しますか？販売データも消えます。')) return;
+  if(!confirm('この作品を削除しますか？'))return;
   S.noteWorks=(S.noteWorks||[]).filter(w=>w.id!==id);
-  S.curriculum.forEach(w=>{if(w.workSales) delete w.workSales[id]});
-  saveS();renderWorks();renderInputForm();renderDashboard();
-  showToast('作品を削除しました');
+  S.curriculum.forEach(w=>{if(w.workSales)delete w.workSales[id]});
+  saveS();renderWorks();renderInputForm();renderDashboard();showToast('削除しました');
 }
-
 function openPriceModal(id){
-  priceWorkId=id;
-  const work=(S.noteWorks||[]).find(w=>w.id===id);
-  document.getElementById('price-modal-work-name').textContent=work.name;
-  document.getElementById('price-inp').value='';
-  document.getElementById('price-inp-date').value=new Date().toISOString().split('T')[0];
+  priceWorkId=id;const w=(S.noteWorks||[]).find(x=>x.id===id);
+  document.getElementById('price-modal-work-name').textContent=w.name;
+  document.getElementById('price-inp').value='';document.getElementById('price-inp-date').value=todayStr();
   openModal('modal-price');
 }
-
 function savePrice(){
   const price=parseInt(document.getElementById('price-inp').value)||0;
   const dateStr=document.getElementById('price-inp-date').value;
   if(!price){showToast('新しい価格を入力してください');return}
   if(!dateStr){showToast('変更日を入力してください');return}
-  const work=(S.noteWorks||[]).find(w=>w.id===priceWorkId);
-  // 変更日からweekインデックスを計算
-  const changeDate=new Date(dateStr+'T00:00:00');
-  const startDate=new Date(S.startDate+'T00:00:00');
+  const w=(S.noteWorks||[]).find(x=>x.id===priceWorkId);
+  const changeDate=new Date(dateStr+'T00:00:00');const startDate=new Date(S.startDate+'T00:00:00');
   const fromWeek=Math.max(0,Math.ceil((changeDate-startDate)/(1000*60*60*24*7)));
-  // 同じweekの履歴があれば更新、なければ追加
-  const existing=work.priceHistory.find(ph=>ph.fromWeek===fromWeek);
-  if(existing){ existing.price=price; existing.changeDate=changeDate.toLocaleDateString('ja-JP'); }
-  else { work.priceHistory.push({price,fromWeek,changeDate:changeDate.toLocaleDateString('ja-JP')}); }
-  work.priceHistory.sort((a,b)=>a.fromWeek-b.fromWeek);
+  const existing=w.priceHistory.find(ph=>ph.fromWeek===fromWeek);
+  if(existing){existing.price=price;existing.changeDate=changeDate.toLocaleDateString('ja-JP')}
+  else w.priceHistory.push({price,fromWeek,changeDate:changeDate.toLocaleDateString('ja-JP')});
+  w.priceHistory.sort((a,b)=>a.fromWeek-b.fromWeek);
   saveS();closeModal('modal-price');renderWorks();renderDashboard();renderInputForm();
   showToast(`Week ${fromWeek+1}〜 ¥${price.toLocaleString()}に変更しました`);
 }
 
 // ══ INPUT ══
 function renderInputForm(){
-  if(!S.curriculum) return;
+  if(!S.curriculum)return;
   inputWeek=getCurWeek();
-  document.getElementById('wpills').innerHTML=S.curriculum.map((w,i)=>
-    `<div class="wpill ${i===inputWeek?'on':''}" onclick="setIW(${i})">Week ${w.week}</div>`
-  ).join('');
+  document.getElementById('wpills').innerHTML=S.curriculum.map((w,i)=>`<div class="wpill ${i===inputWeek?'on':''}" onclick="setIW(${i})">Week ${w.week}</div>`).join('');
   renderInputFields();
 }
-
-function setIW(idx){
-  inputWeek=idx;
-  document.querySelectorAll('.wpill').forEach((p,i)=>p.classList.toggle('on',i===idx));
-  renderInputFields();
-}
-
+function setIW(idx){inputWeek=idx;document.querySelectorAll('.wpill').forEach((p,i)=>p.classList.toggle('on',i===idx));renderInputFields()}
 function renderInputFields(){
-  const w=S.curriculum[inputWeek];
-  const works=S.noteWorks||[];
+  const w=S.curriculum[inputWeek];const works=S.noteWorks||[];
   let noteRows='';
-  if(works.length===0){
-    noteRows=`<div class="no-works-hint">「note管理」タブで作品を登録してください</div>`;
-  } else {
+  if(works.length===0)noteRows=`<div class="no-works-hint">「note管理」タブで作品を登録してください</div>`;
+  else{
     const wkRev=calcWeekRevenue(inputWeek);
-    noteRows=`<div class="icard">
-      <div class="icard-t"><span class="idot idot-nt"></span>note販売実績（作品別）</div>
-      ${works.map(work=>{
-        const price=getWorkPrice(work,inputWeek);
-        const count=w.workSales?.[work.id]||0;
-        const rev=price*count;
-        return`<div class="irow">
-          <div class="irow-lbl">${work.name}<small>¥${price.toLocaleString()}/本</small></div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <span class="irow-rev">${count>0?'¥'+rev.toLocaleString():''}</span>
-            <input class="irow-inp" type="number" value="${count||''}" placeholder="0" inputmode="numeric" oninput="updateWorkSales('${work.id}',this.value)">
-          </div>
-        </div>`;
-      }).join('')}
-      <div class="week-rev-total">
-        <span class="week-rev-total-lbl">週の売上合計</span>
-        <span class="week-rev-total-val" id="week-rev-total">¥${wkRev.toLocaleString()}</span>
-      </div>
-    </div>`;
+    noteRows=`<div class="icard"><div class="icard-t"><span class="idot idot-nt"></span>note販売実績（作品別）</div>${works.map(work=>{const price=getWorkPrice(work,inputWeek);const count=w.workSales?.[work.id]||0;const rev=price*count;return`<div class="irow"><div class="irow-lbl">${work.name}<small>¥${price.toLocaleString()}/本</small></div><div style="display:flex;align-items:center;gap:8px"><span class="irow-rev">${count>0?'¥'+rev.toLocaleString():''}</span><input class="irow-inp" type="number" value="${count||''}" placeholder="0" inputmode="numeric" oninput="updateWorkSales('${work.id}',this.value)"></div></div>`}).join('')}<div class="week-rev-total"><span class="week-rev-total-lbl">週の売上合計</span><span class="week-rev-total-val" id="week-rev-total">¥${wkRev.toLocaleString()}</span></div></div>`;
   }
-
-  document.getElementById('inp-form').innerHTML=`
-    <div class="icard">
-      <div class="icard-t"><span class="idot idot-th"></span>Threads実績</div>
-      <div class="irow"><span class="irow-lbl">フォロワー数</span><input class="irow-inp" type="number" id="ii-fw" value="${w.followers||''}" placeholder="0" inputmode="numeric"></div>
-      <div class="irow"><span class="irow-lbl">閲覧数（合計）</span><input class="irow-inp" type="number" id="ii-vw" value="${w.views||''}" placeholder="0" inputmode="numeric"></div>
-    </div>
-    ${noteRows}
-    <div class="icard">
-      <div class="icard-t" style="margin-bottom:7px">言語化・振り返りメモ</div>
-      <textarea class="memo-area" id="ii-memo" placeholder="Threads投稿の分析、noteの振り返りなど">${w.verbalization||''}</textarea>
-    </div>
-    <button class="save-btn" onclick="saveInput()">Week ${w.week} の数値を保存</button>`;
+  document.getElementById('inp-form').innerHTML=`<div class="icard"><div class="icard-t"><span class="idot idot-th"></span>Threads実績</div><div class="irow"><span class="irow-lbl">フォロワー数</span><input class="irow-inp" type="number" id="ii-fw" value="${w.followers||''}" placeholder="0" inputmode="numeric"></div><div class="irow"><span class="irow-lbl">閲覧数（合計）</span><input class="irow-inp" type="number" id="ii-vw" value="${w.views||''}" placeholder="0" inputmode="numeric"></div></div>${noteRows}<div class="icard"><div class="icard-t" style="margin-bottom:7px">言語化・振り返りメモ</div><textarea class="memo-area" id="ii-memo" placeholder="Threads投稿の分析、noteの振り返りなど">${w.verbalization||''}</textarea></div><button class="save-btn" onclick="saveInput()">Week ${w.week} の数値を保存</button>`;
 }
-
 function updateWorkSales(workId,val){
-  const w=S.curriculum[inputWeek];
-  if(!w.workSales) w.workSales={};
-  const count=parseInt(val)||0;
-  if(count===0) delete w.workSales[workId]; else w.workSales[workId]=count;
-  const total=document.getElementById('week-rev-total');
-  if(total) total.textContent='¥'+calcWeekRevenue(inputWeek).toLocaleString();
+  const w=S.curriculum[inputWeek];if(!w.workSales)w.workSales={};
+  const count=parseInt(val)||0;if(count===0)delete w.workSales[workId];else w.workSales[workId]=count;
+  const el=document.getElementById('week-rev-total');if(el)el.textContent='¥'+calcWeekRevenue(inputWeek).toLocaleString();
 }
-
 function saveInput(){
   const w=S.curriculum[inputWeek];
   w.followers=parseInt(document.getElementById('ii-fw').value)||0;
   w.views=parseInt(document.getElementById('ii-vw').value)||0;
   w.verbalization=document.getElementById('ii-memo').value;
-  saveS();renderDashboard();
-  showToast(`Week ${w.week} を保存しました ✓`);
+  saveS();renderDashboard();showToast(`Week ${w.week} を保存しました ✓`);
 }
 
 // ══ STRATEGY MODAL ══
 function openStrategyModal(idx){
-  editIdx=idx;
-  const week=S.curriculum[idx];
+  editIdx=idx;const week=S.curriculum[idx];
   document.getElementById('modal-wnum').textContent=week.week;
   modalThChecked=THREADS_ALL.map((s,i)=>(week.threadsStrategies||[]).includes(s)?i:-1).filter(i=>i>=0);
   modalNtChecked=NOTE_ALL.map((s,i)=>(week.noteStrategies||[]).includes(s)?i:-1).filter(i=>i>=0);
@@ -1224,66 +1809,20 @@ function openStrategyModal(idx){
   renderModalList('modal-nt-list',NOTE_ALL,modalNtChecked,'nt');
   const cthSel=(week.customThreadsStrategies||[]).map(s=>(S.customThreadsStrategies||[]).indexOf(s)).filter(i=>i>=0);
   const cntSel=(week.customNoteStrategies||[]).map(s=>(S.customNoteStrategies||[]).indexOf(s)).filter(i=>i>=0);
-  modalCthChecked=[...cthSel]; modalCntChecked=[...cntSel];
+  modalCthChecked=[...cthSel];modalCntChecked=[...cntSel];
   renderCustomExisting('modal-cth-existing',S.customThreadsStrategies||[],modalCthChecked,'cth');
   renderCustomExisting('modal-cnt-existing',S.customNoteStrategies||[],modalCntChecked,'cnt');
-  document.getElementById('modal-cth-new').innerHTML='';
-  document.getElementById('modal-cnt-new').innerHTML='';
-  document.getElementById('modal-th-err').textContent='';
-  document.getElementById('modal-nt-err').textContent='';
-  updateModalCounts();
-  openModal('modal-strategy');
+  document.getElementById('modal-cth-new').innerHTML='';document.getElementById('modal-cnt-new').innerHTML='';
+  document.getElementById('modal-th-err').textContent='';document.getElementById('modal-nt-err').textContent='';
+  updateModalCounts();openModal('modal-strategy');
 }
-
-function renderModalList(cid,items,checked,prefix){
-  document.getElementById(cid).innerHTML=items.map((s,i)=>`
-    <label class="modal-opt">
-      <input type="checkbox" id="${prefix}_${i}" ${checked.includes(i)?'checked':''} onchange="onModalCheck('${prefix}',${i},this.checked)">
-      <span>${s}</span>
-    </label>`).join('');
-}
-
-function renderCustomExisting(cid,items,checked,prefix){
-  const el=document.getElementById(cid);
-  if(!items||items.length===0){el.innerHTML='<div style="font-size:12px;color:var(--text3);font-style:italic;padding:3px 0">保存済みのカスタム施策はありません</div>';return}
-  el.innerHTML=items.map((s,i)=>`
-    <label class="modal-opt">
-      <input type="checkbox" id="${prefix}_${i}" ${checked.includes(i)?'checked':''} onchange="onCustomCheck('${prefix}',${i},this.checked)">
-      <span>${s}</span>
-    </label>`).join('');
-}
-
-function onModalCheck(prefix,i,checked){
-  const arr=prefix==='th'?modalThChecked:modalNtChecked;
-  if(checked){if(!arr.includes(i))arr.push(i)}else{const p=arr.indexOf(i);if(p>=0)arr.splice(p,1)}
-  updateModalCounts();
-  document.getElementById(prefix==='th'?'modal-th-err':'modal-nt-err').textContent='';
-}
-
-function onCustomCheck(prefix,i,checked){
-  const arr=prefix==='cth'?modalCthChecked:modalCntChecked;
-  if(checked){if(!arr.includes(i))arr.push(i)}else{const p=arr.indexOf(i);if(p>=0)arr.splice(p,1)}
-}
-
-function updateModalCounts(){
-  document.getElementById('modal-th-cnt').textContent=modalThChecked.length;
-  document.getElementById('modal-nt-cnt').textContent=modalNtChecked.length;
-}
-
-function addCthInput(){
-  const c=document.getElementById('modal-cth-new');
-  const div=document.createElement('div');div.className='modal-custom-item';
-  div.innerHTML=`<input class="modal-custom-inp" type="text" placeholder="カスタムThreads施策を入力"><button class="modal-del-btn" onclick="this.parentElement.remove()">削除</button>`;
-  c.appendChild(div);
-}
-
-function addCntInput(){
-  const c=document.getElementById('modal-cnt-new');
-  const div=document.createElement('div');div.className='modal-custom-item';
-  div.innerHTML=`<input class="modal-custom-inp" type="text" placeholder="カスタムnote施策を入力"><button class="modal-del-btn" onclick="this.parentElement.remove()">削除</button>`;
-  c.appendChild(div);
-}
-
+function renderModalList(cid,items,checked,prefix){document.getElementById(cid).innerHTML=items.map((s,i)=>`<label class="modal-opt"><input type="checkbox" id="${prefix}_${i}" ${checked.includes(i)?'checked':''} onchange="onModalCheck('${prefix}',${i},this.checked)"><span>${s}</span></label>`).join('')}
+function renderCustomExisting(cid,items,checked,prefix){const el=document.getElementById(cid);if(!items||items.length===0){el.innerHTML='<div style="font-size:12px;color:var(--text3);font-style:italic;padding:3px 0">保存済みのカスタム施策はありません</div>';return}el.innerHTML=items.map((s,i)=>`<label class="modal-opt"><input type="checkbox" id="${prefix}_${i}" ${checked.includes(i)?'checked':''} onchange="onCustomCheck('${prefix}',${i},this.checked)"><span>${s}</span></label>`).join('')}
+function onModalCheck(prefix,i,checked){const arr=prefix==='th'?modalThChecked:modalNtChecked;if(checked){if(!arr.includes(i))arr.push(i)}else{const p=arr.indexOf(i);if(p>=0)arr.splice(p,1)}updateModalCounts();document.getElementById(prefix==='th'?'modal-th-err':'modal-nt-err').textContent=''}
+function onCustomCheck(prefix,i,checked){const arr=prefix==='cth'?modalCthChecked:modalCntChecked;if(checked){if(!arr.includes(i))arr.push(i)}else{const p=arr.indexOf(i);if(p>=0)arr.splice(p,1)}}
+function updateModalCounts(){document.getElementById('modal-th-cnt').textContent=modalThChecked.length;document.getElementById('modal-nt-cnt').textContent=modalNtChecked.length}
+function addCthInput(){const c=document.getElementById('modal-cth-new');const div=document.createElement('div');div.className='modal-custom-item';div.innerHTML=`<input class="modal-custom-inp" type="text" placeholder="カスタムThreads施策を入力"><button class="modal-del-btn" onclick="this.parentElement.remove()">削除</button>`;c.appendChild(div)}
+function addCntInput(){const c=document.getElementById('modal-cnt-new');const div=document.createElement('div');div.className='modal-custom-item';div.innerHTML=`<input class="modal-custom-inp" type="text" placeholder="カスタムnote施策を入力"><button class="modal-del-btn" onclick="this.parentElement.remove()">削除</button>`;c.appendChild(div)}
 function saveStrategyModal(){
   if(modalThChecked.length<1||modalThChecked.length>6){document.getElementById('modal-th-err').textContent='1〜6個選んでください';return}
   if(modalNtChecked.length<1||modalNtChecked.length>6){document.getElementById('modal-nt-err').textContent='1〜6個選んでください';return}
@@ -1291,364 +1830,112 @@ function saveStrategyModal(){
   week.threadsStrategies=modalThChecked.map(i=>THREADS_ALL[i]);
   week.noteStrategies=modalNtChecked.map(i=>NOTE_ALL[i]);
   week.threadsChecked=[];week.noteChecked=[];
-  const newCth=Array.from(document.querySelectorAll('#modal-cth-new .modal-custom-inp')).map(i=>i.value.trim()).filter(v=>v);
-  const newCnt=Array.from(document.querySelectorAll('#modal-cnt-new .modal-custom-inp')).map(i=>i.value.trim()).filter(v=>v);
+
+  // 新規カスタム施策をグローバルに追加（重複除外）
   if(!S.customThreadsStrategies)S.customThreadsStrategies=[];
   if(!S.customNoteStrategies)S.customNoteStrategies=[];
+  const newCth=Array.from(document.querySelectorAll('#modal-cth-new .modal-custom-inp'))
+    .map(i=>i.value.trim()).filter(v=>v && !S.customThreadsStrategies.includes(v));
+  const newCnt=Array.from(document.querySelectorAll('#modal-cnt-new .modal-custom-inp'))
+    .map(i=>i.value.trim()).filter(v=>v && !S.customNoteStrategies.includes(v));
   S.customThreadsStrategies=[...S.customThreadsStrategies,...newCth];
   S.customNoteStrategies=[...S.customNoteStrategies,...newCnt];
-  week.customThreadsStrategies=[...modalCthChecked.map(i=>S.customThreadsStrategies[i]).filter(Boolean),...newCth];
-  week.customNoteStrategies=[...modalCntChecked.map(i=>S.customNoteStrategies[i]).filter(Boolean),...newCnt];
+
+  // このWEEKに割り当て：既存チェック済み＋新規追加分
+  week.customThreadsStrategies=[
+    ...modalCthChecked.map(i=>S.customThreadsStrategies[i]).filter(Boolean),
+    ...newCth
+  ];
+  week.customNoteStrategies=[
+    ...modalCntChecked.map(i=>S.customNoteStrategies[i]).filter(Boolean),
+    ...newCnt
+  ];
   week.customThreadsChecked=[];week.customNoteChecked=[];
   saveS();closeModal('modal-strategy');renderCurriculum();renderDashboard();
   showToast('保存しました ✓');
 }
 
-// ══ DAY TASKS ══
-// DAYタスク構造:
-// S.dayTasks = {
-//   "YYYY-MM-DD": [
-//     {id, text, done, weekIdx, type, carryover, freq}
-//   ]
-// }
-// S.lastSeenDate = "YYYY-MM-DD"  (週切り替え検知用)
-
-const WEEK_TO_DAY_FREQ = {
-  // 毎日
-  '毎日1-3投稿':7,'毎日5投稿以上':7,'毎日10投稿以上':7,'毎日20投稿以上':7,
-  'リプ5回以上投稿':7,'リプ10回以上投稿':7,'リプ20回以上投稿':7,
-  'ゴースト投稿':7,
-  // 週3回 (月水金)
-  'Threads投稿内容についてAIと壁打ち（10分）':3,
-  '投稿分析言語化（言語化欄に記載）':3,
-  'Threadsで導線投稿（1日〜2日で1回）':3,
-  '引用投稿1回以上':3,
-  '固定投稿見直し':3,
-  // 週1回
-  'プロフィール改善':1,
-  '無料note執筆':1,'無料noteリリース':1,
-  '有料note執筆':1,'有料note予告':1,'有料noteリリース':1,
-  '無料noteリライト':1,'有料noteの無料部分リライト':1,'有料部分リライト':1,
-  'コンテンツSEO対策（タイトル、冒頭文）':1,
-  '次回作テーマをAIと壁打ち（10分）':1,
-};
-
-function todayStr(){ return new Date().toISOString().split('T')[0]; }
-
-function todayDayOfWeek(){ return new Date().getDay(); } // 0=日,1=月...
-
-function shouldRunToday(freq, dateStr){
-  if(freq===7) return true;
-  const dow = new Date(dateStr+'T00:00:00').getDay();
-  if(freq===3) return [1,3,5].includes(dow); // 月水金
-  if(freq===1) return dow===1; // 月のみ
-  return false;
-}
-
-function buildDayTasks(weekIdx, dateStr){
-  if(!S.curriculum||weekIdx<0||weekIdx>=S.curriculum.length) return [];
-  const week = S.curriculum[weekIdx];
-  const tasks = [];
-  const allStrategies = [
-    ...(week.threadsStrategies||[]).map(t=>({text:t,type:'threads'})),
-    ...(week.noteStrategies||[]).map(t=>({text:t,type:'note'})),
-    ...(week.customThreadsStrategies||[]).map(t=>({text:t,type:'custom-threads'})),
-    ...(week.customNoteStrategies||[]).map(t=>({text:t,type:'custom-note'})),
-  ];
-  for(const s of allStrategies){
-    const freq = WEEK_TO_DAY_FREQ[s.text] || 1;
-    if(shouldRunToday(freq, dateStr)){
-      tasks.push({
-        id: genId(),
-        text: s.text,
-        done: false,
-        weekIdx,
-        type: s.type,
-        freq,
-        carryover: false,
-      });
-    }
-  }
-  return tasks;
-}
-
-function ensureTodayTasks(){
-  if(!S.curriculum) return;
-  const today = todayStr();
-  if(!S.dayTasks) S.dayTasks = {};
-  // 今日のタスクがまだない場合は生成
-  if(!S.dayTasks[today]){
-    const weekIdx = getCurWeek();
-    S.dayTasks[today] = buildDayTasks(weekIdx, today);
-    saveS();
-  }
-}
-
-function checkWeekRollover(){
-  if(!S.curriculum) return;
-  const today = todayStr();
-  const last = S.lastSeenDate;
-  if(!last || last === today) return;
-
-  // 前回見た日のweekIdxと今日のweekIdxを比較
-  const lastWeekIdx = getWeekIdxForDate(last);
-  const todayWeekIdx = getCurWeek();
-  if(lastWeekIdx === todayWeekIdx) return;
-
-  // 週が切り替わった → 前の週の未消化タスクを収集
-  const incomplete = getIncompleteDayTasksForWeek(lastWeekIdx, last);
-  if(incomplete.length === 0){
-    S.lastSeenDate = today;
-    saveS();
-    return;
-  }
-
-  // ポップアップ表示
-  showCarryoverPopup(incomplete, todayWeekIdx);
-}
-
-function getWeekIdxForDate(dateStr){
-  if(!S.startDate) return 0;
-  const diff = Math.floor((new Date(dateStr+'T00:00:00') - new Date(S.startDate+'T00:00:00'))/(1000*60*60*24*7));
-  return Math.max(0, Math.min(diff, S.weeks-1));
-}
-
-function getIncompleteDayTasksForWeek(weekIdx, lastDate){
-  // その週の全日のタスクから未完了を収集（重複テキストは除く）
-  if(!S.dayTasks) return [];
-  const seen = new Set();
-  const result = [];
-  for(const [date, tasks] of Object.entries(S.dayTasks)){
-    if(getWeekIdxForDate(date) !== weekIdx) continue;
-    for(const t of tasks){
-      if(!t.done && !seen.has(t.text)){
-        seen.add(t.text);
-        result.push({...t});
-      }
-    }
-  }
-  return result;
-}
-
-// ── CARRYOVER POPUP ──
-let carryoverTasks = [];
-let carryoverTargetWeek = 0;
-let carryoverSelected = new Set();
-
-function showCarryoverPopup(tasks, targetWeekIdx){
-  carryoverTasks = tasks;
-  carryoverTargetWeek = targetWeekIdx;
-  carryoverSelected = new Set(tasks.map(t=>t.id)); // デフォルト全選択
-
-  document.getElementById('popup-sub').textContent =
-    `先週終わらなかったタスクが${tasks.length}件あります。次の週に持ち越すタスクを選んでください。`;
-
-  document.getElementById('popup-task-list').innerHTML = tasks.map(t=>`
-    <div class="popup-task-item selected" id="pti-${t.id}" onclick="togCarryoverItem('${t.id}',this)">
-      <input type="checkbox" checked onclick="event.stopPropagation();togCarryoverItem('${t.id}',this.closest('.popup-task-item'))">
-      <span>${t.text}</span>
-    </div>`).join('');
-
-  document.getElementById('popup-carryover').classList.add('vis');
-}
-
-function togCarryoverItem(id, el){
-  const cb = el.querySelector('input[type=checkbox]');
-  if(carryoverSelected.has(id)){
-    carryoverSelected.delete(id);
-    el.classList.remove('selected');
-    if(cb) cb.checked = false;
-  } else {
-    carryoverSelected.add(id);
-    el.classList.add('selected');
-    if(cb) cb.checked = true;
-  }
-}
-
-function doCarryover(){
-  const today = todayStr();
-  if(!S.dayTasks) S.dayTasks = {};
-  if(!S.dayTasks[today]) S.dayTasks[today] = buildDayTasks(carryoverTargetWeek, today);
-
-  for(const t of carryoverTasks){
-    if(carryoverSelected.has(t.id)){
-      // 既存に同じテキストがなければ追加
-      const exists = S.dayTasks[today].some(dt=>dt.text===t.text);
-      if(!exists){
-        S.dayTasks[today].push({
-          id: genId(), text: t.text, done: false,
-          weekIdx: carryoverTargetWeek, type: t.type,
-          freq: t.freq, carryover: true,
-        });
-      }
-    }
-  }
-  S.lastSeenDate = today;
-  saveS();
-  document.getElementById('popup-carryover').classList.remove('vis');
-  renderDayTasks();
-  showToast(`${carryoverSelected.size}件を持ち越しました`);
-}
-
-function discardCarryover(){
-  S.lastSeenDate = todayStr();
-  saveS();
-  document.getElementById('popup-carryover').classList.remove('vis');
-  renderDayTasks();
-  showToast('未消化タスクをリセットしました');
-}
-
-// ── DAY TASK RENDER ──
-function renderDayTasks(){
-  if(!S.curriculum) return;
-  ensureTodayTasks();
-  const today = todayStr();
-  const tasks = S.dayTasks[today] || [];
-  const d = new Date();
-  const dayNames = ['日','月','火','水','木','金','土'];
-  document.getElementById('day-date-lbl').textContent =
-    `${d.getMonth()+1}月${d.getDate()}日（${dayNames[d.getDay()]}）`;
-
-  const done = tasks.filter(t=>t.done).length;
-  const pct = tasks.length > 0 ? Math.round(done/tasks.length*100) : 0;
-  document.getElementById('day-pct-lbl').textContent = pct+'%';
-  document.getElementById('day-pbar').style.width = pct+'%';
-
-  document.getElementById('day-tasks-list').innerHTML = tasks.length === 0
-    ? `<div style="text-align:center;padding:16px;color:var(--text3);font-size:13px">今日のタスクはありません</div>`
-    : tasks.map((t,i)=>`
-      <div class="day-task ${t.done?'done':''} ${t.carryover?'carryover':''}" onclick="togDayTask(${i})">
-        <div class="dt-ck">${t.done?chkSvg():''}</div>
-        <span class="dt-txt">${t.carryover?'！':''} ${t.text}</span>
-      </div>`).join('');
-}
-
-function togDayTask(i){
-  const today = todayStr();
-  const task = S.dayTasks[today][i];
-  task.done = !task.done;
-  // WEEKタスクの消化にも反映（同じテキストのチェックを同期）
-  syncDayToWeek(task);
-  saveS();
-  renderDayTasks();
-  renderDashboard();
-}
-
-function syncDayToWeek(dayTask){
-  // DAYタスクのdone状態をWEEKタスクのcheckedに反映
-  const week = S.curriculum[dayTask.weekIdx];
-  if(!week) return;
-  const keyMap = {'threads':'threadsChecked','note':'noteChecked','custom-threads':'customThreadsChecked','custom-note':'customNoteChecked'};
-  const stratKey = dayTask.type==='threads'?'threadsStrategies':dayTask.type==='note'?'noteStrategies':dayTask.type==='custom-threads'?'customThreadsStrategies':'customNoteStrategies';
-  const arr = week[stratKey]||[];
-  const idx = arr.indexOf(dayTask.text);
-  if(idx < 0) return;
-  const checkedArr = week[keyMap[dayTask.type]];
-  if(!checkedArr) return;
-  if(dayTask.done && !checkedArr.includes(idx)) checkedArr.push(idx);
-  else if(!dayTask.done){ const p=checkedArr.indexOf(idx); if(p>=0)checkedArr.splice(p,1); }
-}
-
-// ── カスタムDAYタスク ──
-function openDayAddModal(){
-  document.getElementById('day-custom-inp').value = '';
-  openModal('modal-day-add');
-}
-
-function addCustomDayTask(){
-  const text = document.getElementById('day-custom-inp').value.trim();
-  if(!text){ showToast('タスク内容を入力してください'); return; }
-  const today = todayStr();
-  if(!S.dayTasks) S.dayTasks = {};
-  if(!S.dayTasks[today]) S.dayTasks[today] = [];
-  S.dayTasks[today].push({
-    id: genId(), text, done: false,
-    weekIdx: getCurWeek(), type: 'custom-day',
-    freq: 1, carryover: false,
-  });
-  saveS();
-  closeModal('modal-day-add');
-  renderDayTasks();
-  showToast('カスタムタスクを追加しました ✓');
-}
-
-// ══ GRAPH ══
+// ══ GRAPH & SHARE ══
 function togChart(el){const k=el.dataset.k;CS[k]=!CS[k];el.classList.toggle('on',CS[k]);renderGraph()}
-
 function renderGraph(){
-  if(!S.curriculum) return;
-  const labels=S.curriculum.map(w=>`W${w.week}`);
-  const ds=[];
-  if(CS.followers) ds.push({label:'フォロワー数',data:S.curriculum.map(w=>w.followers||0),borderColor:'#7c6aff',backgroundColor:'rgba(124,106,255,0.07)',tension:.4,yAxisID:'y',pointRadius:3,pointHoverRadius:5});
-  if(CS.sales)     ds.push({label:'note販売数',data:S.curriculum.map((_,i)=>calcWeekSalesTotal(i)),borderColor:'#3ddba8',backgroundColor:'rgba(61,219,168,0.07)',tension:.4,yAxisID:'y2',pointRadius:3,pointHoverRadius:5});
-  if(CS.revenue)   ds.push({label:'売上（¥）',data:S.curriculum.map((_,i)=>calcWeekRevenue(i)),borderColor:'#ffb547',backgroundColor:'rgba(255,181,71,0.07)',tension:.4,yAxisID:'y3',pointRadius:3,pointHoverRadius:5});
-  if(CS.views)     ds.push({label:'閲覧数',data:S.curriculum.map(w=>w.views||0),borderColor:'#5bb8ff',backgroundColor:'rgba(91,184,255,0.07)',tension:.4,yAxisID:'y4',pointRadius:3,pointHoverRadius:5});
+  if(!S.curriculum)return;
+  const labels=S.curriculum.map(w=>`W${w.week}`);const ds=[];
+  if(CS.followers)ds.push({label:'フォロワー数',data:S.curriculum.map(w=>w.followers||0),borderColor:'#7c6aff',backgroundColor:'rgba(124,106,255,0.07)',tension:.4,yAxisID:'y',pointRadius:3,pointHoverRadius:5});
+  if(CS.sales)ds.push({label:'note販売数',data:S.curriculum.map((_,i)=>calcWeekSalesTotal(i)),borderColor:'#3ddba8',backgroundColor:'rgba(61,219,168,0.07)',tension:.4,yAxisID:'y2',pointRadius:3,pointHoverRadius:5});
+  if(CS.revenue)ds.push({label:'売上（¥）',data:S.curriculum.map((_,i)=>calcWeekRevenue(i)),borderColor:'#ffb547',backgroundColor:'rgba(255,181,71,0.07)',tension:.4,yAxisID:'y3',pointRadius:3,pointHoverRadius:5});
+  if(CS.views)ds.push({label:'閲覧数',data:S.curriculum.map(w=>w.views||0),borderColor:'#5bb8ff',backgroundColor:'rgba(91,184,255,0.07)',tension:.4,yAxisID:'y4',pointRadius:3,pointHoverRadius:5});
   if(mainChart)mainChart.destroy();
   const ctx=document.getElementById('mainChart').getContext('2d');
-  mainChart=new Chart(ctx,{type:'line',data:{labels,datasets:ds},options:{
-    responsive:true,interaction:{mode:'index',intersect:false},
-    plugins:{legend:{labels:{color:'#8888aa',font:{family:"'DM Sans'"},boxWidth:11,padding:10}},title:{display:false}},
-    scales:{
-      x:{ticks:{color:'#55556a',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},
-      y:{display:CS.followers,position:'left',ticks:{color:'#7c6aff',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},
-      y2:{display:CS.sales,position:'right',ticks:{color:'#3ddba8',font:{size:10}},grid:{drawOnChartArea:false}},
-      y3:{display:CS.revenue,position:'right',ticks:{color:'#ffb547',font:{size:10}},grid:{drawOnChartArea:false}},
-      y4:{display:CS.views,position:'right',ticks:{color:'#5bb8ff',font:{size:10}},grid:{drawOnChartArea:false}},
-    }
-  }});
+  mainChart=new Chart(ctx,{type:'line',data:{labels,datasets:ds},options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#8888aa',font:{family:"'DM Sans'"},boxWidth:11,padding:10}},title:{display:false}},scales:{x:{ticks:{color:'#55556a',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},y:{display:CS.followers,position:'left',ticks:{color:'#7c6aff',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},y2:{display:CS.sales,position:'right',ticks:{color:'#3ddba8',font:{size:10}},grid:{drawOnChartArea:false}},y3:{display:CS.revenue,position:'right',ticks:{color:'#ffb547',font:{size:10}},grid:{drawOnChartArea:false}},y4:{display:CS.views,position:'right',ticks:{color:'#5bb8ff',font:{size:10}},grid:{drawOnChartArea:false}}}}});
   const totalS=calcTotalSales(),totalR=calcTotalRevenue();
   const latFw=S.curriculum.reduce((a,w)=>w.followers>0?w.followers:a,0);
   let tot=0,dn=0;
-  S.curriculum.forEach(w=>{
-    tot+=(w.threadsStrategies||[]).length+(w.noteStrategies||[]).length+(w.customThreadsStrategies||[]).length+(w.customNoteStrategies||[]).length;
-    dn+=(w.threadsChecked||[]).length+(w.noteChecked||[]).length+(w.customThreadsChecked||[]).length+(w.customNoteChecked||[]).length;
-  });
+  S.curriculum.forEach(w=>{tot+=(w.threadsStrategies||[]).length+(w.noteStrategies||[]).length+(w.customThreadsStrategies||[]).length+(w.customNoteStrategies||[]).length;dn+=(w.threadsChecked||[]).length+(w.noteChecked||[]).length+(w.customThreadsChecked||[]).length+(w.customNoteChecked||[]).length});
   const oPct=tot>0?Math.round(dn/tot*100):0;
   const cfg=DIFF_CFG[S.diff],cw=getCurWeek();
-  document.getElementById('share-stats').innerHTML=`
-    <div class="shi"><div class="shi-v" style="color:var(--accent2)">${latFw.toLocaleString()}</div><div class="shi-l">フォロワー数</div></div>
-    <div class="shi"><div class="shi-v" style="color:var(--green)">${totalS}</div><div class="shi-l">note販売数（本）</div></div>
-    <div class="shi"><div class="shi-v" style="color:var(--amber)">¥${totalR.toLocaleString()}</div><div class="shi-l">累計売上</div></div>
-    <div class="shi"><div class="shi-v" style="color:var(--coral)">${oPct}%</div><div class="shi-l">タスク達成率</div></div>`;
+  document.getElementById('share-stats').innerHTML=`<div class="shi"><div class="shi-v" style="color:var(--accent2)">${latFw.toLocaleString()}</div><div class="shi-l">フォロワー数</div></div><div class="shi"><div class="shi-v" style="color:var(--green)">${totalS}</div><div class="shi-l">note販売数（本）</div></div><div class="shi"><div class="shi-v" style="color:var(--amber)">¥${totalR.toLocaleString()}</div><div class="shi-l">累計売上</div></div><div class="shi"><div class="shi-v" style="color:var(--coral)">${oPct}%</div><div class="shi-l">タスク達成率</div></div>`;
   document.getElementById('share-note').textContent=`${cfg.emoji} ${cfg.label}プラン Week ${cw+1}／${S.weeks} 進行中`;
+  const tmpl=document.getElementById('share-template');
+  if(tmpl&&!S.shareTemplate)tmpl.value=DEFAULT_TEMPLATE;
+  else if(tmpl)tmpl.value=S.shareTemplate;
 }
 
-function copyShare(){
+// テンプレートをリアルタイム保存（インラインスクリプトなのでDOMContentLoadedは不要）
+function onTemplateInput(){
+  const ta=document.getElementById('share-template');
+  if(ta){ S.shareTemplate=ta.value; saveS(); }
+}
+
+function resetTemplate(){
+  S.shareTemplate=DEFAULT_TEMPLATE;
+  saveS();
+  const ta=document.getElementById('share-template');
+  if(ta) ta.value=DEFAULT_TEMPLATE;
+  showToast('テンプレートをリセットしました');
+}
+
+function buildShareText(){
   const totalS=calcTotalSales(),totalR=calcTotalRevenue();
   const latFw=S.curriculum.reduce((a,w)=>w.followers>0?w.followers:a,0);
   const cfg=DIFF_CFG[S.diff],cw=getCurWeek();
   const works=(S.noteWorks||[]).map(w=>`  ・${w.name}（¥${currentWorkPrice(w).toLocaleString()}）`).join('\n');
-  const txt=`【Threads×note 運用記録 Week ${cw+1}】\n\n${cfg.emoji} ${cfg.label}プラン（${cfg.months}ヶ月）\nフォロワー：${latFw.toLocaleString()}人\nnote販売：${totalS}本\n累計売上：¥${totalR.toLocaleString()}\n${works?'\n販売中のnote:\n'+works+'\n':''}\n目標に向かって進んでいます✊\n#Threads運用 #note収益化`;
-  navigator.clipboard.writeText(txt).then(()=>showToast('コピーしました！'));
+  const tmpl=S.shareTemplate||DEFAULT_TEMPLATE;
+  return tmpl
+    .replace(/\{week\}/g,cw+1)
+    .replace(/\{total_weeks\}/g,S.weeks)
+    .replace(/\{followers\}/g,latFw.toLocaleString()+'人')
+    .replace(/\{sales\}/g,totalS+'本')
+    .replace(/\{revenue\}/g,'¥'+totalR.toLocaleString())
+    .replace(/\{plan\}/g,cfg.emoji+' '+cfg.label)
+    .replace(/\{works\}/g,works?'販売中のnote:\n'+works:'');
+}
+
+function copyShare(){
+  navigator.clipboard.writeText(buildShareText()).then(()=>showToast('コピーしました！'));
 }
 
 // ══ MODAL UTILS ══
 function openModal(id){document.getElementById(id).classList.add('vis')}
 function closeModal(id){document.getElementById(id).classList.remove('vis')}
-['modal-strategy','modal-work','modal-price','modal-day-add'].forEach(id=>{
-  document.getElementById(id).addEventListener('click',function(e){if(e.target===this)closeModal(id)});
+['modal-strategy','modal-work','modal-price','modal-day-add','modal-reset'].forEach(id=>{
+  const el=document.getElementById(id);
+  if(el)el.addEventListener('click',function(e){if(e.target===this)closeModal(id)});
 });
 
 // ══ TOAST ══
-function showToast(msg){
-  const t=document.getElementById('toast');
-  t.textContent=msg;t.classList.add('show');
-  setTimeout(()=>t.classList.remove('show'),2500);
-}
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
 
 // ══ INIT ══
-['threnote_v1','threnote_v2','curriculumState'].forEach(k=>localStorage.removeItem(k));
+['threnote_v1','threnote_v2','threnote_v3','threnote_v4','curriculumState'].forEach(k=>localStorage.removeItem(k));
 loadS();
-if(S.curriculum && S.diff && S.startDate){
-  if(!S.lastSeenDate) S.lastSeenDate = todayStr();
-  launchApp();
-} else {
-  S={};
-  document.getElementById('scr-onb').classList.add('active');
-  document.getElementById('scr-main').classList.remove('active');
-  document.getElementById('bnav').classList.remove('vis');
-  renderOnbWorksList();
-}
+initHome();
+// 全スクリーンをまず非表示にしてからホームを表示
+document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none';});
+const homeEl=document.getElementById('scr-home');
+homeEl.classList.add('active');
+homeEl.style.display='flex';
+// 初回はチュートリアルを自動表示
+if(!S.tutorialDone){ showTutorial(); }
 </script>
 </body>
 </html>
