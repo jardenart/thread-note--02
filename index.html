@@ -6,7 +6,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="theme-color" content="#0a0a0f">
-<title>TNCompass — Threads×note 収益化</title>
+<title>TNCompass v6 — Threads×note 収益化</title>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
 <style>
@@ -23,8 +23,25 @@
   --r:12px;--r2:18px;
   --fd:'Syne',sans-serif;
   --fb:'DM Sans',sans-serif;
-  --fn:'Space Grotesk',sans-serif; /* 数字専用フォント */
+  --fn:'Space Grotesk',sans-serif;
 }
+/* ── ライトモード ── */
+body.light-mode {
+  --bg:#f4f4f9;--bg2:#ffffff;--bg3:#eeeef6;
+  --card:#ffffff;--card2:#f0f0f8;--card3:#e8e8f4;
+  --border:rgba(0,0,0,0.08);--border2:rgba(0,0,0,0.14);
+  --text:#1a1a2e;--text2:#5555778;--text3:#9999bb;
+  --accent:#6a58ef;--accent2:#7c6aff;--accent-glow:rgba(106,88,239,0.18);
+  --green:#2bbf8e;--green-dim:rgba(43,191,142,0.12);
+  --amber:#e09d30;--amber-dim:rgba(224,157,48,0.12);
+  --coral:#e8527a;--coral-dim:rgba(232,82,122,0.12);
+  --blue:#4aa8ef;--blue-dim:rgba(74,168,239,0.12);
+}
+body.light-mode::before{opacity:.2}
+body.light-mode #scr-splash{background:#f4f4f9}
+body.light-mode .splash-bar{background:rgba(0,0,0,.1)}
+/* ライトモードのテーマカラー */
+body.light-mode{background:var(--bg);color:var(--text)}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 body{font-family:var(--fb);background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:.5}
@@ -57,7 +74,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .home-btn-primary .home-btn-sub{color:rgba(255,255,255,.7)}
 
 /* ── ONB ── */
-#scr-onb{background:radial-gradient(ellipse 80% 55% at 50% -5%,rgba(124,106,255,0.16) 0%,transparent 65%),radial-gradient(ellipse 45% 35% at 88% 82%,rgba(61,219,168,0.07) 0%,transparent 55%),var(--bg);min-height:100dvh;padding-bottom:60px}
+#scr-onb{background:var(--bg);min-height:100dvh;padding-bottom:60px;position:relative;overflow:hidden}
 .onb-top{padding:clamp(36px,8vw,60px) 24px 28px;text-align:center}
 .onb-logo-row{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:20px}
 .onb-h1{font-family:var(--fd);font-size:clamp(22px,6vw,34px);font-weight:800;line-height:1.15;margin-bottom:10px}
@@ -374,15 +391,105 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .reset-confirm-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .reset-cancel{padding:13px;background:transparent;border:1.5px solid var(--border2);border-radius:var(--r2);color:var(--text2);font-family:var(--fb);font-size:14px;cursor:pointer}
 .reset-go{padding:13px;background:var(--coral);border:none;border-radius:var(--r2);color:white;font-family:var(--fd);font-size:14px;font-weight:700;cursor:pointer}
+/* ── SPLASH SCREEN ── */
+#scr-splash{position:fixed;inset:0;background:#0a0a0f;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px}
+#scr-splash.fade-out{animation:splashOut .6s ease forwards}
+@keyframes splashOut{to{opacity:0;transform:scale(1.04)}}
+.splash-logo{animation:splashLogoIn .8s cubic-bezier(.22,1,.36,1) forwards;opacity:0}
+@keyframes splashLogoIn{from{opacity:0;transform:scale(.6) translateY(20px)}to{opacity:1;transform:scale(1) translateY(0)}}
+.splash-name{font-family:var(--fd);font-size:28px;font-weight:800;letter-spacing:.08em;opacity:0;animation:splashTextIn .7s .4s cubic-bezier(.22,1,.36,1) forwards;background:linear-gradient(130deg,#fff 0%,var(--accent2) 50%,var(--green) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+@keyframes splashTextIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+.splash-sub{font-size:12px;color:var(--text3);opacity:0;animation:splashTextIn .6s .7s ease forwards;letter-spacing:.04em}
+.splash-bar{width:120px;height:2px;background:var(--border);border-radius:1px;overflow:hidden;opacity:0;animation:splashTextIn .5s .9s ease forwards}
+.splash-bar-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--green));border-radius:1px;animation:splashFill 1.2s .9s ease forwards;width:0}
+@keyframes splashFill{to{width:100%}}
+
+/* ── HOME animated bg ── */
+#scr-home{background:var(--bg)}
+#home-bg-canvas{position:absolute;inset:0;z-index:0;pointer-events:none}
+#scr-home .home-logo-wrap,#scr-home .home-menu{position:relative;z-index:1}
+
+/* ── CELEBRATION ── */
+#celebration{position:fixed;inset:0;pointer-events:none;z-index:800;overflow:hidden}
+.confetti-piece{position:absolute;width:8px;height:8px;border-radius:2px;opacity:0;animation:confettiFall linear forwards}
+@keyframes confettiFall{0%{opacity:1;transform:translateY(-20px) rotate(0deg)}100%{opacity:0;transform:translateY(100vh) rotate(720deg)}}
+.celebrate-badge{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.5);background:linear-gradient(135deg,var(--accent),#9b6aff);border-radius:var(--r2);padding:18px 28px;text-align:center;z-index:801;pointer-events:none;animation:badgeIn .5s cubic-bezier(.22,1,.36,1) forwards,badgeOut .4s 2s ease forwards}
+@keyframes badgeIn{to{transform:translate(-50%,-50%) scale(1);opacity:1}}
+@keyframes badgeOut{to{transform:translate(-50%,-50%) scale(.9);opacity:0}}
+.celebrate-badge-text{font-family:var(--fd);font-size:18px;font-weight:800;color:white}
+.celebrate-badge-sub{font-size:12px;color:rgba(255,255,255,.7);margin-top:4px}
+/* ── PC / iPad レイアウト (#58) ── */
+@media (min-width: 768px){
+  body{max-width:480px;margin:0 auto;box-shadow:0 0 60px rgba(0,0,0,.5)}
+  .bnav{max-width:480px;left:50%;transform:translateX(-50%)}
+  .tab-tip{max-width:440px}
+  .modal-bg{align-items:center}
+  .modal-sheet,.reset-confirm-sheet,.popup-sheet{border-radius:var(--r2);border:1px solid var(--border2);max-width:440px;margin:0 auto}
+  .tour-sheet{border-radius:var(--r2);max-width:440px;margin:0 auto}
+}
+@media (min-width:1024px){
+  body::after{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 70% at 50% 50%,rgba(124,106,255,.05),transparent);pointer-events:none;z-index:-1}
+}
+
+/* ── 施策ヒント (#33) ── */
+.hint-btn{background:none;border:none;color:var(--text3);font-size:11px;cursor:pointer;padding:0 4px;line-height:1;flex-shrink:0;transition:color .2s}
+.hint-btn:active{color:var(--accent2)}
+.hint-popup{position:fixed;left:16px;right:16px;bottom:calc(80px + env(safe-area-inset-bottom));background:var(--card2);border:1px solid var(--border2);border-radius:var(--r2);padding:14px 36px 14px 16px;z-index:600;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:tipIn .3s ease;max-width:480px}
+.hint-popup-title{font-family:var(--fd);font-size:13px;font-weight:700;color:var(--accent2);margin-bottom:6px}
+.hint-popup-body{font-size:12px;color:var(--text2);line-height:1.8}
+.hint-popup-close{position:absolute;top:10px;right:12px;background:none;border:none;color:var(--text3);font-size:16px;cursor:pointer}
+
+/* ── グラフタブ切替 (#42, #44) ── */
+.graph-tab-pills{display:flex;gap:7px;margin-bottom:12px;overflow-x:auto;scrollbar-width:none}
+.graph-tab-pills::-webkit-scrollbar{display:none}
+.graph-tab-pill{padding:6px 14px;border-radius:20px;border:1.5px solid var(--border);background:var(--card);color:var(--text2);font-size:11px;font-weight:600;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0;font-family:var(--fd)}
+.graph-tab-pill.on{border-color:var(--accent);color:var(--accent2);background:rgba(124,106,255,.1)}
+
+/* ── 過去DAYタスク (#36) ── */
+.dhd-pill{padding:5px 12px;border-radius:20px;border:1.5px solid var(--border);background:var(--card2);color:var(--text2);font-size:11px;cursor:pointer;white-space:nowrap;transition:all .2s;flex-shrink:0}
+.dhd-pill.on{border-color:var(--green);color:var(--green);background:var(--green-dim)}
+
+.tab-tip{position:fixed;bottom:calc(82px + env(safe-area-inset-bottom));left:50%;transform:translateX(-50%);background:var(--card2);border:1px solid var(--border2);border-radius:var(--r2);padding:14px 36px 14px 16px;max-width:calc(100vw - 32px);width:320px;z-index:500;box-shadow:0 8px 32px rgba(0,0,0,.5);animation:tipIn .35s ease}
+@keyframes tipIn{from{opacity:0;transform:translateX(-50%) translateY(12px)}to{opacity:1;transform:translateX(-50%) translateY(0)}}
+.tab-tip-title{font-family:var(--fd);font-size:12px;font-weight:700;color:var(--accent2);margin-bottom:5px}
+.tab-tip-body{font-size:12px;color:var(--text2);line-height:1.75}
+.tab-tip-body b{color:var(--text);font-weight:500}
+.tab-tip-close{position:absolute;top:10px;right:12px;background:none;border:none;color:var(--text3);font-size:16px;cursor:pointer;line-height:1;padding:0}
+/* toast */
 .toast{position:fixed;bottom:94px;left:50%;transform:translateX(-50%) translateY(8px);background:var(--card2);border:1px solid var(--border2);border-radius:30px;padding:8px 16px;font-size:13px;color:var(--text);opacity:0;transition:all .3s;pointer-events:none;z-index:999;white-space:nowrap}
 .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
 </style>
 </head>
 <body>
+<div id="scr-splash">
+  <svg class="splash-logo" width="80" height="80" viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <linearGradient id="slg1" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#a08fff"/><stop offset="100%" stop-color="#3ddba8"/></linearGradient>
+      <linearGradient id="slg2" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse"><stop offset="0%" stop-color="#7c6aff"/><stop offset="100%" stop-color="#3ddba8"/></linearGradient>
+    </defs>
+    <rect width="80" height="80" rx="20" fill="url(#slg2)" opacity=".18"/>
+    <rect x="1" y="1" width="78" height="78" rx="19" stroke="url(#slg1)" stroke-width="1.5" fill="none" opacity=".6"/>
+    <circle cx="40" cy="40" r="18" stroke="url(#slg1)" stroke-width="1.5" fill="none"/>
+    <circle cx="40" cy="40" r="3" fill="url(#slg1)"/>
+    <path d="M40 40 L36 22 L40 27 L44 22 Z" fill="#a08fff"/>
+    <path d="M40 40 L44 58 L40 53 L36 58 Z" fill="#3ddba8" opacity=".8"/>
+    <line x1="40" y1="20" x2="40" y2="16" stroke="url(#slg1)" stroke-width="1.5" stroke-linecap="round"/>
+    <line x1="40" y1="60" x2="40" y2="64" stroke="url(#slg1)" stroke-width="1.5" stroke-linecap="round" opacity=".5"/>
+    <line x1="20" y1="40" x2="16" y2="40" stroke="url(#slg1)" stroke-width="1.5" stroke-linecap="round" opacity=".5"/>
+    <line x1="60" y1="40" x2="64" y2="40" stroke="url(#slg1)" stroke-width="1.5" stroke-linecap="round" opacity=".5"/>
+    <text x="13" y="46" font-family="'Syne',sans-serif" font-weight="800" font-size="11" fill="#a08fff" opacity=".9">T</text>
+    <text x="60" y="46" font-family="'Syne',sans-serif" font-weight="800" font-size="11" fill="#3ddba8" opacity=".9">N</text>
+  </svg>
+  <div class="splash-name">TNCompass</div>
+  <div class="splash-sub">Threads × note 収益化カリキュラム</div>
+  <div class="splash-bar"><div class="splash-bar-fill"></div></div>
+</div>
+<div id="celebration"></div>
 <div class="toast" id="toast"></div>
 
 <!-- ══ HOME SCREEN ══ -->
 <div class="screen active" id="scr-home">
+  <canvas id="home-bg-canvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0"></canvas>
   <div class="safe-top"></div>
   <div class="home-logo-wrap">
     <!-- TNCompass ロゴ SVG -->
@@ -452,6 +559,8 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
 <!-- ══ ONBOARDING ══ -->
 <div class="screen" id="scr-onb">
+  <canvas id="onb-bg-canvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0"></canvas>
+  <div style="position:relative;z-index:1;width:100%">
   <div class="safe-top"></div>
   <div class="onb-top">
     <div class="onb-logo-row">
@@ -505,13 +614,21 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 
   <!-- Step 3: 開始日 -->
   <div class="onb-step" id="stp3">
-    <p style="font-size:13px;color:var(--text2);margin-bottom:14px;text-align:center">開始日を設定してください</p>
-    <div class="field"><label>開始日</label><input type="date" id="inp-start"></div>
+    <p style="font-size:13px;color:var(--text2);margin-bottom:10px;text-align:center">開始日を設定してください</p>
+    <div style="background:rgba(124,106,255,.1);border:1px solid rgba(124,106,255,.3);border-radius:var(--r);padding:10px 13px;margin-bottom:14px;display:flex;gap:9px;align-items:flex-start">
+      <span style="font-size:16px;flex-shrink:0">📅</span>
+      <div style="font-size:12px;color:var(--accent2);line-height:1.7">
+        <b>設定した日の曜日がWEEKの開始曜日になります。</b><br>
+        <span id="start-day-hint" style="color:var(--text2)">日付を選ぶと確認できます。</span>
+      </div>
+    </div>
+    <div class="field"><label>開始日</label><input type="date" id="inp-start" oninput="onStartDateChange()"></div>
     <div class="field"><label>プランサマリー</label><div class="plan-box" id="plan-box"></div></div>
     <button class="btn-s" onclick="goStp(2)">← 戻る</button>
     <div style="height:10px"></div>
     <button class="btn-p" onclick="startApp()">カリキュラムを開始する 🎯</button>
   </div>
+  </div><!-- /z-index wrapper -->
 </div>
 
 <!-- ══ MAIN APP ══ -->
@@ -545,26 +662,50 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     <div class="day-section" id="day-section">
       <div class="day-header">
         <span class="day-date" id="day-date-lbl"></span>
-        <span class="day-pct" id="day-pct-lbl">0%</span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text3);cursor:pointer">
+            <input type="checkbox" id="hide-done-day" onchange="renderDayTasks()" style="accent-color:var(--accent);width:12px;height:12px">完了を隠す
+          </label>
+          <span class="day-pct" id="day-pct-lbl">0%</span>
+        </div>
       </div>
       <div class="pbar" style="margin-bottom:10px"><div class="pfill" id="day-pbar" style="width:0%"></div></div>
       <div id="day-tasks-list"></div>
       <button class="day-add-btn" onclick="openDayAddModal()">＋ カスタムタスクを追加</button>
     </div>
-    <div class="sec-t">今週のタスク</div>
+    <div class="sec-t" style="display:flex;justify-content:space-between;align-items:center">
+      <span>今週のタスク</span>
+      <button onclick="showWeeklyReport()" style="font-size:11px;padding:4px 11px;background:var(--card2);border:1px solid var(--border2);border-radius:20px;color:var(--text2);cursor:pointer;font-family:var(--fb)">📊 週次レポート</button>
+    </div>
     <div class="wb">
       <div class="wbh">
         <span class="wbadge" id="db-wlbl">WEEK 1</span>
-        <span id="db-wpct" style="font-family:var(--fn);font-size:13px;font-weight:600;color:var(--green)">0%</span>
+        <span id="db-wperiod" style="font-size:10px;color:var(--text3)"></span>
+        <div style="display:flex;align-items:center;gap:10px">
+          <label style="display:flex;align-items:center;gap:5px;font-size:10px;color:var(--text3);cursor:pointer">
+            <input type="checkbox" id="hide-done-week" onchange="renderDashboard()" style="accent-color:var(--accent);width:12px;height:12px">完了を隠す
+          </label>
+          <span id="db-wpct" style="font-family:var(--fn);font-size:13px;font-weight:600;color:var(--green)">0%</span>
+        </div>
       </div>
       <div class="pbar" style="margin-bottom:10px"><div class="pfill" id="db-wbar" style="width:0%"></div></div>
       <div class="tl" id="db-tasks"></div>
     </div>
+    <!-- #36 過去のDAYタスク -->
+    <div class="sec-t" style="margin-top:4px;display:flex;justify-content:space-between;align-items:center">
+      <span>過去のタスク履歴</span>
+      <button onclick="togDayHistory()" id="day-history-toggle-btn" style="font-size:11px;padding:4px 11px;background:var(--card2);border:1px solid var(--border2);border-radius:20px;color:var(--text2);cursor:pointer;font-family:var(--fb)">表示</button>
+    </div>
+    <div id="day-history-section" style="display:none">
+      <div style="display:flex;gap:7px;overflow-x:auto;scrollbar-width:none;padding-bottom:4px;margin-bottom:10px" id="day-history-pills"></div>
+      <div id="day-history-list" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:13px"></div>
+    </div>
   </div>
-
-  <!-- CURRICULUM -->
   <div class="ms" id="tab-curriculum">
-    <div class="ph"><div><div class="ph-title">カリキュラム</div><div class="ph-sub" id="cur-sub"></div></div></div>
+    <div class="ph" style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><div class="ph-title">カリキュラム</div><div class="ph-sub" id="cur-sub"></div></div>
+      <button id="btn-restart" onclick="confirmRestart()" style="display:none;padding:6px 12px;background:linear-gradient(135deg,var(--accent),#9b6aff);border:none;border-radius:20px;color:white;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--fd);flex-shrink:0;margin-top:4px">🔁 再スタート</button>
+    </div>
     <div id="cur-list"></div>
   </div>
 
@@ -585,19 +726,37 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <!-- GRAPH -->
   <div class="ms" id="tab-graph">
     <div class="ph"><div><div class="ph-title">グラフ＆シェア</div><div class="ph-sub">進捗を可視化する</div></div></div>
-    <div class="ctoggle">
-      <div class="cpill on c-acc" data-k="followers" onclick="togChart(this)">フォロワー数</div>
-      <div class="cpill on c-grn" data-k="sales" onclick="togChart(this)">note販売数</div>
-      <div class="cpill on c-amb" data-k="revenue" onclick="togChart(this)">売上</div>
-      <div class="cpill c-blu" data-k="views" onclick="togChart(this)">閲覧数</div>
+    <!-- グラフ種別タブ -->
+    <div class="graph-tab-pills">
+      <div class="graph-tab-pill on" data-g="weekly" onclick="swGraphTab(this)">週別推移</div>
+      <div class="graph-tab-pill" data-g="monthly" onclick="swGraphTab(this)">月別収益</div>
+      <div class="graph-tab-pill" data-g="works" onclick="swGraphTab(this)">作品別売上</div>
     </div>
-    <div class="cwrap"><canvas id="mainChart" height="220"></canvas></div>
-    <div class="share-card">
+    <!-- 週別推移 -->
+    <div id="graph-weekly">
+      <div class="ctoggle">
+        <div class="cpill on c-acc" data-k="followers" onclick="togChart(this)">フォロワー数</div>
+        <div class="cpill on c-grn" data-k="sales" onclick="togChart(this)">note販売数</div>
+        <div class="cpill on c-amb" data-k="revenue" onclick="togChart(this)">売上</div>
+        <div class="cpill c-blu" data-k="views" onclick="togChart(this)">閲覧数</div>
+      </div>
+      <div class="cwrap"><canvas id="mainChart" height="220"></canvas></div>
+    </div>
+    <!-- 月別収益 -->
+    <div id="graph-monthly" style="display:none">
+      <div class="cwrap"><canvas id="monthlyChart" height="220"></canvas></div>
+      <div id="monthly-table" style="margin-top:10px"></div>
+    </div>
+    <!-- 作品別売上 -->
+    <div id="graph-works" style="display:none">
+      <div class="cwrap"><canvas id="worksChart" height="220"></canvas></div>
+      <div id="works-table" style="margin-top:10px"></div>
+    </div>
+    <div class="share-card" style="margin-top:11px">
       <div class="share-t">📸 シェア用サマリー</div>
       <div class="share-grid" id="share-stats"></div>
       <div class="share-note-txt" id="share-note"></div>
     </div>
-    <!-- 投稿テンプレート編集 -->
     <div class="share-tmpl-wrap">
       <div class="share-tmpl-lbl">
         <span>投稿テンプレート</span>
@@ -622,7 +781,55 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <div class="ms" id="tab-settings">
     <div class="ph"><div><div class="ph-title">設定</div><div class="ph-sub">アプリの管理</div></div></div>
     <div id="settings-plan-info" style="background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:14px;margin-bottom:16px"></div>
-    <div class="sec-t">カリキュラム</div>
+
+    <!-- 目標売上・開始日変更 -->
+    <div class="sec-t">目標・プラン</div>
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:14px;margin-bottom:9px">
+      <div style="font-size:11px;color:var(--text2);margin-bottom:8px;font-weight:500;letter-spacing:.05em;text-transform:uppercase">目標売上を変更</div>
+      <div style="display:flex;gap:9px;align-items:center">
+        <div style="position:relative;flex:1"><span style="position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--text2);font-size:14px">¥</span><input type="number" id="settings-target-rev" inputmode="numeric" placeholder="100000" style="width:100%;padding:10px 10px 10px 24px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-family:var(--fn);font-size:15px;outline:none"></div>
+        <button onclick="saveTargetRev()" style="padding:10px 16px;background:linear-gradient(135deg,var(--accent),#9b6aff);border:none;border-radius:var(--r);color:white;font-family:var(--fd);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">変更する</button>
+      </div>
+    </div>
+    <!-- #29 開始日変更 -->
+    <div style="background:var(--card);border:1px solid var(--border);border-radius:var(--r2);padding:14px;margin-bottom:9px">
+      <div style="font-size:11px;color:var(--text2);margin-bottom:8px;font-weight:500;letter-spacing:.05em;text-transform:uppercase">開始日を変更</div>
+      <div style="font-size:11px;color:var(--amber);margin-bottom:8px">⚠️ 変更すると全WEEKの期間が再計算されます</div>
+      <div style="display:flex;gap:9px;align-items:center">
+        <input type="date" id="settings-start-date" style="flex:1;padding:10px;background:var(--bg2);border:1.5px solid var(--border2);border-radius:var(--r);color:var(--text);font-size:14px;outline:none">
+        <button onclick="saveStartDate()" style="padding:10px 16px;background:linear-gradient(135deg,var(--accent),#9b6aff);border:none;border-radius:var(--r);color:white;font-family:var(--fd);font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap">変更する</button>
+      </div>
+    </div>
+
+    <!-- 表示設定 -->
+    <div class="sec-t" style="margin-top:16px">表示設定</div>
+    <div class="settings-item" onclick="toggleLightMode()">
+      <div>
+        <div class="settings-item-lbl" id="theme-lbl">☀️ ライトモードに切替</div>
+        <div class="settings-item-sub">画面の明るさを切り替える</div>
+      </div>
+      <span class="settings-item-arrow">›</span>
+    </div>
+
+    <!-- データ管理 -->
+    <div class="sec-t" style="margin-top:16px">データ管理</div>
+    <div class="settings-item" onclick="exportData()">
+      <div><div class="settings-item-lbl">📤 データをバックアップ</div><div class="settings-item-sub">JSONファイルとしてダウンロード</div></div>
+      <span class="settings-item-arrow">›</span>
+    </div>
+    <div class="settings-item" onclick="document.getElementById('import-file').click()">
+      <div><div class="settings-item-lbl">📥 データを復元</div><div class="settings-item-sub">バックアップファイルから読み込む</div></div>
+      <span class="settings-item-arrow">›</span>
+    </div>
+    <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(this)">
+
+    <!-- カリキュラム -->
+    <div class="sec-t" style="margin-top:16px">カリキュラム</div>
+    <!-- #27 オンボーディングやり直し -->
+    <div class="settings-item" onclick="confirmRedoOnb()">
+      <div><div class="settings-item-lbl">🔄 設定をやり直す</div><div class="settings-item-sub">難易度・note・開始日を再設定する</div></div>
+      <span class="settings-item-arrow">›</span>
+    </div>
     <div class="settings-item" onclick="confirmReset()">
       <div><div class="settings-item-lbl" style="color:var(--coral)">カリキュラムをリセット</div><div class="settings-item-sub">全データを削除してホームに戻る</div></div>
       <span class="settings-item-arrow">›</span>
@@ -631,10 +838,15 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div><div class="settings-item-lbl">ホームに戻る</div><div class="settings-item-sub">データは保持されます</div></div>
       <span class="settings-item-arrow">›</span>
     </div>
-    <div style="height:16px"></div>
-    <div class="sec-t">このアプリについて</div>
+
+    <!-- このアプリについて -->
+    <div class="sec-t" style="margin-top:16px">このアプリについて</div>
     <div class="settings-item" onclick="showTutorial()">
       <div><div class="settings-item-lbl">アプリ説明書</div><div class="settings-item-sub">使い方ガイド・各機能の説明</div></div>
+      <span class="settings-item-arrow">›</span>
+    </div>
+    <div class="settings-item" onclick="openContact()">
+      <div><div class="settings-item-lbl">お問い合わせ・バグ報告</div><div class="settings-item-sub">ご意見・不具合はこちら</div></div>
       <span class="settings-item-arrow">›</span>
     </div>
   </div>
@@ -715,7 +927,50 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   </div>
 </div>
 
-<!-- ══ RESET CONFIRM MODAL ══ -->
+<!-- ══ WEEKLY REPORT MODAL ══ -->
+<div class="modal-bg" id="modal-weekly-report">
+  <div class="modal-sheet">
+    <div class="modal-handle"></div>
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px">
+      <div class="modal-title" style="margin-bottom:0">📊 週次レポート</div>
+      <button onclick="closeModal('modal-weekly-report')" style="background:none;border:none;color:var(--text3);font-size:20px;cursor:pointer;padding:0 4px">✕</button>
+    </div>
+    <div id="weekly-report-content"></div>
+  </div>
+</div>
+
+<!-- ══ REDO ONB CONFIRM ══ -->
+<div class="modal-bg" id="modal-redo-onb">
+  <div class="reset-confirm-sheet">
+    <div class="reset-confirm-icon">🔄</div>
+    <div class="reset-confirm-title" style="color:var(--accent2)">設定をやり直しますか？</div>
+    <div class="reset-confirm-body">
+      難易度・note作品・開始日を再設定できます。<br><br>
+      <b style="color:var(--amber)">これまでの記録データは保持されます。</b><br>
+      カリキュラムは新しい設定で再生成されます。
+    </div>
+    <div class="reset-confirm-btns">
+      <button class="reset-cancel" onclick="closeModal('modal-redo-onb')">キャンセル</button>
+      <button class="reset-go" style="background:var(--accent)" onclick="doRedoOnb()">やり直す</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ IMPORT CONFIRM MODAL ══ -->
+<div class="modal-bg" id="modal-import-confirm">
+  <div class="reset-confirm-sheet">
+    <div class="reset-confirm-icon">📥</div>
+    <div class="reset-confirm-title" style="color:var(--accent2)">データを復元しますか？</div>
+    <div class="reset-confirm-body">
+      現在のデータは<b style="color:var(--amber)">自動的にバックアップ</b>されてからインポートします。<br><br>
+      バックアップファイルの内容で上書きされます。
+    </div>
+    <div class="reset-confirm-btns">
+      <button class="reset-cancel" onclick="closeModal('modal-import-confirm')">キャンセル</button>
+      <button class="reset-go" style="background:var(--accent)" onclick="doImport()">復元する</button>
+    </div>
+  </div>
+</div>
 <div class="modal-bg" id="modal-reset">
   <div class="reset-confirm-sheet">
     <div class="reset-confirm-icon">🗑️</div>
@@ -1217,7 +1472,7 @@ function renderTourStep(){
 function confirmReset(){ openModal('modal-reset'); }
 
 function doReset(){
-  localStorage.removeItem('tncompass_v1');
+  localStorage.removeItem('tncompass_v6');
   S = {};
   closeModal('modal-reset');
   document.getElementById('bnav').classList.remove('vis');
@@ -1227,7 +1482,7 @@ function doReset(){
 }
 
 // ══ MASTER DATA ══
-const THREADS_ALL=['プロフィール改善','毎日1-3投稿','毎日5投稿以上','毎日10投稿以上','毎日20投稿以上','リプ5回以上投稿','リプ10回以上投稿','リプ20回以上投稿','固定投稿見直し','投稿分析言語化（言語化欄に記載）','ゴースト投稿','引用投稿1回以上','Threads投稿内容についてAIと壁打ち（10分）','Threadsで導線投稿（1日〜2日で1回）'];
+const THREADS_ALL=['プロフィール改善','毎日1-3投稿','毎日5投稿以上','毎日10投稿以上','毎日20投稿以上','リプ2回以上投稿','リプ5回以上投稿','リプ10回以上投稿','リプ20回以上投稿','固定投稿見直し','投稿分析言語化（言語化欄に記載）','ゴースト投稿','引用投稿1回以上','Threads投稿内容についてAIと壁打ち（10分）','Threadsで導線投稿（1日〜2日で1回）'];
 const NOTE_ALL=['プロフィール改善','無料note執筆','無料noteリリース','有料note執筆','有料note予告','有料noteリリース','無料noteリライト','有料noteの無料部分リライト','有料部分リライト','コンテンツSEO対策（タイトル、冒頭文）','次回作テーマをAIと壁打ち（10分）'];
 const DIFF_CFG={slow:{label:'ゆっくり',emoji:'🌱',months:12,color:'var(--green)'},normal:{label:'コツコツ',emoji:'🔥',months:6,color:'var(--blue)'},fast:{label:'ガツガツ',emoji:'⚡',months:4,color:'var(--amber)'},vfast:{label:'バリバリ',emoji:'🚀',months:2,color:'var(--coral)'}};
 const PHASE_NAMES={'1':'Phase 1: 基礎構築','2':'Phase 2: 展開初期','3':'Phase 3: 本展開','4':'Phase 4: 最適化'};
@@ -1242,7 +1497,7 @@ note販売：{sales}本
 目標に向かって進んでいます✊
 #Threads運用 #note収益化`;
 
-const WEEK_TO_DAY_FREQ={'プロフィール改善':1,'毎日1-3投稿':7,'毎日5投稿以上':7,'毎日10投稿以上':7,'毎日20投稿以上':7,'リプ5回以上投稿':7,'リプ10回以上投稿':7,'リプ20回以上投稿':7,'固定投稿見直し':3,'投稿分析言語化（言語化欄に記載）':3,'ゴースト投稿':7,'引用投稿1回以上':3,'Threads投稿内容についてAIと壁打ち（10分）':3,'Threadsで導線投稿（1日〜2日で1回）':3,'無料note執筆':1,'無料noteリリース':1,'有料note執筆':1,'有料note予告':1,'有料noteリリース':1,'無料noteリライト':1,'有料noteの無料部分リライト':1,'有料部分リライト':1,'コンテンツSEO対策（タイトル、冒頭文）':1,'次回作テーマをAIと壁打ち（10分）':1};
+const WEEK_TO_DAY_FREQ={'プロフィール改善':1,'毎日1-3投稿':7,'毎日5投稿以上':7,'毎日10投稿以上':7,'毎日20投稿以上':7,'リプ2回以上投稿':7,'リプ5回以上投稿':7,'リプ10回以上投稿':7,'リプ20回以上投稿':7,'固定投稿見直し':3,'投稿分析言語化（言語化欄に記載）':3,'ゴースト投稿':7,'引用投稿1回以上':3,'Threads投稿内容についてAIと壁打ち（10分）':3,'Threadsで導線投稿（1日〜2日で1回）':3,'無料note執筆':1,'無料noteリリース':1,'有料note執筆':1,'有料note予告':1,'有料noteリリース':1,'無料noteリライト':1,'有料noteの無料部分リライト':1,'有料部分リライト':1,'コンテンツSEO対策（タイトル、冒頭文）':1,'次回作テーマをAIと壁打ち（10分）':1};
 
 // ══ STATE ══
 let S={};
@@ -1254,8 +1509,8 @@ let mainChart=null;
 let onbWorks=[];
 let carryoverTasks=[],carryoverTargetWeek=0,carryoverSelected=new Set();
 
-function loadS(){try{S=JSON.parse(localStorage.getItem('tncompass_v1')||'{}')}catch(e){S={}}}
-function saveS(){localStorage.setItem('tncompass_v1',JSON.stringify(S))}
+function loadS(){try{S=JSON.parse(localStorage.getItem('tncompass_v6')||'{}')}catch(e){S={}}}
+function saveS(){localStorage.setItem('tncompass_v6',JSON.stringify(S))}
 function genId(){return Date.now().toString(36)+Math.random().toString(36).slice(2,5)}
 function todayStr(){return new Date().toISOString().split('T')[0]}
 
@@ -1302,6 +1557,7 @@ function startNewCurriculum(){
   const onb=document.getElementById('scr-onb');
   onb.classList.add('active');
   onb.style.display='block';
+  initOnbBg();
 }
 
 function showScreen(id){
@@ -1322,13 +1578,14 @@ function goHome(){
   showScreen('scr-home');
   document.getElementById('bnav').classList.remove('vis');
   initHome();
+  initHomeBg();
 }
 
 function showManual(){ showTutorial(); }
 
 function confirmReset(){
   if(confirm('カリキュラムを完全にリセットします。\n全データが削除されます。よろしいですか？')){
-    localStorage.removeItem('tncompass_v1');
+    localStorage.removeItem('tncompass_v6');
     S={};
     document.getElementById('bnav').classList.remove('vis');
     showScreen('scr-home');
@@ -1337,15 +1594,214 @@ function confirmReset(){
   }
 }
 
+// ══ SETTINGS ══
 function renderSettingsInfo(){
   if(!S.diff) return;
   const cfg=DIFF_CFG[S.diff];
   const cw=getCurWeek();
   const totalRev=calcTotalRevenue();
+  // #53 経過日数
+  const startD=new Date(S.startDate+'T00:00:00');
+  const elapsedDays=Math.floor((new Date()-startD)/(1000*60*60*24));
+  // #43 達成予測
+  const weeklyRevAvg=totalRev>0&&cw>0?Math.round(totalRev/cw):0;
+  const remaining=Math.max(0,(S.targetRevenue||0)-totalRev);
+  const weeksToGoal=weeklyRevAvg>0?Math.ceil(remaining/weeklyRevAvg):null;
+  const predictionTxt=weeksToGoal!=null
+    ?(weeksToGoal===0?'🎉 目標達成済み！':`現在のペースであと約 ${weeksToGoal} 週で達成見込み`)
+    :'（まだデータが少ないです）';
   document.getElementById('settings-plan-info').innerHTML=`
     <div style="font-size:11px;color:var(--text2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:10px">現在のプラン</div>
-    <div style="font-size:16px;font-weight:500;margin-bottom:6px">${cfg.emoji} ${cfg.label}プラン</div>
-    <div style="font-size:12px;color:var(--text2);line-height:1.8">開始日：${S.startDate}<br>終了予定：${S.endDate}<br>進捗：Week ${cw+1} / ${S.weeks}<br>累計売上：<span style="color:var(--green);font-family:var(--fn)">¥${totalRev.toLocaleString()}</span></div>`;
+    <div style="font-size:16px;font-weight:500;margin-bottom:8px">${cfg.emoji} ${cfg.label}プラン</div>
+    <div style="font-size:12px;color:var(--text2);line-height:2">
+      開始日：${S.startDate}<br>
+      終了予定：${S.endDate}<br>
+      運用開始から：<span style="font-family:var(--fn);color:var(--text)">${elapsedDays}</span> 日目<br>
+      進捗：Week <span style="font-family:var(--fn);color:var(--text)">${cw+1}</span> / ${S.weeks}<br>
+      目標売上：<span style="font-family:var(--fn)">¥${(S.targetRevenue||0).toLocaleString()}</span><br>
+      累計売上：<span style="color:var(--green);font-family:var(--fn)">¥${totalRev.toLocaleString()}</span><br>
+      <span style="color:var(--accent2)">${predictionTxt}</span>
+    </div>`;
+  const el=document.getElementById('settings-target-rev');
+  if(el) el.value=S.targetRevenue||'';
+  const sdEl=document.getElementById('settings-start-date');
+  if(sdEl) sdEl.value=S.startDate||'';
+  // テーマラベル更新
+  const tl=document.getElementById('theme-lbl');
+  if(tl) tl.textContent=document.body.classList.contains('light-mode')?'🌙 ダークモードに切替':'☀️ ライトモードに切替';
+}
+
+// ライトモード切替
+function toggleLightMode(){
+  const isLight=document.body.classList.toggle('light-mode');
+  S.lightMode=isLight;saveS();
+  const tl=document.getElementById('theme-lbl');
+  if(tl) tl.textContent=isLight?'🌙 ダークモードに切替':'☀️ ライトモードに切替';
+  showToast(isLight?'ライトモードに切替えました':'ダークモードに切替えました');
+}
+
+// #27 オンボーディングやり直し
+function confirmRedoOnb(){ openModal('modal-redo-onb'); }
+function doRedoOnb(){
+  closeModal('modal-redo-onb');
+  // 記録データは保持してオンボーディングへ
+  const keepData={noteWorks:S.noteWorks,dayTasks:S.dayTasks,lightMode:S.lightMode,shareTemplate:S.shareTemplate,seenTabs:S.seenTabs,tutorialDone:S.tutorialDone};
+  S=keepData;
+  selDiffKey=null;curStep=0;onbWorks=(keepData.noteWorks||[]).map(w=>({id:w.id,name:w.name,price:w.priceHistory?.[w.priceHistory.length-1]?.price||0}));
+  [0,1,2,3].forEach(i=>{const d=document.getElementById('d'+i);if(d)d.className='dot'+(i===0?' on':'');});
+  document.querySelectorAll('.onb-step').forEach(s=>s.classList.remove('on'));
+  document.getElementById('stp0').classList.add('on');
+  document.querySelectorAll('.dc').forEach(c=>c.classList.remove('sel'));
+  showScreen('scr-onb');
+  document.getElementById('bnav').classList.remove('vis');
+  initOnbBg();
+  renderOnbWorksList();
+}
+
+// #29 開始日変更
+function saveStartDate(){
+  const val=document.getElementById('settings-start-date').value;
+  if(!val){showToast('日付を選択してください');return}
+  if(!confirm(`開始日を ${val} に変更します。全WEEKの期間が再計算されます。よろしいですか？`))return;
+  S.startDate=val;
+  const startDate=new Date(val+'T00:00:00');
+  const cfg=DIFF_CFG[S.diff];
+  const endDate=new Date(startDate);endDate.setMonth(endDate.getMonth()+cfg.months);
+  S.endDate=endDate.toISOString().split('T')[0];
+  // WEEKの日付を再計算
+  let current=new Date(startDate);
+  S.curriculum.forEach(week=>{
+    const ws=new Date(current),we=new Date(current);we.setDate(we.getDate()+6);
+    week.start=fmtDate(ws);week.end=fmtDate(we);
+    current.setDate(current.getDate()+7);
+  });
+  saveS();renderDashboard();renderCurriculum();renderSettingsInfo();
+  showToast('開始日を変更しました ✓');
+}
+
+// #52 目標売上達成演出
+function checkGoalAchievement(){
+  if(!S.targetRevenue||S.goalCelebrated)return;
+  const totalRev=calcTotalRevenue();
+  if(totalRev>=S.targetRevenue){
+    S.goalCelebrated=true;saveS();
+    setTimeout(()=>{
+      launchConfetti();
+      showCelebrationBadge('🏆 目標売上達成！','おめでとうございます！');
+    },500);
+  }
+}
+
+// #49 週次レポート
+function showWeeklyReport(){
+  const cw=getCurWeek();
+  const week=S.curriculum[cw];
+  const totalTasks=(week.threadsStrategies||[]).length+(week.noteStrategies||[]).length+(week.customThreadsStrategies||[]).length+(week.customNoteStrategies||[]).length;
+  const doneTasks=(week.threadsChecked||[]).length+(week.noteChecked||[]).length+(week.customThreadsChecked||[]).length+(week.customNoteChecked||[]).length;
+  const wPct=totalTasks>0?Math.round(doneTasks/totalTasks*100):0;
+  const weekRev=calcWeekRevenue(cw);
+  const weekSales=calcWeekSalesTotal(cw);
+  const latFw=S.curriculum.reduce((a,w)=>w.followers>0?w.followers:a,0);
+  const totalRev=calcTotalRevenue();
+  const remaining=Math.max(0,(S.targetRevenue||0)-totalRev);
+  document.getElementById('weekly-report-content').innerHTML=`
+    <div style="text-align:center;padding:10px 0 16px">
+      <div style="font-size:11px;color:var(--text3);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px">WEEK ${cw+1} レポート</div>
+      <div style="font-size:10px;color:var(--text3)">${week.start} 〜 ${week.end}</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-bottom:14px">
+      <div style="background:var(--bg2);border-radius:var(--r);padding:12px;text-align:center">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:4px">タスク達成率</div>
+        <div style="font-family:var(--fn);font-size:22px;font-weight:700;color:${wPct===100?'var(--green)':'var(--accent2)'}">${wPct}%</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:2px">${doneTasks}/${totalTasks}個</div>
+      </div>
+      <div style="background:var(--bg2);border-radius:var(--r);padding:12px;text-align:center">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:4px">今週の売上</div>
+        <div style="font-family:var(--fn);font-size:18px;font-weight:700;color:var(--green)">¥${weekRev.toLocaleString()}</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:2px">${weekSales}本販売</div>
+      </div>
+      <div style="background:var(--bg2);border-radius:var(--r);padding:12px;text-align:center">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:4px">フォロワー数</div>
+        <div style="font-family:var(--fn);font-size:22px;font-weight:700;color:var(--accent2)">${latFw.toLocaleString()}</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:2px">人</div>
+      </div>
+      <div style="background:var(--bg2);border-radius:var(--r);padding:12px;text-align:center">
+        <div style="font-size:10px;color:var(--text3);margin-bottom:4px">目標まで残り</div>
+        <div style="font-family:var(--fn);font-size:${remaining>999999?'14':'18'}px;font-weight:700;color:var(--amber)">¥${remaining.toLocaleString()}</div>
+        <div style="font-size:10px;color:var(--text3);margin-top:2px">累計¥${totalRev.toLocaleString()}</div>
+      </div>
+    </div>
+    ${wPct===100?'<div style="text-align:center;padding:10px;background:var(--green-dim);border-radius:var(--r);color:var(--green);font-size:13px;font-weight:500">🎉 今週のタスクを全て達成！</div>':
+    wPct>=50?'<div style="text-align:center;padding:10px;background:rgba(124,106,255,.1);border-radius:var(--r);color:var(--accent2);font-size:13px">👍 折り返し以上達成！このまま続けましょう</div>':
+    '<div style="text-align:center;padding:10px;background:var(--amber-dim);border-radius:var(--r);color:var(--amber);font-size:13px">💪 残りのタスクも進めていきましょう</div>'}`;
+  openModal('modal-weekly-report');
+}
+
+// #27モーダルをcloseModal対象に追加
+// (modal-redo-onbはcloseModalリストに後で追加)
+
+// ② 目標売上変更
+function saveTargetRev(){
+  const val=parseInt(document.getElementById('settings-target-rev').value)||0;
+  if(val<1){showToast('1以上の金額を入力してください');return}
+  S.targetRevenue=val;
+  saveS();
+  renderDashboard();
+  renderSettingsInfo();
+  showToast('目標売上を更新しました ✓');
+}
+
+// ① エクスポート
+function exportData(){
+  if(!S.curriculum){showToast('エクスポートするデータがありません');return}
+  const json=JSON.stringify(S,null,2);
+  const blob=new Blob([json],{type:'application/json'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  const date=new Date().toISOString().split('T')[0];
+  a.href=url;a.download=`tncompass_backup_${date}.json`;
+  document.body.appendChild(a);a.click();
+  document.body.removeChild(a);URL.revokeObjectURL(url);
+  showToast('バックアップを保存しました ✓');
+}
+
+// ① インポート
+function importData(input){
+  const file=input.files[0];if(!file)return;
+  // 確認モーダルを表示
+  window._pendingImportFile=file;
+  openModal('modal-import-confirm');
+  input.value='';
+}
+
+function doImport(){
+  closeModal('modal-import-confirm');
+  const file=window._pendingImportFile;if(!file)return;
+  // 現在データを自動バックアップ
+  if(S.curriculum) exportData();
+  const reader=new FileReader();
+  reader.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      // バリデーション
+      if(!data.curriculum||!data.diff||!data.startDate){
+        showToast('無効なバックアップファイルです');return;
+      }
+      S=data;
+      saveS();
+      launchApp();
+      showToast('データを復元しました ✓');
+    }catch(err){
+      showToast('ファイルの読み込みに失敗しました');
+    }
+  };
+  reader.readAsText(file);
+}
+
+// ④ お問い合わせ
+const CONTACT_URL='https://docs.google.com/forms/d/e/1FAIpQLScoaCRGe6iZ0Q1v2HTcWnrtlE9YHvRdtKESQpLzxA4NJf4Wig/viewform';
+function openContact(){
+  window.open(CONTACT_URL,'_blank');
 }
 
 // ══ ONBOARDING ══
@@ -1390,12 +1846,23 @@ function goStp(n){
     if(!rev){showToast('目標売上を入力してください');return}
     renderPlanBox(rev);
     document.getElementById('inp-start').value=todayStr();
+    onStartDateChange();
   }
   document.getElementById('stp'+curStep).classList.remove('on');
   curStep=n;
   document.getElementById('stp'+n).classList.add('on');
   [0,1,2,3].forEach(i=>{const d=document.getElementById('d'+i);if(d) d.className='dot'+(i===n?' on':i<n?' done':'')});
   if(n===1) renderOnbWorksList();
+}
+
+function onStartDateChange(){
+  const val=document.getElementById('inp-start').value;
+  const hint=document.getElementById('start-day-hint');
+  if(!hint||!val) return;
+  const days=['日曜日','月曜日','火曜日','水曜日','木曜日','金曜日','土曜日'];
+  const d=new Date(val+'T00:00:00');
+  const dow=d.getDay();
+  hint.textContent=`開始日：${val.replace(/-/g,'/')}（${days[dow]}）→ 毎週${days[dow]}始まりのカリキュラムになります。`;
 }
 
 function calcT(){
@@ -1460,7 +1927,11 @@ function getThreadsStrategies(diff,progress,weekIdx,totalWeeks){
   else if(diff==='normal')s.push(progress<.5?'毎日5投稿以上':'毎日10投稿以上');
   else if(diff==='fast')s.push(progress<.33?'毎日10投稿以上':progress<.67?'毎日15投稿以上':'毎日20投稿以上');
   else s.push('毎日20投稿以上');
-  if(progress>.3){if(diff==='slow')s.push('リプ5回以上投稿');else if(diff==='normal')s.push('リプ10回以上投稿');else s.push('リプ20回以上投稿')}
+  // リプ施策：WEEK1から毎日、難易度ごとの回数
+  if(diff==='slow')s.push('リプ2回以上投稿');
+  else if(diff==='normal')s.push('リプ5回以上投稿');
+  else if(diff==='fast')s.push('リプ10回以上投稿');
+  else s.push('リプ20回以上投稿');
   if(weekIdx>0&&weekIdx%4===0)s.push('Threadsで導線投稿（1日〜2日で1回）');
   return s.slice(0,6);
 }
@@ -1506,10 +1977,13 @@ function calcTotalSales(){return S.curriculum.reduce((s,_,i)=>s+calcWeekSalesTot
 
 // ══ LAUNCH ══
 function launchApp(){
+  stopOnbBg();
   showScreen('scr-main');
   document.getElementById('bnav').classList.add('vis');
   if(!S.lastSeenDate)S.lastSeenDate=todayStr();
   if(!S.shareTemplate)S.shareTemplate=DEFAULT_TEMPLATE;
+  // 既存カリキュラムにリプ施策がない場合はパッチを当てる
+  patchReplyTasks();
   ensureTodayTasks();
   checkWeekRollover();
   renderDayTasks();
@@ -1521,6 +1995,267 @@ function launchApp(){
   document.getElementById('share-template').value=S.shareTemplate||DEFAULT_TEMPLATE;
 }
 
+function patchReplyTasks(){
+  if(!S.curriculum||!S.diff) return;
+  const replyMap={slow:'リプ2回以上投稿',normal:'リプ5回以上投稿',fast:'リプ10回以上投稿',vfast:'リプ20回以上投稿'};
+  const reply=replyMap[S.diff];
+  if(!reply) return;
+  let patched=false;
+  S.curriculum.forEach(week=>{
+    const already=(week.threadsStrategies||[]).includes(reply);
+    if(!already){
+      // 毎日投稿系の直後に挿入（最大6個を超えないよう）
+      const ts=week.threadsStrategies||[];
+      const insertIdx=ts.findIndex(s=>s.startsWith('毎日'));
+      if(insertIdx>=0) ts.splice(insertIdx+1,0,reply);
+      else ts.push(reply);
+      week.threadsStrategies=ts.slice(0,6);
+      patched=true;
+    }
+  });
+  if(patched){
+    // 今日のDAYタスクを再生成してリプを反映
+    const today=todayStr();
+    if(S.dayTasks&&S.dayTasks[today]) delete S.dayTasks[today];
+    saveS();
+  }
+}
+
+// ══ GRAPH TAB SWITCH (#42, #44) ══
+let currentGraphTab = 'weekly';
+let monthlyChart = null;
+let worksChart = null;
+
+function swGraphTab(el){
+  document.querySelectorAll('.graph-tab-pill').forEach(p=>p.classList.remove('on'));
+  el.classList.add('on');
+  currentGraphTab = el.dataset.g;
+  document.getElementById('graph-weekly').style.display = currentGraphTab==='weekly'?'block':'none';
+  document.getElementById('graph-monthly').style.display = currentGraphTab==='monthly'?'block':'none';
+  document.getElementById('graph-works').style.display = currentGraphTab==='works'?'block':'none';
+  if(currentGraphTab==='weekly') renderGraph();
+  else if(currentGraphTab==='monthly') renderMonthlyChart();
+  else if(currentGraphTab==='works') renderWorksChart();
+}
+
+// #42 月別収益グラフ
+function renderMonthlyChart(){
+  if(!S.curriculum) return;
+  // 月ごとに収益を集計
+  const monthMap = {};
+  S.curriculum.forEach((week, i) => {
+    const m = week.start ? week.start.slice(0,7) : null;
+    if(!m) return;
+    if(!monthMap[m]) monthMap[m] = 0;
+    monthMap[m] += calcWeekRevenue(i);
+  });
+  const labels = Object.keys(monthMap).sort();
+  const data = labels.map(m => monthMap[m]);
+  if(monthlyChart) monthlyChart.destroy();
+  const ctx = document.getElementById('monthlyChart').getContext('2d');
+  monthlyChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: labels.map(m => m.slice(5) + '月'),
+      datasets: [{
+        label: '月別売上（¥）',
+        data,
+        backgroundColor: 'rgba(61,219,168,0.25)',
+        borderColor: '#3ddba8',
+        borderWidth: 2,
+        borderRadius: 6,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: {
+        x: { ticks: { color: '#55556a', font: { size: 10 } }, grid: { color: 'rgba(255,255,255,0.04)' } },
+        y: { ticks: { color: '#3ddba8', font: { size: 10 }, callback: v => '¥'+v.toLocaleString() }, grid: { color: 'rgba(255,255,255,0.04)' } }
+      }
+    }
+  });
+  // テーブル
+  const totalMonthly = data.reduce((a,b)=>a+b,0);
+  document.getElementById('monthly-table').innerHTML = labels.map((m,i)=>`
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--card);border-radius:8px;margin-bottom:5px;font-size:12px">
+      <span style="color:var(--text2)">${m.slice(5)}月</span>
+      <span style="font-family:var(--fn);font-weight:600;color:var(--green)">¥${data[i].toLocaleString()}</span>
+    </div>`).join('') +
+    `<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 10px;background:var(--green-dim);border:1px solid rgba(61,219,168,.3);border-radius:8px;margin-top:7px;font-size:12px">
+      <span style="color:var(--green);font-weight:500">累計合計</span>
+      <span style="font-family:var(--fn);font-size:14px;font-weight:700;color:var(--green)">¥${totalMonthly.toLocaleString()}</span>
+    </div>`;
+}
+
+// #44 作品別売上グラフ
+function renderWorksChart(){
+  if(!S.curriculum) return;
+  const works = S.noteWorks || [];
+  if(works.length === 0){
+    document.getElementById('worksChart').parentElement.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text3);font-size:13px">note作品を登録すると<br>ここにグラフが表示されます</div>';
+    return;
+  }
+  const labels = works.map(w => w.name.length > 10 ? w.name.slice(0,10)+'…' : w.name);
+  const revenues = works.map(w => S.curriculum.reduce((s,_,i) => s + getWorkPrice(w,i)*(S.curriculum[i].workSales?.[w.id]||0), 0));
+  const sales = works.map(w => S.curriculum.reduce((s,_,i) => s + (S.curriculum[i].workSales?.[w.id]||0), 0));
+  const colors = ['rgba(124,106,255,0.7)','rgba(61,219,168,0.7)','rgba(255,181,71,0.7)','rgba(255,107,138,0.7)','rgba(91,184,255,0.7)'];
+  if(worksChart) worksChart.destroy();
+  const ctx = document.getElementById('worksChart').getContext('2d');
+  worksChart = new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels,
+      datasets: [{ data: revenues, backgroundColor: colors, borderColor: 'rgba(0,0,0,0)', borderWidth: 2 }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { labels: { color: '#8888aa', font: { family:"'DM Sans'" }, padding: 12 } }
+      }
+    }
+  });
+  document.getElementById('works-table').innerHTML = works.map((w,i) => `
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:9px 11px;background:var(--card);border-radius:9px;margin-bottom:6px;font-size:12px">
+      <div style="flex:1;min-width:0">
+        <div style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${w.name}</div>
+        <div style="color:var(--text3);font-size:10px;margin-top:1px">${sales[i]}本販売</div>
+      </div>
+      <span style="font-family:var(--fn);font-size:14px;font-weight:700;color:${colors[i%colors.length].replace('0.7','1')}">¥${revenues[i].toLocaleString()}</span>
+    </div>`).join('');
+}
+
+// #36 過去のDAYタスク
+let dayHistoryVisible = false;
+let dayHistoryDate = null;
+
+function togDayHistory(){
+  dayHistoryVisible = !dayHistoryVisible;
+  const sec = document.getElementById('day-history-section');
+  const btn = document.getElementById('day-history-toggle-btn');
+  sec.style.display = dayHistoryVisible ? 'block' : 'none';
+  btn.textContent = dayHistoryVisible ? '隠す' : '表示';
+  if(dayHistoryVisible) renderDayHistory();
+}
+
+function renderDayHistory(){
+  if(!S.dayTasks) return;
+  const dates = Object.keys(S.dayTasks).sort().reverse().slice(0,14); // 直近2週間
+  if(dates.length === 0){
+    document.getElementById('day-history-pills').innerHTML = '';
+    document.getElementById('day-history-list').innerHTML = '<div style="text-align:center;padding:14px;color:var(--text3);font-size:13px">まだ履歴がありません</div>';
+    return;
+  }
+  if(!dayHistoryDate || !dates.includes(dayHistoryDate)) dayHistoryDate = dates[0];
+  const dayNames = ['日','月','火','水','木','金','土'];
+  document.getElementById('day-history-pills').innerHTML = dates.map(d => {
+    const dt = new Date(d+'T00:00:00');
+    const label = `${dt.getMonth()+1}/${dt.getDate()}(${dayNames[dt.getDay()]})`;
+    return `<div class="dhd-pill ${d===dayHistoryDate?'on':''}" onclick="selDayHistory('${d}')">${label}</div>`;
+  }).join('');
+  const tasks = S.dayTasks[dayHistoryDate] || [];
+  const done = tasks.filter(t=>t.done).length;
+  document.getElementById('day-history-list').innerHTML = `
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:9px">
+      <span style="font-size:11px;color:var(--text3)">${dayHistoryDate}</span>
+      <span style="font-family:var(--fn);font-size:12px;font-weight:600;color:${done===tasks.length&&tasks.length>0?'var(--green)':'var(--text2)'}">${done}/${tasks.length} 完了</span>
+    </div>` +
+    (tasks.length === 0 ? '<div style="text-align:center;padding:10px;color:var(--text3);font-size:12px">この日のタスクはありません</div>' :
+    tasks.map(t=>`<div style="display:flex;align-items:center;gap:8px;padding:7px 9px;background:var(--bg2);border-radius:7px;margin-bottom:5px;font-size:12px">
+      <div style="width:14px;height:14px;border-radius:3px;flex-shrink:0;background:${t.done?'var(--green)':'none'};border:1.5px solid ${t.done?'var(--green)':'var(--border2)'};display:flex;align-items:center;justify-content:center">${t.done?chkSvg():''}</div>
+      <span style="color:${t.done?'var(--text3)':'var(--text)'};text-decoration:${t.done?'line-through':'none'}">${t.text}</span>
+      ${t.carryover?'<span style="font-size:9px;color:var(--amber);margin-left:auto">持越</span>':''}
+    </div>`).join(''));
+}
+
+function selDayHistory(d){
+  dayHistoryDate = d;
+  renderDayHistory();
+}
+
+// #31 WEEKスキップ
+function skipWeek(idx){
+  if(!confirm(`WEEK ${idx+1} をスキップしますか？\nタスクは全て完了済みとしてマークされます。`)) return;
+  const week = S.curriculum[idx];
+  week.threadsChecked = (week.threadsStrategies||[]).map((_,i)=>i);
+  week.noteChecked = (week.noteStrategies||[]).map((_,i)=>i);
+  week.customThreadsChecked = (week.customThreadsStrategies||[]).map((_,i)=>i);
+  week.customNoteChecked = (week.customNoteStrategies||[]).map((_,i)=>i);
+  week.skipped = true;
+  saveS();
+  renderCurriculum();
+  renderDashboard();
+  showToast(`Week ${idx+1} をスキップしました`);
+}
+
+// #30 終了後の再スタート
+function confirmRestart(){
+  if(!confirm('カリキュラムを最初からやり直します。\nこれまでの記録データは保持されます。よろしいですか？')) return;
+  // 全チェックをリセット
+  S.curriculum.forEach(week=>{
+    week.threadsChecked=[];week.noteChecked=[];
+    week.customThreadsChecked=[];week.customNoteChecked=[];
+    week.skipped=false;
+    week.followers=0;week.views=0;week.workSales={};
+  });
+  S.dayTasks={};
+  S.goalCelebrated=false;
+  const startDate=new Date();
+  S.startDate=startDate.toISOString().split('T')[0];
+  const cfg=DIFF_CFG[S.diff];
+  const endDate=new Date(startDate);endDate.setMonth(endDate.getMonth()+cfg.months);
+  S.endDate=endDate.toISOString().split('T')[0];
+  // WEEK日付再計算
+  let current=new Date(startDate);
+  S.curriculum.forEach(week=>{
+    const ws=new Date(current),we=new Date(current);we.setDate(we.getDate()+6);
+    week.start=fmtDate(ws);week.end=fmtDate(we);
+    current.setDate(current.getDate()+7);
+  });
+  saveS();
+  renderCurriculum();renderDashboard();
+  showToast('カリキュラムを再スタートしました 🔁');
+}
+
+// #33 施策ヒント
+const STRATEGY_HINTS = {
+  'プロフィール改善': { title: 'プロフィール改善', body: 'フォロワーが訪問した時の第一印象を最大化します。アイコン・自己紹介・固定投稿を定期的に見直しましょう。' },
+  '毎日1-3投稿': { title: '毎日1〜3投稿', body: 'アルゴリズムに認知されるため、少量でも毎日継続することが重要です。投稿の質より習慣化を優先しましょう。' },
+  '毎日5投稿以上': { title: '毎日5投稿以上', body: '投稿頻度を上げることでインプレッションが増加します。短文でもOK。ストックを作っておくと継続しやすいです。' },
+  '毎日10投稿以上': { title: '毎日10投稿以上', body: '高頻度投稿でアルゴリズムへのシグナルを強化します。時間を決めてまとめて作成するのが効率的です。' },
+  '毎日20投稿以上': { title: '毎日20投稿以上', body: '最大限の露出を狙う戦略です。ジャンルを分散させず、ターゲットに絞った内容で一貫性を保ちましょう。' },
+  'リプ2回以上投稿': { title: 'リプ2回以上', body: '他の投稿へのリプライは相互認知を生み出します。同ジャンルの投稿者に価値あるコメントをすることでフォロワーを獲得できます。' },
+  'リプ5回以上投稿': { title: 'リプ5回以上', body: 'リプライはフォロワーへの露出と相互認知を同時に生み出します。投稿者本人だけでなく、その投稿を見ている人にも自分を認知させられます。' },
+  'リプ10回以上投稿': { title: 'リプ10回以上', body: '積極的なリプライで自分のアカウントの存在感を高めます。フォロワーが多い投稿者へのリプは特に効果的です。' },
+  'リプ20回以上投稿': { title: 'リプ20回以上', body: '高頻度のリプライでコミュニティ内での認知度を急速に高めます。毎日コンスタントに行うことで複利的な効果が生まれます。' },
+  'Threads投稿内容についてAIと壁打ち（10分）': { title: 'AIと壁打ち（10分）', body: '投稿ネタが尽きる前にAIとブレストします。「今週のThreadsのテーマを10個提案して」など具体的に依頼すると効果的です。' },
+  'Threadsで導線投稿（1日〜2日で1回）': { title: '導線投稿', body: 'noteへの誘導投稿です。「詳しくはnoteに書きました」という形で価値を提示してからnoteへ誘導することで購入率が上がります。' },
+  '投稿分析言語化（言語化欄に記載）': { title: '投稿分析の言語化', body: '今週の投稿を振り返り、伸びた投稿・伸びなかった投稿のパターンを言語化します。記録タブのメモ欄に記載しましょう。' },
+  '無料note執筆': { title: '無料note執筆', body: '有料noteの前に無料noteで信頼を構築します。読者が「この人の有料noteも読みたい」と思えるような質の高い内容にしましょう。' },
+  '無料noteリリース': { title: '無料noteリリース', body: '無料noteを公開します。ThreadsでURLを告知し、フォロワーへの価値提供と新規読者の獲得を狙います。' },
+  '有料note執筆': { title: '有料note執筆', body: '購入者が「買ってよかった」と感じる内容を目指します。具体例・数字・実体験を盛り込むと購入者満足度が上がります。' },
+  '有料note予告': { title: '有料note予告', body: 'リリース前に告知することで期待感を高めます。「何日後にリリース予定」と具体的な日付を出すと購入意欲が上がります。' },
+  '有料noteリリース': { title: '有料noteリリース', body: '公開と同時にThreadsで複数回告知しましょう。リリース当日・翌日・1週間後と間隔をあけて繰り返し告知すると効果的です。' },
+  'コンテンツSEO対策（タイトル、冒頭文）': { title: 'コンテンツSEO対策', body: 'noteの検索流入を増やすためにタイトルと冒頭文を最適化します。読者が検索するキーワードを自然に含めましょう。' },
+  '次回作テーマをAIと壁打ち（10分）': { title: '次回作テーマの検討', body: '読者が「次も読みたい」と思うテーマをAIと一緒に考えます。フォロワーからの質問・コメントがテーマのヒントになります。' },
+  '無料noteリライト': { title: '無料noteリライト', body: '既存の無料noteを更新して鮮度を保ちます。古い情報の更新・読みやすさの改善で検索流入と閲覧数を回復させましょう。' },
+  '有料noteの無料部分リライト': { title: '無料部分のリライト', body: '有料noteの無料プレビュー部分を磨きます。「続きが読みたい」と思わせる冒頭部分が購入率を大きく左右します。' },
+  '有料部分リライト': { title: '有料部分のリライト', body: '既存の有料noteの内容をアップデートします。「最新版に更新しました」と告知することで既存読者の満足度向上と口コミ増加につながります。' },
+};
+
+function showHint(strategyName){
+  const hint = STRATEGY_HINTS[strategyName];
+  if(!hint){ showToast('この施策のヒントはまだありません'); return; }
+  const old = document.getElementById('hint-popup-el');
+  if(old) old.remove();
+  const el = document.createElement('div');
+  el.className = 'hint-popup';
+  el.id = 'hint-popup-el';
+  el.innerHTML = `<button class="hint-popup-close" onclick="document.getElementById('hint-popup-el').remove()">✕</button><div class="hint-popup-title">💡 ${hint.title}</div><div class="hint-popup-body">${hint.body}</div>`;
+  document.body.appendChild(el);
+  setTimeout(()=>{ const p=document.getElementById('hint-popup-el'); if(p)p.remove(); }, 8000);
+}
+
 function swTab(name,btn){
   document.querySelectorAll('.ms').forEach(s=>s.classList.remove('on'));
   document.getElementById('tab-'+name).classList.add('on');
@@ -1530,6 +2265,8 @@ function swTab(name,btn){
   if(name==='input')renderInputForm();
   if(name==='notes')renderWorks();
   if(name==='settings')renderSettingsInfo();
+  // 初回ヒント
+  maybeShowTabTip(name);
 }
 
 function getCurWeek(){
@@ -1564,6 +2301,9 @@ function renderDashboard(){
   document.getElementById('db-sales').textContent=totalSales;
   document.getElementById('db-rem').textContent=rem>0?'¥'+rem.toLocaleString():'達成！🎉';
   document.getElementById('db-wlbl').textContent=`WEEK ${cw+1}`;
+  // WEEKの期間を表示
+  const wPeriodEl=document.getElementById('db-wperiod');
+  if(wPeriodEl) wPeriodEl.textContent=`${week.start.slice(5).replace('/','/').replace(/^0/,'')}〜${week.end.slice(5).replace('/','/').replace(/^0/,'')}`;
   const allTasks=[...(week.threadsStrategies||[]).map((t,i)=>({text:t,type:'threads',idx:i})),...(week.noteStrategies||[]).map((t,i)=>({text:t,type:'note',idx:i})),...(week.customThreadsStrategies||[]).map((t,i)=>({text:t,type:'custom-threads',idx:i})),...(week.customNoteStrategies||[]).map((t,i)=>({text:t,type:'custom-note',idx:i}))];
   const doneCount=(week.threadsChecked||[]).length+(week.noteChecked||[]).length+(week.customThreadsChecked||[]).length+(week.customNoteChecked||[]).length;
   const wPct=allTasks.length>0?Math.round(doneCount/allTasks.length*100):0;
@@ -1572,14 +2312,30 @@ function renderDashboard(){
   const tagCls={threads:'tt-th',note:'tt-nt','custom-threads':'tt-cu','custom-note':'tt-cu'};
   const tagLbl={threads:'Threads',note:'note','custom-threads':'カスタム','custom-note':'カスタム'};
   const isDone=t=>{if(t.type==='threads')return(week.threadsChecked||[]).includes(t.idx);if(t.type==='note')return(week.noteChecked||[]).includes(t.idx);if(t.type==='custom-threads')return(week.customThreadsChecked||[]).includes(t.idx);if(t.type==='custom-note')return(week.customNoteChecked||[]).includes(t.idx);return false};
-  document.getElementById('db-tasks').innerHTML=allTasks.map(t=>`<div class="ti ${isDone(t)?'done':''}" onclick="togDashTask(${cw},'${t.type}',${t.idx})"><div class="tck">${isDone(t)?chkSvg():''}</div><span class="ttxt">${t.text}</span><span class="ttag ${tagCls[t.type]}">${tagLbl[t.type]}</span></div>`).join('');
+  const hideDoneWeek=document.getElementById('hide-done-week')?.checked||false;
+  document.getElementById('db-tasks').innerHTML=allTasks
+    .filter(t=>!hideDoneWeek||!isDone(t))
+    .map(t=>`<div class="ti ${isDone(t)?'done':''}" onclick="togDashTask(${cw},'${t.type}',${t.idx})"><div class="tck">${isDone(t)?chkSvg():''}</div><span class="ttxt">${t.text}</span><span class="ttag ${tagCls[t.type]}">${tagLbl[t.type]}</span></div>`).join('')
+    ||(hideDoneWeek?`<div style="text-align:center;padding:14px;color:var(--green);font-size:13px">🎉 今週のタスク完了！</div>`:'');
 }
 function chkSvg(){return'<svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="#071a10" stroke-width="2.5"><polyline points="2,6 5,9 10,3"/></svg>'}
 function togDashTask(wi,type,idx){
   const week=S.curriculum[wi];
   const keyMap={threads:'threadsChecked',note:'noteChecked','custom-threads':'customThreadsChecked','custom-note':'customNoteChecked'};
-  const arr=week[keyMap[type]];const pos=arr.indexOf(idx);if(pos>=0)arr.splice(pos,1);else arr.push(idx);
+  const arr=week[keyMap[type]];
+  const wasDone=arr.includes(idx);
+  if(wasDone)arr.splice(arr.indexOf(idx),1);else arr.push(idx);
   saveS();renderDashboard();renderCurriculum();
+  // WEEK完了チェック
+  if(!wasDone){
+    const thF=(week.threadsStrategies||[]).filter(Boolean);
+    const ntF=(week.noteStrategies||[]).filter(Boolean);
+    const cthF=(week.customThreadsStrategies||[]).filter(Boolean);
+    const cntF=(week.customNoteStrategies||[]).filter(Boolean);
+    const tot=thF.length+ntF.length+cthF.length+cntF.length;
+    const dn=(week.threadsChecked||[]).length+(week.noteChecked||[]).length+(week.customThreadsChecked||[]).length+(week.customNoteChecked||[]).length;
+    if(tot>0&&dn===tot) celebrate('week');
+  }
 }
 
 // ══ DAY TASKS ══
@@ -1662,14 +2418,28 @@ function renderDayTasks(){
   const pct=tasks.length>0?Math.round(done/tasks.length*100):0;
   document.getElementById('day-pct-lbl').textContent=pct+'%';
   document.getElementById('day-pbar').style.width=pct+'%';
+  const hideDone=document.getElementById('hide-done-day')?.checked||false;
   document.getElementById('day-tasks-list').innerHTML=tasks.length===0
     ?`<div style="text-align:center;padding:14px;color:var(--text3);font-size:13px">今日のタスクはありません</div>`
-    :tasks.map((t,i)=>`<div class="day-task ${t.done?'done':''} ${t.carryover?'carryover':''}" onclick="togDayTask(${i})"><div class="dt-ck">${t.done?chkSvg():''}</div><span class="dt-txt">${t.carryover?'！ ':''}${t.text}</span></div>`).join('');
+    :tasks.filter(t=>!hideDone||!t.done).length===0
+      ?`<div style="text-align:center;padding:14px;color:var(--green);font-size:13px">🎉 すべて完了しました！</div>`
+      :tasks.filter(t=>!hideDone||!t.done).map((t,i)=>`<div class="day-task ${t.done?'done':''} ${t.carryover?'carryover':''}" onclick="togDayTask(${tasks.indexOf(t)})"><div class="dt-ck">${t.done?chkSvg():''}</div><span class="dt-txt">${t.carryover?'！ ':''}${t.text}</span></div>`).join('');
 }
 function togDayTask(i){
-  const today=todayStr();const task=S.dayTasks[today][i];task.done=!task.done;
-  syncDayToWeek(task);saveS();renderDayTasks();renderDashboard();
+  const today=todayStr();
+  const task=S.dayTasks[today][i];
+  const wasDone=task.done;
+  task.done=!task.done;
+  syncDayToWeek(task);
+  saveS();renderDayTasks();renderDashboard();
+  // DAYタスク全完了チェック（チェックした瞬間、かつ完了になった場合のみ）
+  if(!wasDone && task.done){
+    const tasks=S.dayTasks[today]||[];
+    const allDone=tasks.length>0 && tasks.every(t=>t.done);
+    if(allDone) celebrate('day');
+  }
 }
+
 function syncDayToWeek(dayTask){
   const week=S.curriculum[dayTask.weekIdx];if(!week)return;
   const keyMap={'threads':'threadsChecked','note':'noteChecked','custom-threads':'customThreadsChecked','custom-note':'customNoteChecked'};
@@ -1693,22 +2463,71 @@ function renderCurriculum(){
   if(!S.curriculum)return;
   const cfg=DIFF_CFG[S.diff];const cw=getCurWeek();
   document.getElementById('cur-sub').textContent=`${cfg.emoji} ${cfg.label}プラン · 全${S.weeks}週`;
+  // #30 全週完了したら再スタートボタンを表示
+  const allDone=S.curriculum.every(w=>{
+    const tot=(w.threadsStrategies||[]).length+(w.noteStrategies||[]).length+(w.customThreadsStrategies||[]).length+(w.customNoteStrategies||[]).length;
+    const dn=(w.threadsChecked||[]).length+(w.noteChecked||[]).length+(w.customThreadsChecked||[]).length+(w.customNoteChecked||[]).length;
+    return tot>0&&dn===tot;
+  });
+  const restartBtn=document.getElementById('btn-restart');
+  if(restartBtn) restartBtn.style.display=allDone?'block':'none';
+  // #33 ヒントボタン付きタスクアイテム
+  const mkI=(t,i,type,done)=>`<div class="si ${done?'done':''} ${type.includes('custom')?'si-custom':''}" style="display:flex;align-items:flex-start;gap:7px" onclick="togTask(${i===undefined?'undefined':i},'${type}',${i})"><div class="si-ck" style="flex-shrink:0;margin-top:1px">${done?chkSvg():''}</div><span class="si-txt" style="flex:1">${type.includes('custom')?'🔧 ':''}${t}</span><button class="hint-btn" onclick="event.stopPropagation();showHint('${t.replace(/'/g,"\\'")}')" title="施策の説明">?</button></div>`;
   document.getElementById('cur-list').innerHTML=S.curriculum.map((week,idx)=>{
     const thF=(week.threadsStrategies||[]).filter(Boolean);const ntF=(week.noteStrategies||[]).filter(Boolean);
     const cthF=(week.customThreadsStrategies||[]).filter(Boolean);const cntF=(week.customNoteStrategies||[]).filter(Boolean);
     const tot=thF.length+ntF.length+cthF.length+cntF.length;
     const dn=(week.threadsChecked||[]).length+(week.noteChecked||[]).length+(week.customThreadsChecked||[]).length+(week.customNoteChecked||[]).length;
     const pct=tot>0?Math.round(dn/tot*100):0;const isCur=idx===cw;
-    const mkI=(t,i,type,done)=>`<div class="si ${done?'done':''} ${type.includes('custom')?'si-custom':''}" onclick="togTask(${idx},'${type}',${i})"><div class="si-ck">${done?chkSvg():''}</div><span class="si-txt">${type.includes('custom')?'🔧 ':''}${t}</span></div>`;
-    return`<div class="ws ${isCur?'open':''}" id="ws${idx}"><div class="wsh" onclick="togWS(${idx})"><div><div class="wnum">${isCur?'▶ 今週 · ':''}WEEK ${week.week} <span class="pb ${PHASE_CLS[week.phase]}" style="margin-left:4px">${PHASE_NAMES[week.phase]}</span></div><div class="wtitle" style="color:${pct===100?'var(--green)':'var(--text)'}">${pct===100?'✓ 完了':'タスク '+tot+'個'}</div></div><div style="display:flex;align-items:center;gap:9px"><span style="font-family:var(--fn);font-size:12px;font-weight:600;color:${pct>0?'var(--accent2)':'var(--text3)'}">${pct}%</span><span class="wchv">▼</span></div></div><div class="wsb"><div class="pbar" style="margin:7px 0 12px"><div class="pfill" style="width:${pct}%"></div></div><div class="ssl"><span style="color:var(--accent2)">Threads施策</span><button class="ewb" onclick="openStrategyModal(${idx})">施策を変更</button></div>${thF.map((t,i)=>mkI(t,i,'threads',(week.threadsChecked||[]).includes(i))).join('')}${cthF.map((t,i)=>mkI(t,i,'custom-threads',(week.customThreadsChecked||[]).includes(i))).join('')}<div class="ssl" style="margin-top:12px"><span style="color:var(--green)">note施策</span></div>${ntF.map((t,i)=>mkI(t,i,'note',(week.noteChecked||[]).includes(i))).join('')}${cntF.map((t,i)=>mkI(t,i,'custom-note',(week.customNoteChecked||[]).includes(i))).join('')}<div style="font-size:11px;color:var(--text3);margin-top:8px">${week.start} 〜 ${week.end}</div></div></div>`;
+    const skipped=week.skipped;
+    const dateRange=`${week.start.slice(5).replace('/','/').replace(/^0/,'')}〜${week.end.slice(5).replace('/','/').replace(/^0/,'')}`;
+    return`<div class="ws ${isCur?'open':''}" id="ws${idx}" style="${skipped?'opacity:.6':''}">
+      <div class="wsh" onclick="togWS(${idx})">
+        <div>
+          <div class="wnum">${isCur?'▶ 今週 · ':''}WEEK ${week.week} <span class="pb ${PHASE_CLS[week.phase]}" style="margin-left:4px">${PHASE_NAMES[week.phase]}</span> <span style="font-size:9px;color:var(--text3);margin-left:4px">${dateRange}</span>${skipped?'<span style="font-size:9px;color:var(--text3);margin-left:4px">スキップ済</span>':''}</div>
+          <div class="wtitle" style="color:${pct===100?'var(--green)':'var(--text)'}">${pct===100?'✓ 完了':'タスク '+tot+'個'}</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:9px">
+          <span style="font-family:var(--fn);font-size:12px;font-weight:600;color:${pct>0?'var(--accent2)':'var(--text3)'}">${pct}%</span>
+          <span class="wchv">▼</span>
+        </div>
+      </div>
+      <div class="wsb">
+        <div class="pbar" style="margin:7px 0 12px"><div class="pfill" style="width:${pct}%"></div></div>
+        <div class="ssl">
+          <span style="color:var(--accent2)">Threads施策</span>
+          <div style="display:flex;gap:6px">
+            <button class="ewb" onclick="openStrategyModal(${idx})">施策を変更</button>
+            ${pct<100?`<button class="ewb" style="color:var(--text3)" onclick="event.stopPropagation();skipWeek(${idx})">スキップ</button>`:''}
+          </div>
+        </div>
+        ${thF.map((t,i)=>mkI(t,i,'threads',(week.threadsChecked||[]).includes(i))).join('')}
+        ${cthF.map((t,i)=>mkI(t,i,'custom-threads',(week.customThreadsChecked||[]).includes(i))).join('')}
+        <div class="ssl" style="margin-top:12px"><span style="color:var(--green)">note施策</span></div>
+        ${ntF.map((t,i)=>mkI(t,i,'note',(week.noteChecked||[]).includes(i))).join('')}
+        ${cntF.map((t,i)=>mkI(t,i,'custom-note',(week.customNoteChecked||[]).includes(i))).join('')}
+      </div>
+    </div>`;
   }).join('');
 }
 function togWS(idx){document.getElementById('ws'+idx).classList.toggle('open')}
 function togTask(wi,type,i){
   const week=S.curriculum[wi];
   const keyMap={threads:'threadsChecked',note:'noteChecked','custom-threads':'customThreadsChecked','custom-note':'customNoteChecked'};
-  const arr=week[keyMap[type]];const pos=arr.indexOf(i);if(pos>=0)arr.splice(pos,1);else arr.push(i);
+  const arr=week[keyMap[type]];
+  const wasDone=arr.includes(i);
+  if(wasDone)arr.splice(arr.indexOf(i),1);else arr.push(i);
   saveS();renderCurriculum();renderDashboard();
+  // WEEKタスク全完了チェック（チェックした瞬間のみ）
+  if(!wasDone){
+    const thF=(week.threadsStrategies||[]).filter(Boolean);
+    const ntF=(week.noteStrategies||[]).filter(Boolean);
+    const cthF=(week.customThreadsStrategies||[]).filter(Boolean);
+    const cntF=(week.customNoteStrategies||[]).filter(Boolean);
+    const tot=thF.length+ntF.length+cthF.length+cntF.length;
+    const dn=(week.threadsChecked||[]).length+(week.noteChecked||[]).length+(week.customThreadsChecked||[]).length+(week.customNoteChecked||[]).length;
+    if(tot>0 && dn===tot) celebrate('week');
+  }
 }
 
 // ══ NOTE WORKS ══
@@ -1796,7 +2615,9 @@ function saveInput(){
   w.followers=parseInt(document.getElementById('ii-fw').value)||0;
   w.views=parseInt(document.getElementById('ii-vw').value)||0;
   w.verbalization=document.getElementById('ii-memo').value;
-  saveS();renderDashboard();showToast(`Week ${w.week} を保存しました ✓`);
+  saveS();renderDashboard();
+  checkGoalAchievement();
+  showToast(`Week ${w.week} を保存しました ✓`);
 }
 
 // ══ STRATEGY MODAL ══
@@ -1917,25 +2738,217 @@ function copyShare(){
 // ══ MODAL UTILS ══
 function openModal(id){document.getElementById(id).classList.add('vis')}
 function closeModal(id){document.getElementById(id).classList.remove('vis')}
-['modal-strategy','modal-work','modal-price','modal-day-add','modal-reset'].forEach(id=>{
+['modal-strategy','modal-work','modal-price','modal-day-add','modal-reset','modal-import-confirm','modal-redo-onb','modal-weekly-report'].forEach(id=>{
   const el=document.getElementById(id);
   if(el)el.addEventListener('click',function(e){if(e.target===this)closeModal(id)});
 });
 
+// ══ SPLASH ══
+function runSplash(cb){
+  const splash=document.getElementById('scr-splash');
+  if(!splash){cb();return}
+  setTimeout(()=>{
+    splash.classList.add('fade-out');
+    setTimeout(()=>{splash.remove();cb();},650);
+  },2000);
+}
+
+// ══ ANIMATED ONB BG ══
+function initOnbBg(){
+  const canvas=document.getElementById('onb-bg-canvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  let t=0;
+  const blobs=[
+    {ox:.5,oy:.0,r:.75,cr:[124,106,255],a:.28,sx:.0011,sy:.0008,phase:0},
+    {ox:.9,oy:.7,r:.6,cr:[61,219,168],a:.18,sx:-.0009,sy:.0013,phase:2.5},
+    {ox:.1,oy:.5,r:.5,cr:[155,106,255],a:.15,sx:.0014,sy:-.0009,phase:1},
+  ];
+  function resize(){canvas.width=canvas.offsetWidth||window.innerWidth;canvas.height=canvas.offsetHeight||window.innerHeight}
+  resize();window.addEventListener('resize',resize);
+  function draw(){
+    const W=canvas.width,H=canvas.height;
+    ctx.clearRect(0,0,W,H);
+    blobs.forEach(b=>{
+      const bx=(b.ox+Math.sin(t*b.sx*1000+b.phase)*0.16)*W;
+      const by=(b.oy+Math.cos(t*b.sy*1000+b.phase)*0.14)*H;
+      const rad=b.r*Math.min(W,H);
+      const grad=ctx.createRadialGradient(bx,by,0,bx,by,rad);
+      grad.addColorStop(0,`rgba(${b.cr[0]},${b.cr[1]},${b.cr[2]},${b.a})`);
+      grad.addColorStop(0.5,`rgba(${b.cr[0]},${b.cr[1]},${b.cr[2]},${b.a*.25})`);
+      grad.addColorStop(1,`rgba(${b.cr[0]},${b.cr[1]},${b.cr[2]},0)`);
+      ctx.fillStyle=grad;ctx.beginPath();ctx.arc(bx,by,rad,0,Math.PI*2);ctx.fill();
+    });
+    t+=0.016;
+    window._onbBgAnimId=requestAnimationFrame(draw);
+  }
+  if(window._onbBgAnimId) cancelAnimationFrame(window._onbBgAnimId);
+  draw();
+}
+
+function stopOnbBg(){if(window._onbBgAnimId){cancelAnimationFrame(window._onbBgAnimId);window._onbBgAnimId=null}}
+
+// ══ ANIMATED HOME BG ══
+function initHomeBg(){
+  const canvas=document.getElementById('home-bg-canvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  let t=0;
+  const blobs=[
+    {ox:.5,oy:.1,r:.8,cr:[124,106,255],a:.32,sx:.0012,sy:.0009,phase:0},
+    {ox:.85,oy:.8,r:.65,cr:[61,219,168],a:.22,sx:-.0010,sy:.0014,phase:2},
+    {ox:.1,oy:.6,r:.55,cr:[155,106,255],a:.18,sx:.0015,sy:-.0010,phase:4},
+    {ox:.65,oy:.3,r:.5,cr:[61,219,168],a:.14,sx:-.0013,sy:.0011,phase:1.5},
+  ];
+  function resize(){
+    canvas.width=canvas.offsetWidth||window.innerWidth;
+    canvas.height=canvas.offsetHeight||window.innerHeight;
+  }
+  resize();
+  window.addEventListener('resize',resize);
+  function draw(){
+    const W=canvas.width,H=canvas.height;
+    ctx.clearRect(0,0,W,H);
+    blobs.forEach(b=>{
+      const bx=(b.ox+Math.sin(t*b.sx*1000+b.phase)*0.18)*W;
+      const by=(b.oy+Math.cos(t*b.sy*1000+b.phase)*0.15)*H;
+      const rad=b.r*Math.min(W,H);
+      const grad=ctx.createRadialGradient(bx,by,0,bx,by,rad);
+      grad.addColorStop(0,`rgba(${b.cr[0]},${b.cr[1]},${b.cr[2]},${b.a})`);
+      grad.addColorStop(0.5,`rgba(${b.cr[0]},${b.cr[1]},${b.cr[2]},${b.a*.3})`);
+      grad.addColorStop(1,`rgba(${b.cr[0]},${b.cr[1]},${b.cr[2]},0)`);
+      ctx.fillStyle=grad;
+      ctx.beginPath();ctx.arc(bx,by,rad,0,Math.PI*2);ctx.fill();
+    });
+    t+=0.016;
+    window._homeBgAnimId=requestAnimationFrame(draw);
+  }
+  if(window._homeBgAnimId) cancelAnimationFrame(window._homeBgAnimId);
+  draw();
+}
+
+// ══ CELEBRATION ══
+function launchConfetti(){
+  const el=document.getElementById('celebration');
+  if(!el)return;
+  const colors=['#7c6aff','#3ddba8','#ffb547','#ff6b8a','#5bb8ff','#a08fff'];
+  for(let i=0;i<60;i++){
+    const piece=document.createElement('div');
+    piece.className='confetti-piece';
+    piece.style.cssText=`
+      left:${Math.random()*100}%;
+      top:-10px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      width:${6+Math.random()*8}px;
+      height:${6+Math.random()*8}px;
+      border-radius:${Math.random()>.5?'50%':'2px'};
+      animation-duration:${1.5+Math.random()*2}s;
+      animation-delay:${Math.random()*.5}s;
+    `;
+    el.appendChild(piece);
+    setTimeout(()=>piece.remove(),3500);
+  }
+}
+
+function showCelebrationBadge(title,sub){
+  const el=document.getElementById('celebration');
+  if(!el)return;
+  const badge=document.createElement('div');
+  badge.className='celebrate-badge';
+  badge.style.opacity='0';
+  badge.innerHTML=`<div class="celebrate-badge-text">${title}</div><div class="celebrate-badge-sub">${sub}</div>`;
+  el.appendChild(badge);
+  setTimeout(()=>badge.remove(),3000);
+}
+
+function celebrate(type){
+  launchConfetti();
+  if(type==='day') showCelebrationBadge('🎉 今日のタスク完了！','お疲れさまでした！');
+  else if(type==='week') showCelebrationBadge('🏆 今週のタスク完了！','素晴らしい達成です！');
+}
+
 // ══ TOAST ══
 function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500)}
 
+// ══ TAB TOOLTIPS (初回ヒント) ══
+const TAB_TIPS = {
+  dashboard: {
+    title: '📊 ダッシュボードの使い方',
+    body: '<b>今日のタスク</b>はWEEKタスクから毎日自動生成されます。タップしてチェックするとWEEKの進捗にも反映。<br>週が変わると<b>持ち越し確認</b>のポップアップが出ます。'
+  },
+  curriculum: {
+    title: '✅ カリキュラムの使い方',
+    body: '週ごとのThreads施策・note施策が並んでいます。<b>タップでチェック</b>消化。<br>「施策を変更」で週ごとにカスタマイズ、カスタム施策の追加もできます。'
+  },
+  notes: {
+    title: '📝 note管理の使い方',
+    body: '<b>＋ 作品を追加</b>から販売中のnote作品を登録。<br>価格変更ボタンで変更日以降の週に新価格が自動反映されます。'
+  },
+  input: {
+    title: '➕ 記録タブの使い方',
+    body: '上のWeekピルでWeekを選んで実績を入力。<br>作品別の販売数を入力すると<b>売上が自動計算</b>されグラフに反映されます。'
+  },
+  graph: {
+    title: '📈 グラフ＆シェアの使い方',
+    body: '上のトグルで表示する指標を切り替えられます。<br>投稿テンプレートを編集して<b>コピー</b>するとThreadsにそのまま貼り付けられます。'
+  },
+  settings: {
+    title: '⚙️ 設定の使い方',
+    body: 'カリキュラムの<b>リセット</b>やホーム画面への移動ができます。<br>アプリ説明書でいつでも使い方を確認できます。'
+  }
+};
+
+let currentTip = null;
+
+function maybeShowTabTip(tab){
+  // S.seenTabs に記録済みなら表示しない
+  if(!S.seenTabs) S.seenTabs = {};
+  if(S.seenTabs[tab]) return;
+  S.seenTabs[tab] = true;
+  saveS();
+  const tip = TAB_TIPS[tab];
+  if(!tip) return;
+  showTabTip(tip);
+}
+
+function showTabTip(tip){
+  // 既存があれば削除
+  const old = document.getElementById('tab-tip-el');
+  if(old) old.remove();
+  const el = document.createElement('div');
+  el.className = 'tab-tip';
+  el.id = 'tab-tip-el';
+  el.innerHTML = `
+    <button class="tab-tip-close" onclick="closeTabTip()">✕</button>
+    <div class="tab-tip-title">${tip.title}</div>
+    <div class="tab-tip-body">${tip.body}</div>`;
+  document.body.appendChild(el);
+  currentTip = el;
+  // 4秒後に自動で消える
+  setTimeout(closeTabTip, 12000);
+}
+
+function closeTabTip(){
+  const el = document.getElementById('tab-tip-el');
+  if(el){ el.style.opacity='0'; el.style.transform='translateX(-50%) translateY(10px)'; el.style.transition='all .3s'; setTimeout(()=>el.remove(),300); }
+}
+
 // ══ INIT ══
-['threnote_v1','threnote_v2','threnote_v3','threnote_v4','curriculumState'].forEach(k=>localStorage.removeItem(k));
+['threnote_v1','threnote_v2','threnote_v3','threnote_v4','tncompass_v1','curriculumState'].forEach(k=>localStorage.removeItem(k));
 loadS();
+// ライトモード復元
+if(S.lightMode) document.body.classList.add('light-mode');
 initHome();
-// 全スクリーンをまず非表示にしてからホームを表示
+// 全スクリーンをまず非表示
 document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none';});
-const homeEl=document.getElementById('scr-home');
-homeEl.classList.add('active');
-homeEl.style.display='flex';
-// 初回はチュートリアルを自動表示
-if(!S.tutorialDone){ showTutorial(); }
+// スプラッシュ → ホーム
+runSplash(()=>{
+  const homeEl=document.getElementById('scr-home');
+  homeEl.classList.add('active');
+  homeEl.style.display='flex';
+  initHomeBg();
+  if(!S.tutorialDone){ showTutorial(); }
+});
 </script>
 </body>
 </html>
