@@ -3193,17 +3193,94 @@ function saveStrategyModal(){
 }
 
 // ══ GRAPH & SHARE ══
-function togChart(el){const k=el.dataset.k;CS[k]=!CS[k];el.classList.toggle('on',CS[k]);renderGraph()}
+function togChart(el){
+  const k=el.dataset.k;
+  CS[k]=!CS[k];
+  el.classList.toggle('on',CS[k]);
+  renderGraph();
+}
+
 function renderGraph(){
   if(!S.curriculum)return;
-  const labels=S.curriculum.map(w=>`W${w.week}`);const ds=[];
-  if(CS.followers)ds.push({label:'フォロワー数',data:S.curriculum.map(w=>w.followers||0),borderColor:'#7c6aff',backgroundColor:'rgba(124,106,255,0.07)',tension:.4,yAxisID:'y',pointRadius:3,pointHoverRadius:5});
-  if(CS.sales)ds.push({label:'note販売数',data:S.curriculum.map((_,i)=>calcWeekSalesTotal(i)),borderColor:'#3ddba8',backgroundColor:'rgba(61,219,168,0.07)',tension:.4,yAxisID:'y2',pointRadius:3,pointHoverRadius:5});
-  if(CS.revenue)ds.push({label:'売上（¥）',data:S.curriculum.map((_,i)=>calcWeekRevenue(i)),borderColor:'#ffb547',backgroundColor:'rgba(255,181,71,0.07)',tension:.4,yAxisID:'y3',pointRadius:3,pointHoverRadius:5});
-  if(CS.views)ds.push({label:'閲覧数',data:S.curriculum.map(w=>w.views||0),borderColor:'#5bb8ff',backgroundColor:'rgba(91,184,255,0.07)',tension:.4,yAxisID:'y4',pointRadius:3,pointHoverRadius:5});
+  const labels=S.curriculum.map(w=>`W${w.week}`);
+  const ds=[];
+
+  // 各指標を独立した軸で表示（スケールが混在しない）
+  if(CS.followers) ds.push({
+    label:'フォロワー数',
+    data:S.curriculum.map(w=>w.followers||0),
+    borderColor:'#7c6aff',backgroundColor:'rgba(124,106,255,0.08)',
+    tension:.4,yAxisID:'yFw',pointRadius:3,pointHoverRadius:5,fill:true
+  });
+  if(CS.sales) ds.push({
+    label:'note販売数',
+    data:S.curriculum.map((_,i)=>calcWeekSalesTotal(i)),
+    borderColor:'#3ddba8',backgroundColor:'rgba(61,219,168,0.08)',
+    tension:.4,yAxisID:'ySales',pointRadius:3,pointHoverRadius:5,fill:false
+  });
+  if(CS.revenue) ds.push({
+    label:'売上（¥）',
+    data:S.curriculum.map((_,i)=>calcWeekRevenue(i)),
+    borderColor:'#ffb547',backgroundColor:'rgba(255,181,71,0.08)',
+    tension:.4,yAxisID:'yRev',pointRadius:3,pointHoverRadius:5,fill:false
+  });
+  if(CS.views) ds.push({
+    label:'閲覧数',
+    data:S.curriculum.map(w=>w.views||0),
+    borderColor:'#5bb8ff',backgroundColor:'rgba(91,184,255,0.08)',
+    tension:.4,yAxisID:'yViews',pointRadius:3,pointHoverRadius:5,fill:false
+  });
+
   if(mainChart)mainChart.destroy();
   const ctx=document.getElementById('mainChart').getContext('2d');
-  mainChart=new Chart(ctx,{type:'line',data:{labels,datasets:ds},options:{responsive:true,interaction:{mode:'index',intersect:false},plugins:{legend:{labels:{color:'#8888aa',font:{family:"'DM Sans'"},boxWidth:11,padding:10}},title:{display:false}},scales:{x:{ticks:{color:'#55556a',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},y:{display:CS.followers,position:'left',ticks:{color:'#7c6aff',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},y2:{display:CS.sales,position:'right',ticks:{color:'#3ddba8',font:{size:10}},grid:{drawOnChartArea:false}},y3:{display:CS.revenue,position:'right',ticks:{color:'#ffb547',font:{size:10}},grid:{drawOnChartArea:false}},y4:{display:CS.views,position:'right',ticks:{color:'#5bb8ff',font:{size:10}},grid:{drawOnChartArea:false}}}}});
+
+  // 表示中の軸が何本か数える（右軸の重複表示を避ける）
+  const rightAxes=[];
+  if(CS.sales) rightAxes.push('ySales');
+  if(CS.revenue) rightAxes.push('yRev');
+  if(CS.views) rightAxes.push('yViews');
+
+  mainChart=new Chart(ctx,{
+    type:'line',
+    data:{labels,datasets:ds},
+    options:{
+      responsive:true,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{labels:{color:'#9898bb',font:{family:"'DM Sans'"},boxWidth:10,padding:10}}
+      },
+      scales:{
+        x:{ticks:{color:'#7777a0',font:{size:10}},grid:{color:'rgba(255,255,255,0.04)'}},
+        yFw:{
+          display:CS.followers,
+          position:'left',
+          ticks:{color:'#7c6aff',font:{size:10},maxTicksLimit:6},
+          grid:{color:'rgba(255,255,255,0.04)'}
+        },
+        ySales:{
+          display:CS.sales,
+          position:'right',
+          ticks:{color:'#3ddba8',font:{size:10},maxTicksLimit:6},
+          grid:{drawOnChartArea:!CS.followers}
+        },
+        yRev:{
+          display:CS.revenue,
+          position:'right',
+          ticks:{
+            color:'#ffb547',font:{size:10},maxTicksLimit:6,
+            callback:v=>'¥'+v.toLocaleString()
+          },
+          grid:{drawOnChartArea:!CS.followers&&!CS.sales}
+        },
+        yViews:{
+          display:CS.views,
+          position:'right',
+          ticks:{color:'#5bb8ff',font:{size:10},maxTicksLimit:6},
+          grid:{drawOnChartArea:false}
+        }
+      }
+    }
+  });
   const totalS=calcTotalSales(),totalR=calcTotalRevenue();
   const latFw=S.curriculum.reduce((a,w)=>w.followers>0?w.followers:a,0);
   let tot=0,dn=0;
