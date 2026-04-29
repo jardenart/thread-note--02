@@ -10,7 +10,28 @@
 <meta name="theme-color" content="#0a0a0f">
 <title>TNCompass — Threads×note 収益化</title>
 
-<!-- PWA manifest + icons (インライン) -->
+<!-- オフラインキャッシュ（Cache API直接利用）-->
+<script>
+(function(){
+  // Service WorkerなしでCache APIを直接使いページをキャッシュ
+  if(!('caches' in window)) return;
+  const CACHE = 'tncompass-v6-s1';
+  // 現在のページをキャッシュに保存
+  caches.open(CACHE).then(cache => {
+    cache.put(location.href, new Response(document.documentElement.outerHTML, {
+      headers: {'Content-Type': 'text/html; charset=utf-8'}
+    }));
+  }).catch(()=>{});
+  // オフライン時の案内（Service Workerなしでも動作確認）
+  window.addEventListener('offline', ()=>{
+    console.log('[TNCompass] オフライン検知 - キャッシュから動作');
+  });
+  window.addEventListener('online', ()=>{
+    console.log('[TNCompass] オンライン復帰');
+  });
+})();
+</script>
+
 <link rel="apple-touch-icon" href="data:image/png;base64,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">
 <script>
 (function(){
@@ -75,7 +96,7 @@ body.light-mode .splash-bar{background:rgba(0,0,0,.1)}
 /* ライトモードのテーマカラー */
 body.light-mode{background:var(--bg);color:var(--text)}
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-body{font-family:var(--fb);background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden}
+body{font-family:var(--fb);background:var(--bg);color:var(--text);min-height:100dvh;overflow-x:hidden;visibility:hidden}
 body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");pointer-events:none;z-index:999;opacity:.5}
 
 .screen{display:none;animation:fi .3s ease}.screen.active{display:block}
@@ -247,6 +268,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .ws.open .wchv{transform:rotate(180deg)}
 .wsb{display:none;padding:0 18px 18px}
 .ws.open .wsb{display:block}
+.ws-current{border:1.5px solid var(--accent) !important;box-shadow:0 0 0 3px rgba(124,106,255,.08) !important}
 .ssl{font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin:16px 0 10px;display:flex;align-items:center;justify-content:space-between;color:var(--text3)}
 .ewb{font-size:10px;padding:4px 10px;background:transparent;border:1px solid var(--border2);border-radius:20px;color:var(--text3);cursor:pointer;font-family:var(--fb);transition:all .2s}
 .ewb:active{border-color:var(--accent);color:var(--accent2)}
@@ -392,7 +414,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 #celebration{position:fixed;inset:0;pointer-events:none;z-index:800;overflow:hidden}
 .confetti-piece{position:absolute;width:8px;height:8px;border-radius:2px;opacity:0;animation:confettiFall linear forwards}
 @keyframes confettiFall{0%{opacity:1;transform:translateY(-20px) rotate(0deg)}100%{opacity:0;transform:translateY(100vh) rotate(720deg)}}
-.celebrate-badge{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.5);background:linear-gradient(135deg,var(--accent),#9b6aff);border-radius:var(--r2);padding:18px 28px;text-align:center;z-index:801;pointer-events:none;animation:badgeIn .5s cubic-bezier(.22,1,.36,1) forwards,badgeOut .4s 2s ease forwards}
+.celebrate-badge{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.5);background:linear-gradient(135deg,var(--accent),#9b6aff);border-radius:var(--r2);padding:18px 28px;text-align:center;z-index:801;pointer-events:none;animation:badgeIn .5s cubic-bezier(.22,1,.36,1) forwards,badgeOut .4s 4s ease forwards}
 @keyframes badgeIn{to{transform:translate(-50%,-50%) scale(1);opacity:1}}
 @keyframes badgeOut{to{transform:translate(-50%,-50%) scale(.9);opacity:0}}
 .celebrate-badge-text{font-family:var(--fd);font-size:18px;font-weight:800;color:white}
@@ -482,6 +504,17 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 .copy-btn:active{transform:scale(.98)}
 
 /* ── ローンチ機能 ── */
+/* ── 毎日施策ゲージ ── */
+.daily-gauge-item{display:flex;align-items:center;gap:7px;padding:7px 0;border-bottom:1px solid var(--border)}
+.daily-gauge-item:last-child{border-bottom:none}
+.daily-gauge-wrap{flex:1;min-width:0}
+.daily-gauge-label{font-size:13px;color:var(--text);margin-bottom:4px;display:flex;justify-content:space-between;align-items:center}
+.daily-gauge-label.done{color:var(--text3);text-decoration:line-through}
+.daily-gauge-count{font-size:11px;font-weight:700;color:var(--accent2);font-family:var(--fn)}
+.daily-gauge-count.full{color:var(--green)}
+.daily-gauge-bar{height:5px;background:var(--bg2);border-radius:3px;overflow:hidden}
+.daily-gauge-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .4s cubic-bezier(.22,1,.36,1)}
+.daily-gauge-fill.full{background:linear-gradient(90deg,var(--green),#5dffc0)}
 .launch-badge{display:inline-flex;align-items:center;gap:5px;font-size:10px;font-weight:700;padding:3px 9px;border-radius:20px;background:linear-gradient(120deg,rgba(255,107,138,.15),rgba(255,181,71,.12));border:1px solid rgba(255,181,71,.3);color:var(--amber);letter-spacing:.04em;margin-top:6px}
 .launch-btn{width:100%;padding:9px;background:transparent;border:1.5px dashed var(--amber);border-radius:var(--r);color:var(--amber);font-size:12px;cursor:pointer;margin-top:10px;font-family:var(--fb);transition:all .2s;opacity:.8}
 .launch-btn:active{opacity:1;background:rgba(255,181,71,.08)}
@@ -591,7 +624,7 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
 <div class="toast" id="toast"></div>
 
 <!-- ══ HOME SCREEN ══ -->
-<div class="screen active" id="scr-home">
+<div class="screen" id="scr-home">
   <canvas id="home-bg-canvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:0"></canvas>
   <div class="safe-top"></div>
   <div class="home-logo-wrap">
@@ -726,6 +759,15 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     </div>
     <!-- フェーズバナー -->
     <div id="db-phase-banner"></div>
+    <!-- 記録入力促進バナー -->
+    <div id="record-remind-banner" style="display:none;background:rgba(255,181,71,.07);border:1px solid rgba(255,181,71,.25);border-radius:var(--r2);padding:10px 14px;margin-bottom:11px;display:none;align-items:center;gap:10px">
+      <span style="font-size:18px">📝</span>
+      <div style="flex:1">
+        <div style="font-size:13px;font-weight:600;color:var(--amber)">今週の記録をつけましょう</div>
+        <div style="font-size:11px;color:var(--text2);margin-top:1px">週末にフォロワー数・販売数を入力して振り返りを</div>
+      </div>
+      <button onclick="swTab('input',document.querySelectorAll('.ni')[3]);dismissRecordRemind()" style="font-size:11px;padding:5px 12px;background:var(--amber);border:none;border-radius:20px;color:#1a1000;font-weight:700;cursor:pointer;font-family:var(--fb);flex-shrink:0">入力する</button>
+    </div>
     <div class="hero">
       <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:4px">
         <div class="hero-lbl">全体達成率</div>
@@ -770,7 +812,10 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
         <div class="su">残り</div>
       </div>
     </div>
-    <div class="sec-t">今日のタスク</div>
+    <div style="display:flex;align-items:center;gap:8px;margin:20px 0 10px">
+      <div style="width:4px;height:22px;background:linear-gradient(180deg,var(--accent),var(--accent2));border-radius:2px;flex-shrink:0"></div>
+      <span style="font-size:18px;font-weight:800;color:var(--text);letter-spacing:-.02em;font-family:var(--fd)">今日のタスク</span>
+    </div>
     <div class="day-section" id="day-section">
       <div class="day-header">
         <span class="day-date" id="day-date-lbl"></span>
@@ -789,8 +834,12 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <div id="day-tasks-list"></div>
       <button class="day-add-btn" onclick="openDayAddModal()">＋ カスタムタスクを追加</button>
     </div>
-    <div class="sec-t" style="display:flex;justify-content:space-between;align-items:center">
-      <span>今週のタスク</span>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin:24px 0 10px">
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="width:4px;height:18px;background:linear-gradient(180deg,var(--text3),var(--border2));border-radius:2px;flex-shrink:0"></div>
+        <span style="font-size:14px;font-weight:700;color:var(--text2);letter-spacing:-.01em;font-family:var(--fd)">今週のタスク</span>
+        <span style="font-size:10px;color:var(--text3);font-weight:500">参考：週の目標一覧</span>
+      </div>
       <button onclick="showWeeklyReport()" style="font-size:11px;padding:4px 11px;background:var(--card2);border:1px solid var(--border2);border-radius:20px;color:var(--text2);cursor:pointer;font-family:var(--fb)">📊 週次レポート</button>
     </div>
     <div class="wb">
@@ -863,6 +912,12 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
         <div class="cpill c-grn" data-k="sales" onclick="selChart(this)">note販売数</div>
         <div class="cpill c-amb" data-k="revenue" onclick="selChart(this)">売上</div>
         <div class="cpill c-blu" data-k="views" onclick="selChart(this)">閲覧数</div>
+      </div>
+      <div id="graph-empty-state" style="display:none;flex-direction:column;align-items:center;justify-content:center;padding:40px 20px;gap:12px">
+        <div style="font-size:40px">📊</div>
+        <div style="font-size:15px;font-weight:700;color:var(--text)">まだデータがありません</div>
+        <div style="font-size:12px;color:var(--text2);text-align:center;line-height:1.7">記録タブでフォロワー数・販売数を入力すると<br>グラフが表示されます</div>
+        <button onclick="swTab('input',document.querySelectorAll('.ni')[3])" style="margin-top:4px;padding:9px 22px;background:linear-gradient(135deg,var(--accent),#9b6aff);border:none;border-radius:20px;color:white;font-family:var(--fd);font-size:13px;font-weight:700;cursor:pointer">記録を入力する</button>
       </div>
       <div class="cwrap"><canvas id="mainChart" height="220"></canvas></div>
     </div>
@@ -947,6 +1002,10 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
       <span class="settings-item-arrow">›</span>
     </div>
     <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(this)">
+    <div style="margin-top:10px;padding:10px 14px;background:var(--bg2);border-radius:var(--r);display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:11px;color:var(--text3)">アプリバージョン</span>
+      <span style="font-size:11px;color:var(--text2);font-family:var(--fn)">v6  /  schema v<span id="schema-ver-display">-</span></span>
+    </div>
 
     <!-- カリキュラム -->
     <div class="sec-t" style="margin-top:24px">カリキュラム</div>
@@ -1092,6 +1151,19 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
   <div class="modal-sheet">
     <div class="modal-handle"></div>
     <div class="modal-title">カスタムタスクを追加</div>
+    <span class="modal-inp-label">種別</span>
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <label style="flex:1;display:flex;align-items:center;gap:7px;padding:10px 12px;background:var(--bg2);border-radius:var(--r);border:1.5px solid var(--border2);cursor:pointer" id="lbl-type-threads">
+        <input type="radio" name="day-task-type" value="custom-threads" checked onchange="updateDayTypeStyle()" style="display:none">
+        <span style="width:10px;height:10px;border-radius:50%;background:var(--accent);flex-shrink:0" id="dot-threads"></span>
+        <span style="font-size:12px;font-weight:600;color:var(--accent2)">Threads</span>
+      </label>
+      <label style="flex:1;display:flex;align-items:center;gap:7px;padding:10px 12px;background:var(--bg2);border-radius:var(--r);border:1.5px solid var(--border2);cursor:pointer" id="lbl-type-note">
+        <input type="radio" name="day-task-type" value="custom-note" onchange="updateDayTypeStyle()" style="display:none">
+        <span style="width:10px;height:10px;border-radius:50%;background:var(--bg3);flex-shrink:0" id="dot-note"></span>
+        <span style="font-size:12px;font-weight:600;color:var(--text3)" id="txt-note">note</span>
+      </label>
+    </div>
     <span class="modal-inp-label">タスク内容</span>
     <input class="modal-inp" type="text" id="day-custom-inp" placeholder="例：今日の気づきをメモする">
     <div class="modal-btns"><button class="m-cancel" onclick="closeModal('modal-day-add')">キャンセル</button><button class="m-save" onclick="addCustomDayTask()">追加する</button></div>
@@ -1142,7 +1214,47 @@ body::before{content:'';position:fixed;inset:0;background-image:url("data:image/
     </div>
   </div>
 </div>
-<div class="modal-bg" id="modal-reset">
+<!-- ══ ONB SUMMARY MODAL ══ -->
+<div class="modal-bg" id="modal-onb-summary">
+  <div class="modal-sheet" style="max-height:90vh;overflow-y:auto">
+    <div class="modal-handle"></div>
+    <div style="text-align:center;padding:8px 0 16px">
+      <div style="font-size:36px;margin-bottom:8px">🧭</div>
+      <div style="font-size:20px;font-weight:800;color:var(--text);font-family:var(--fd);letter-spacing:-.02em">カリキュラム開始！</div>
+      <div style="font-size:13px;color:var(--text2);margin-top:4px" id="onb-sum-plan"></div>
+    </div>
+    <div style="background:var(--bg2);border-radius:var(--r2);padding:16px;margin-bottom:16px">
+      <div style="font-size:12px;font-weight:700;color:var(--accent2);letter-spacing:.06em;text-transform:uppercase;margin-bottom:12px">使い方 3ステップ</div>
+      <div style="display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#9b6aff);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">1</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text)">毎日「今日のタスク」をチェック</div>
+            <div style="font-size:11px;color:var(--text2);margin-top:2px;line-height:1.6">ホームの「今日のタスク」だけ見ればOK。DAYタスクをチェックするとWEEKのゲージが自動で溜まります</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--green),#5dffc0);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">2</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text)">週1回「記録タブ」に数字を入力</div>
+            <div style="font-size:11px;color:var(--text2);margin-top:2px;line-height:1.6">フォロワー数・note販売数を記録すると、グラフと予測が更新されます</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:flex-start;gap:12px">
+          <div style="width:28px;height:28px;border-radius:8px;background:linear-gradient(135deg,var(--amber),#ffd580);display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0">3</div>
+          <div>
+            <div style="font-size:13px;font-weight:700;color:var(--text)">「？」ボタンで施策のやり方を確認</div>
+            <div style="font-size:11px;color:var(--text2);margin-top:2px;line-height:1.6">各タスクの「？」をタップするとヒントが表示されます。迷ったら読みましょう</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <button onclick="closeModal('modal-onb-summary')" style="width:100%;padding:14px;background:linear-gradient(135deg,var(--accent),#9b6aff);border:none;border-radius:var(--r2);color:white;font-family:var(--fd);font-size:15px;font-weight:700;cursor:pointer;letter-spacing:.02em">はじめる 🚀</button>
+  </div>
+</div>
+
+<!-- ══ RESET MODAL ══ -->
+<div class="modal-bg" id="modal-reset" style="display:none">
   <div class="reset-confirm-sheet">
     <div class="reset-confirm-icon">🗑️</div>
     <div class="reset-confirm-title">カリキュラムをリセット</div>
@@ -1657,7 +1769,7 @@ function doReset(){
 
 // ══ MASTER DATA ══
 const THREADS_ALL=['プロフィール改善','毎日3投稿','毎日5投稿','毎日10投稿','毎日15投稿','毎日20投稿以上','リプ毎日5回以上','リプ毎日10回以上','リプ毎日20回以上','リプ毎日30回以上','固定投稿見直し','投稿分析言語化（言語化欄に記載）','ゴースト投稿','引用投稿（3日に1回）','引用投稿（2日に1回）','Threads投稿内容についてAIと壁打ち（10分/週）','Threads投稿内容についてAIと壁打ち（10分/毎日）','note導線投稿（3日に1回）','note導線投稿（2日に1回）','note導線投稿（毎日1回）'];
-const NOTE_ALL=['プロフィール改善','無料note執筆','無料noteリリース','有料note執筆','有料note予告','有料noteリリース','無料noteリライト','有料noteの無料部分リライト','有料部分リライト','コンテンツSEO対策（タイトル、冒頭文）','次回作テーマをAIと壁打ち（10分）'];
+const NOTE_ALL=['noteプロフィール改善','競合のnoteを読む（週1）','無料note執筆orリライト（週1）','有料note執筆','有料note執筆（続き）','次回作テーマをAIと壁打ち（週1）','次回作テーマをAIと壁打ち（週2）','次回作テーマをAIと壁打ち（週3）','コンテンツSEO対策（タイトル・冒頭文）','noteを読み返し必要に応じてリライト'];
 const DIFF_CFG={slow:{label:'ゆっくり',emoji:'🌱',months:12,color:'var(--green)'},normal:{label:'コツコツ',emoji:'🔥',months:6,color:'var(--blue)'},fast:{label:'ガツガツ',emoji:'⚡',months:4,color:'var(--amber)'},vfast:{label:'バリバリ',emoji:'🚀',months:2,color:'var(--coral)'}};
 const PHASE_NAMES={'1':'Phase 1: 基礎構築','2':'Phase 2: 展開初期','3':'Phase 3: 本展開','4':'Phase 4: 最適化'};
 const PHASE_CLS={'1':'pb1','2':'pb2','3':'pb3','4':'pb4'};
@@ -1671,7 +1783,36 @@ note販売：{sales}本
 目標に向かって進んでいます✊
 #Threads運用 #note収益化`;
 
-const WEEK_TO_DAY_FREQ={'プロフィール改善':1,'毎日3投稿':7,'毎日5投稿':7,'毎日10投稿':7,'毎日15投稿':7,'毎日20投稿以上':7,'リプ毎日5回以上':7,'リプ毎日10回以上':7,'リプ毎日20回以上':7,'リプ毎日30回以上':7,'固定投稿見直し':3,'投稿分析言語化（言語化欄に記載）':3,'ゴースト投稿':7,'引用投稿（3日に1回）':7,'引用投稿（2日に1回）':7,'Threads投稿内容についてAIと壁打ち（10分/週）':2,'Threads投稿内容についてAIと壁打ち（10分/毎日）':7,'note導線投稿（3日に1回）':7,'note導線投稿（2日に1回）':7,'note導線投稿（毎日1回）':7,'noteプロフィール改善':1,'競合のnoteを読む（週1）':1,'無料note執筆orリライト（週1）':1,'次回作テーマをAIと壁打ち（週1）':1,'次回作テーマをAIと壁打ち（週2）':2,'次回作テーマをAIと壁打ち（週3）':3,'有料note執筆':2,'有料note執筆（続き）':2,'コンテンツSEO対策（タイトル・冒頭文）':1,'noteを読み返し必要に応じてリライト':1};
+const WEEK_TO_DAY_FREQ={
+  // Threads・毎日系
+  '毎日3投稿':7,'毎日5投稿':7,'毎日10投稿':7,'毎日15投稿':7,'毎日20投稿以上':7,
+  'リプ毎日5回以上':7,'リプ毎日10回以上':7,'リプ毎日20回以上':7,'リプ毎日30回以上':7,
+  'ゴースト投稿':7,
+  'Threads投稿内容についてAIと壁打ち（10分/毎日）':7,
+  // Threads・頻度指定系
+  'note導線投稿（3日に1回）':3,
+  'note導線投稿（2日に1回）':4,
+  'note導線投稿（毎日1回）':7,
+  '引用投稿（3日に1回）':3,
+  '引用投稿（2日に1回）':4,
+  '固定投稿見直し':3,
+  'Threads投稿内容についてAIと壁打ち（10分/週）':2,
+  // Threads・週1系
+  'プロフィール改善':1,
+  '投稿分析言語化（言語化欄に記載）':1,
+  // note・週複数系
+  '次回作テーマをAIと壁打ち（週3）':3,
+  '次回作テーマをAIと壁打ち（週2）':2,
+  '有料note執筆':2,
+  '有料note執筆（続き）':2,
+  // note・週1系
+  'noteプロフィール改善':1,
+  '競合のnoteを読む（週1）':1,
+  '無料note執筆orリライト（週1）':1,
+  '次回作テーマをAIと壁打ち（週1）':1,
+  'コンテンツSEO対策（タイトル・冒頭文）':1,
+  'noteを読み返し必要に応じてリライト':1,
+};
 
 // ══ STATE ══
 let S={};
@@ -1682,6 +1823,69 @@ const CS_REMOVED=true; // deprecated
 let mainChart=null;
 let onbWorks=[];
 let carryoverTasks=[],carryoverTargetWeek=0,carryoverSelected=new Set();
+
+const SCHEMA_VERSION = 1;
+
+function migrateData(){
+  if(!S || !S.diff) return; // 未初期化（新規ユーザー）はスキップ
+
+  const v = S._schemaVersion || 0;
+  if(v >= SCHEMA_VERSION) return; // 最新版なら何もしない
+
+  console.log(`[TNCompass] データマイグレーション: v${v} → v${SCHEMA_VERSION}`);
+
+  // ── v0 → v1 ──────────────────────────────────────────
+  // 変更内容:
+  //   - WEEK_TO_DAY_FREQ の導線投稿・引用投稿が 7→3/4 に変更
+  //   - リプ施策名が「リプ○回以上投稿」→「リプ毎日○回以上」に変更
+  //   - AIと壁打ち施策名が「AIと壁打ち（10分）」→「AIと壁打ち（10分/週）/（10分/毎日）」に変更
+  //   - noteStrategies: 無料noteリリース・有料note予告・有料noteリリース削除
+  //   - threadsStrategies: 「Threadsで導線投稿（1日〜2日で1回）」廃止→「note導線投稿（○日に1回）」に統一
+  //   - launches / lastSeenDate / stagnationDismissed フィールド追加
+  if(v < 1){
+    // 施策名の置換マップ（旧 → 新）
+    const THREADS_RENAME = {
+      'リプ2回以上投稿':  'リプ毎日5回以上',
+      'リプ5回以上投稿':  'リプ毎日10回以上',
+      'リプ10回以上投稿': 'リプ毎日20回以上',
+      'リプ20回以上投稿': 'リプ毎日30回以上',
+      'Threads投稿内容についてAIと壁打ち（10分）': 'Threads投稿内容についてAIと壁打ち（10分/週）',
+      'Threadsで導線投稿（1日〜2日で1回）': 'note導線投稿（2日に1回）',
+      '毎日1-3投稿': '毎日3投稿',
+      '毎日5投稿以上': '毎日5投稿',
+      '毎日10投稿以上': '毎日10投稿',
+      '毎日15投稿以上': '毎日15投稿',
+    };
+    const NOTE_RENAME = {
+      'コンテンツSEO対策（タイトル、冒頭文）': 'コンテンツSEO対策（タイトル・冒頭文）',
+      '次回作テーマをAIと壁打ち（10分）': '次回作テーマをAIと壁打ち（週1）',
+    };
+    // 削除する旧note施策
+    const NOTE_REMOVE = ['無料noteリリース','有料note予告','有料noteリリース'];
+
+    if(S.curriculum){
+      S.curriculum.forEach(week => {
+        // Threads施策名を変換 → 重複除去
+        const renamedT = (week.threadsStrategies||[]).map(s => THREADS_RENAME[s]||s);
+        week.threadsStrategies = [...new Set(renamedT)]; // 重複除去
+        // note施策名を変換・削除 → 重複除去
+        const renamedN = (week.noteStrategies||[])
+          .filter(s => !NOTE_REMOVE.includes(s))
+          .map(s => NOTE_RENAME[s]||s);
+        week.noteStrategies = [...new Set(renamedN)]; // 重複除去
+      });
+    }
+
+    // 新フィールドの初期化
+    if(!S.launches) S.launches = [];
+    if(!S.lastSeenDate) S.lastSeenDate = todayStr();
+    if(!S.badges) S.badges = {};
+  }
+
+  S._schemaVersion = SCHEMA_VERSION;
+  saveS();
+  console.log(`[TNCompass] マイグレーション完了`);
+}
 
 function loadS(){try{S=JSON.parse(localStorage.getItem('tncompass_v6')||'{}')}catch(e){S={}}}
 function saveS(){localStorage.setItem('tncompass_v6',JSON.stringify(S))}
@@ -1757,16 +1961,6 @@ function goHome(){
 
 function showManual(){ showTutorial(); }
 
-function confirmReset(){
-  if(confirm('カリキュラムを完全にリセットします。\n全データが削除されます。よろしいですか？')){
-    localStorage.removeItem('tncompass_v6');
-    S={};
-    document.getElementById('bnav').classList.remove('vis');
-    showScreen('scr-home');
-    initHome();
-    showToast('リセットしました');
-  }
-}
 
 // ══ SETTINGS ══
 function renderSettingsInfo(){
@@ -1803,10 +1997,10 @@ function renderSettingsInfo(){
   // テーマラベル更新
   const tl=document.getElementById('theme-lbl');
   if(tl) tl.textContent=document.body.classList.contains('light-mode')?'🌙 ダークモードに切替':'☀️ ライトモードに切替';
-  checkBadges();
+  checkBadges(true);
+  const sv=document.getElementById('schema-ver-display');
+  if(sv) sv.textContent=S._schemaVersion||0;
 }
-
-// ライトモード切替
 function toggleLightMode(){
   const isLight=document.body.classList.toggle('light-mode');
   S.lightMode=isLight;saveS();
@@ -2075,7 +2269,7 @@ function startApp(){
   const weeks=Math.ceil(days/7);
   const noteWorks=onbWorks.map(w=>({id:w.id,name:w.name,priceHistory:[{price:w.price,fromWeek:0,changeDate:''}]}));
   S={diff:selDiffKey,targetRevenue:rev,startDate:startStr,endDate:endDate.toISOString().split('T')[0],weeks,noteWorks,customThreadsStrategies:[],customNoteStrategies:[],dayTasks:{},lastSeenDate:startStr,shareTemplate:DEFAULT_TEMPLATE,curriculum:buildCurriculum(selDiffKey,startDate,weeks)};
-  saveS(); launchApp();
+  saveS(); launchApp(); showOnbSummary();
 }
 
 // ══ CURRICULUM GEN ══
@@ -2127,7 +2321,7 @@ function getThreadsStrategies(diff,progress,weekIdx,totalWeeks){
   if(diff==='slow'||diff==='normal') s.push('引用投稿（3日に1回）');
   else s.push('引用投稿（2日に1回）');
 
-  return s.slice(0,7);
+  return s;
 }
 
 function getNoteStrategies(diff,progress,weekIdx,totalWeeks){
@@ -2147,7 +2341,7 @@ function getNoteStrategies(diff,progress,weekIdx,totalWeeks){
     if(diff==='slow'||diff==='normal') s.push('次回作テーマをAIと壁打ち（週1）');
     else if(diff==='fast') s.push('次回作テーマをAIと壁打ち（週2）');
     else s.push('次回作テーマをAIと壁打ち（週3）');
-    return s.slice(0,6);
+    return s;
   }
 
   // Phase 2（25〜50%）
@@ -2156,7 +2350,7 @@ function getNoteStrategies(diff,progress,weekIdx,totalWeeks){
     s.push('コンテンツSEO対策（タイトル・冒頭文）');
     if(diff==='slow'||diff==='normal') s.push('次回作テーマをAIと壁打ち（週1）');
     else s.push('次回作テーマをAIと壁打ち（週2）');
-    return s.slice(0,6);
+    return s;
   }
 
   // Phase 3（50〜75%）
@@ -2165,7 +2359,7 @@ function getNoteStrategies(diff,progress,weekIdx,totalWeeks){
     s.push('コンテンツSEO対策（タイトル・冒頭文）');
     if(diff==='slow'||diff==='normal') s.push('次回作テーマをAIと壁打ち（週1）');
     else s.push('次回作テーマをAIと壁打ち（週2）');
-    return s.slice(0,6);
+    return s;
   }
 
   // Phase 4（75〜100%）
@@ -2173,7 +2367,7 @@ function getNoteStrategies(diff,progress,weekIdx,totalWeeks){
   s.push('コンテンツSEO対策（タイトル・冒頭文）');
   if(diff==='slow'||diff==='normal') s.push('次回作テーマをAIと壁打ち（週1）');
   else s.push('次回作テーマをAIと壁打ち（週2）');
-  return s.slice(0,6);
+  return s;
 }
 function calcCurve(profile,weeks,avg){
   const fw={slow:4,normal:3,fast:2,vfast:2}[profile];
@@ -2213,39 +2407,40 @@ function launchApp(){
   if(!S.lastSeenDate)S.lastSeenDate=todayStr();
   if(!S.shareTemplate)S.shareTemplate=DEFAULT_TEMPLATE;
   patchReplyTasks();
+  patchDedupStrategies();
+  autoUpdateStrategies();
   patchLaunchStrategies();
   ensureTodayTasks();
   checkWeekRollover();
   checkStagnation();
-  renderDayTasks();
-  renderDashboard();
-  renderCurriculum();
-  renderWorks();
-  renderInputForm();
-  renderSettingsInfo();
+  safeRender(renderDayTasks,'renderDayTasks');
+  safeRender(renderDashboard,'renderDashboard');
+  safeRender(renderCurriculum,'renderCurriculum');
+  safeRender(renderWorks,'renderWorks');
+  safeRender(renderInputForm,'renderInputForm');
+  safeRender(renderSettingsInfo,'renderSettingsInfo');
   document.getElementById('share-template').value=S.shareTemplate||DEFAULT_TEMPLATE;
 }
 
 function patchReplyTasks(){
-  if(!S.curriculum||!S.diff) return;
-  const replyMap={slow:'リプ毎日5回以上',normal:'リプ毎日10回以上',fast:'リプ毎日20回以上',vfast:'リプ毎日30回以上'};
-  const reply=replyMap[S.diff];
-  if(!reply) return;
-  let patched=false;
+  // patchAllStrategies / getThreadsStrategies に統合済みのためno-op
+}
+
+// 起動時に常に施策の重複を除去する
+function patchDedupStrategies(){
+  if(!S.curriculum)return;
+  let changed=false;
   S.curriculum.forEach(week=>{
-    const already=(week.threadsStrategies||[]).includes(reply);
-    if(!already){
-      const ts=week.threadsStrategies||[];
-      const insertIdx=ts.findIndex(s=>s.startsWith('毎日'));
-      if(insertIdx>=0) ts.splice(insertIdx+1,0,reply);
-      else ts.push(reply);
-      week.threadsStrategies=ts.slice(0,7);
-      patched=true;
-    }
+    const bt=(week.threadsStrategies||[]);
+    const dt=[...new Set(bt)];
+    if(dt.length!==bt.length){week.threadsStrategies=dt;changed=true;}
+    const bn=(week.noteStrategies||[]);
+    const dn=[...new Set(bn)];
+    if(dn.length!==bn.length){week.noteStrategies=dn;changed=true;}
   });
-  if(patched){
+  if(changed){
     const today=todayStr();
-    if(S.dayTasks&&S.dayTasks[today]) delete S.dayTasks[today];
+    if(S.dayTasks&&S.dayTasks[today])delete S.dayTasks[today];
     saveS();
   }
 }
@@ -2284,6 +2479,47 @@ function patchAllStrategies(){
   renderCurriculum();
   renderDayTasks();
   showToast('カリキュラムを最新版に更新しました ✓');
+}
+
+// 起動時に自動実行：旧施策名を含む週を最新に更新（カスタム・dailyProgressは保持）
+function autoUpdateStrategies(){
+  if(!S.curriculum||!S.diff||!S.weeks) return;
+
+  // 旧施策名リスト（これが含まれていたら更新対象）
+  const OLD_NAMES=[
+    '毎日1-3投稿','毎日5投稿以上','毎日10投稿以上','毎日15投稿以上',
+    'リプ2回以上投稿','リプ5回以上投稿','リプ10回以上投稿','リプ20回以上投稿',
+    'Threads投稿内容についてAIと壁打ち（10分）',
+    'Threadsで導線投稿（1日〜2日で1回）',
+    'コンテンツSEO対策（タイトル、冒頭文）',
+    '次回作テーマをAIと壁打ち（10分）',
+    '無料noteリリース','有料note予告','有料noteリリース',
+  ];
+
+  let updated=false;
+  S.curriculum.forEach((week,i)=>{
+    const hasOld=[...(week.threadsStrategies||[]),...(week.noteStrategies||[])]
+      .some(s=>OLD_NAMES.includes(s));
+    if(!hasOld) return; // 古い施策がなければスキップ
+
+    const progress=i/S.weeks;
+    // dailyProgress・カスタム施策・チェック状態は保持
+    const dp=week.dailyProgress;
+    week.threadsStrategies=getThreadsStrategies(S.diff,progress,i,S.weeks);
+    week.noteStrategies=getNoteStrategies(S.diff,progress,i,S.weeks);
+    if(dp) week.dailyProgress=dp;
+    // checkedはリセット（施策名が変わるのでインデックスがずれるため）
+    week.threadsChecked=[];
+    week.noteChecked=[];
+    updated=true;
+  });
+
+  if(updated){
+    const today=todayStr();
+    if(S.dayTasks&&S.dayTasks[today]) delete S.dayTasks[today];
+    saveS();
+    console.log('[TNCompass] カリキュラムを自動更新しました');
+  }
 }
 
 // ══ LAUNCH FEATURE ══
@@ -2547,7 +2783,7 @@ const BADGES = [
     svg:`<circle r="14" fill="none" stroke="#bb66ff" stroke-width="1.5"/><text y="5" text-anchor="middle" font-size="15">🎊</text>` },
 ];
 
-function checkBadges(){
+function checkBadges(silent){
   if(!S.curriculum) return;
   if(!S.badges) S.badges = {};
   const totalDays = calcTotalAchievedDays();
@@ -2597,7 +2833,6 @@ function checkBadges(){
     complete:overallPct >= 1.0,
     restart: !!(S.restartCount && S.restartCount >= 1),
     // note
-    first_note: noteWorks.length >= 1,
     notes3:  noteWorks.length >= 3,
     sales10: totalSales >= 10,
     sales100:totalSales >= 100,
@@ -2613,10 +2848,11 @@ function checkBadges(){
   }
   if(newBadges.length>0){
     saveS();
-    // 最高レアリティから順に通知
-    const order={legend:0,epic:1,rare:2,normal:3};
-    newBadges.sort((a,b)=>(order[a.rarity]||3)-(order[b.rarity]||3));
-    newBadges.forEach((b,i)=>setTimeout(()=>showBadgeUnlock(b), i*1200));
+    if(!silent){
+      const order={legend:0,epic:1,rare:2,normal:3};
+      newBadges.sort((a,b)=>(order[a.rarity]||3)-(order[b.rarity]||3));
+      newBadges.forEach((b,i)=>setTimeout(()=>showBadgeUnlock(b), i*1200));
+    }
   }
   renderBadges();
 }
@@ -2735,22 +2971,31 @@ function swGraphTab(el){
 // #42 月別収益グラフ
 function renderMonthlyChart(){
   if(!S.curriculum) return;
-  // 月ごとに収益を集計
+  // 月ごとに収益を集計（week.startからYYYY/MMキーを作る）
   const monthMap = {};
+  const monthOrder = [];
   S.curriculum.forEach((week, i) => {
-    const m = week.start ? week.start.slice(0,7) : null;
-    if(!m) return;
-    if(!monthMap[m]) monthMap[m] = 0;
-    monthMap[m] += calcWeekRevenue(i);
+    const s = week.start;
+    if(!s) return;
+    // "2026/04/28" → "2026/04"
+    const monthKey = s.slice(0, 7);
+    if(!monthMap[monthKey]){
+      monthMap[monthKey] = 0;
+      monthOrder.push(monthKey);
+    }
+    monthMap[monthKey] += calcWeekRevenue(i);
   });
-  const labels = Object.keys(monthMap).sort();
+  const labels = monthOrder;
   const data = labels.map(m => monthMap[m]);
   if(monthlyChart) monthlyChart.destroy();
   const ctx = document.getElementById('monthlyChart').getContext('2d');
   monthlyChart = new Chart(ctx, {
     type: 'bar',
     data: {
-      labels: labels.map(m => m.slice(5) + '月'),
+      labels: labels.map(m => {
+        const [y, mo] = m.split('/');
+        return `${y}/${mo}月`;
+      }),
       datasets: [{
         label: '月別売上（¥）',
         data,
@@ -2771,11 +3016,13 @@ function renderMonthlyChart(){
   });
   // テーブル
   const totalMonthly = data.reduce((a,b)=>a+b,0);
-  document.getElementById('monthly-table').innerHTML = labels.map((m,i)=>`
-    <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--card);border-radius:8px;margin-bottom:5px;font-size:12px">
-      <span style="color:var(--text2)">${m.slice(5)}月</span>
+  document.getElementById('monthly-table').innerHTML = labels.map((m,i)=>{
+    const [y, mo] = m.split('/');
+    return`<div style="display:flex;justify-content:space-between;align-items:center;padding:8px 10px;background:var(--card);border-radius:8px;margin-bottom:5px;font-size:12px">
+      <span style="color:var(--text2)">${y}/${mo}月</span>
       <span style="font-family:var(--fn);font-weight:600;color:var(--green)">¥${data[i].toLocaleString()}</span>
-    </div>`).join('') +
+    </div>`;
+  }).join('') +
     `<div style="display:flex;justify-content:space-between;align-items:center;padding:9px 10px;background:var(--green-dim);border:1px solid rgba(61,219,168,.3);border-radius:8px;margin-top:7px;font-size:12px">
       <span style="color:var(--green);font-weight:500">累計合計</span>
       <span style="font-family:var(--fn);font-size:14px;font-weight:700;color:var(--green)">¥${totalMonthly.toLocaleString()}</span>
@@ -2960,15 +3207,18 @@ function getHintForStrategy(text){
   return null;
 }
 
-function showHint(strategyName){
+function showHint(strategyName, isCarryover){
   const hint = getHintForStrategy(strategyName);
-  if(!hint){ showToast('この施策のヒントはまだありません'); return; }
+  const carryoverNote = isCarryover ? '<div style="margin-bottom:8px;padding:6px 10px;background:rgba(255,181,71,.12);border-radius:8px;font-size:11px;color:var(--amber)">⚠️ 先週から持ち越した未完了タスクです</div>' : '';
+  if(!hint && !isCarryover){ showToast('この施策のヒントはまだありません'); return; }
   const old = document.getElementById('hint-popup-el');
   if(old) old.remove();
   const el = document.createElement('div');
   el.className = 'hint-popup';
   el.id = 'hint-popup-el';
-  el.innerHTML = `<button class="hint-popup-close" onclick="document.getElementById('hint-popup-el').remove()">✕</button><div class="hint-popup-title">💡 ${hint.title}</div><div class="hint-popup-body">${hint.body}</div>`;
+  const body = hint ? `<div class="hint-popup-body">${hint.body}</div>` : '';
+  const title = hint ? `<div class="hint-popup-title">💡 ${hint.title}</div>` : '';
+  el.innerHTML = `<button class="hint-popup-close" onclick="document.getElementById('hint-popup-el').remove()">✕</button>${title}${carryoverNote}${body}`;
   document.body.appendChild(el);
   setTimeout(()=>{ const p=document.getElementById('hint-popup-el'); if(p)p.remove(); }, 8000);
 }
@@ -2982,6 +3232,7 @@ function swTab(name,btn){
   if(name==='input')renderInputForm();
   if(name==='notes')renderWorks();
   if(name==='settings')renderSettingsInfo();
+  if(name==='curriculum')scrollToCurrentWeek();
   // 初回ヒント
   maybeShowTabTip(name);
 }
@@ -2993,6 +3244,14 @@ function getCurWeek(){
 }
 
 // ══ DASHBOARD ══
+function safeRender(fn,name){
+  try{ fn(); }
+  catch(e){
+    console.error(`[TNCompass] ${name} エラー:`,e);
+    showToast('表示エラーが発生しました。再読み込みをお試しください','error');
+  }
+}
+
 function renderDashboard(){
   if(!S.curriculum)return;
   const cfg=DIFF_CFG[S.diff];
@@ -3042,7 +3301,22 @@ function renderDashboard(){
   document.getElementById('db-sales').textContent=totalSales;
   document.getElementById('db-rem').textContent=rem>0?'¥'+rem.toLocaleString():'達成！🎉';
 
-  // D4 フェーズバナー
+  // 記録入力促進バナー（木〜日曜かつ今週未入力）
+  const recordBanner=document.getElementById('record-remind-banner');
+  if(recordBanner){
+    const curWeekData=S.curriculum[cw];
+    const hasRecord=(curWeekData.followers>0)||Object.values(curWeekData.workSales||{}).some(v=>v>0);
+    const dismissed=S.recordRemindDismissed===`${cw}_${new Date().toISOString().slice(0,7)}`;
+    const startDow=S.startDate?new Date(S.startDate+'T00:00:00').getDay():1;
+    const todayDow=new Date().getDay();
+    const dayOfWeek=(todayDow-startDow+7)%7; // 0=週初日
+    const isLateWeek=dayOfWeek>=5; // 週の6・7日目（残り2日）
+    if(!hasRecord&&!dismissed&&cw>0&&isLateWeek){
+      recordBanner.style.display='flex';
+    } else {
+      recordBanner.style.display='none';
+    }
+  }
   const phase=week.phase||'1';
   const PHASE_DESC={
     '1':'🌱 Phase 1 — まず毎日の投稿習慣をつくりましょう',
@@ -3061,8 +3335,8 @@ function renderDashboard(){
   const wPct=allTasks.length>0?Math.round(doneCount/allTasks.length*100):0;
   document.getElementById('db-wpct').textContent=wPct+'%';
   document.getElementById('db-wbar').style.width=wPct+'%';
-  const tagCls={threads:'tt-th',note:'tt-nt','custom-threads':'tt-cu','custom-note':'tt-cu'};
-  const tagLbl={threads:'Threads',note:'note','custom-threads':'カスタム','custom-note':'カスタム'};
+  const tagCls={threads:'tt-th',note:'tt-nt','custom-threads':'tt-cu','custom-note':'tt-cu','custom-day':'tt-cu'};
+  const tagLbl={threads:'Threads',note:'note','custom-threads':'カスタム','custom-note':'カスタム','custom-day':'カスタム'};
   const isDone=t=>{if(t.type==='threads')return(week.threadsChecked||[]).includes(t.idx);if(t.type==='note')return(week.noteChecked||[]).includes(t.idx);if(t.type==='custom-threads')return(week.customThreadsChecked||[]).includes(t.idx);if(t.type==='custom-note')return(week.customNoteChecked||[]).includes(t.idx);return false};
   const hideDoneWeek=document.getElementById('hide-done-week')?.checked||false;
 
@@ -3073,7 +3347,30 @@ function renderDashboard(){
   } else if(filteredTasks.length===0&&hideDoneWeek){
     document.getElementById('db-tasks').innerHTML=`<div style="text-align:center;padding:14px;color:var(--green);font-size:13px">🎉 今週のタスク完了！</div>`;
   } else {
-    document.getElementById('db-tasks').innerHTML=filteredTasks.map(t=>`<div class="ti ${isDone(t)?'done':''}" onclick="togDashTask(${cw},'${t.type}',${t.idx})"><div class="tck">${isDone(t)?chkSvg():''}</div><span class="ttxt">${t.text}</span><span class="ttag ${tagCls[t.type]}">${tagLbl[t.type]}</span></div>`).join('');
+    document.getElementById('db-tasks').innerHTML=filteredTasks.map(t=>{
+      const freq=WEEK_TO_DAY_FREQ[t.text]||1;
+      if(freq>=5){
+        const progress=(week.dailyProgress&&week.dailyProgress[t.text])||0;
+        const full=progress>=7;
+        const pct=Math.round(progress/7*100);
+        const countColor=full?'var(--green)':'var(--accent2)';
+        const fillBg=full?'linear-gradient(90deg,var(--green),#5dffc0)':'linear-gradient(90deg,var(--accent),var(--accent2))';
+        return`<div class="ti ${full?'done':''}">
+          <div class="tck">${full?chkSvg():''}</div>
+          <div style="flex:1;min-width:0">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:3px">
+              <span class="ttxt" style="${full?'text-decoration:line-through;color:var(--text3)':''}">${t.text}</span>
+              <span style="font-size:10px;font-weight:700;font-family:var(--fn);color:${countColor};flex-shrink:0;margin-left:6px">${full?'✓':`${progress}/7`}</span>
+            </div>
+            <div style="height:3px;background:var(--bg2);border-radius:2px;overflow:hidden">
+              <div style="height:100%;width:${pct}%;background:${fillBg};border-radius:2px;transition:width .4s cubic-bezier(.22,1,.36,1)"></div>
+            </div>
+          </div>
+          <span class="ttag ${tagCls[t.type]}">${tagLbl[t.type]}</span>
+        </div>`;
+      }
+      return`<div class="ti ${isDone(t)?'done':''}" onclick="togDashTask(${cw},'${t.type}',${t.idx})"><div class="tck">${isDone(t)?chkSvg():''}</div><span class="ttxt">${t.text}</span><span class="ttag ${tagCls[t.type]}">${tagLbl[t.type]}</span></div>`;
+    }).join('');
   }
 }
 function chkSvg(){return'<svg width="9" height="9" viewBox="0 0 12 12" fill="none" stroke="#071a10" stroke-width="2.5"><polyline points="2,6 5,9 10,3"/></svg>'}
@@ -3098,12 +3395,38 @@ function togDashTask(wi,type,idx){
 
 // ══ DAY TASKS ══
 function shouldRunToday(freq,dateStr){
-  if(freq>=5)return true;  // 毎日 or ほぼ毎日
-  const dow=new Date(dateStr+'T00:00:00').getDay();
-  if(freq===4)return[0,2,4,6].includes(dow);   // 2日に1回（日水金土）
-  if(freq===3)return[1,3,5].includes(dow);       // 3日に1回（月水金）
-  if(freq===2)return[1,4].includes(dow);         // 週2（月木）
-  if(freq===1)return dow===1;                    // 週1（月曜）
+  if(freq>=5)return true;  // 毎日
+  const d=new Date(dateStr+'T00:00:00');
+  const dow=d.getDay();
+  const startDow=S.startDate?new Date(S.startDate+'T00:00:00').getDay():1;
+  const dayOfWeek=(dow-startDow+7)%7; // 0=週初日〜6=週末
+
+  if(freq===4)return dayOfWeek%2===0;            // 2日に1回：0,2,4,6日目
+  if(freq===3)return[0,2,4].includes(dayOfWeek); // 3日に1回：0,2,4日目
+  if(freq===2)return[1,4].includes(dayOfWeek);   // 週2：2日目と5日目
+  if(freq===1)return dayOfWeek===2;              // 週1：3日目（週中盤）
+  return false;
+}
+
+// 施策名ごとに異なる曜日に分散するためのオフセット取得
+function getStrategyDayOffset(text){
+  let hash=0;
+  for(let i=0;i<text.length;i++) hash=(hash*31+text.charCodeAt(i))&0xffff;
+  return hash%3; // 0,1,2のオフセット
+}
+
+function shouldRunTodayForStrategy(freq,dateStr,strategyText){
+  if(freq>=5)return true;
+  const d=new Date(dateStr+'T00:00:00');
+  const dow=d.getDay();
+  const startDow=S.startDate?new Date(S.startDate+'T00:00:00').getDay():1;
+  const dayOfWeek=(dow-startDow+7)%7;
+  const offset=getStrategyDayOffset(strategyText||'');
+
+  if(freq===4)return dayOfWeek%2===0;
+  if(freq===3)return[(0+offset)%7,(2+offset)%7,(4+offset)%7].includes(dayOfWeek);
+  if(freq===2)return[(1+offset)%7,(4+offset)%7].includes(dayOfWeek);
+  if(freq===1)return dayOfWeek===(2+offset)%7; // 週1：施策ごとに異なる日
   return false;
 }
 function buildDayTasks(weekIdx,dateStr){
@@ -3124,7 +3447,7 @@ function buildDayTasks(weekIdx,dateStr){
     } else {
       freq=WEEK_TO_DAY_FREQ[s.text]||1;
     }
-    if(shouldRunToday(freq,dateStr)) tasks.push({id:genId(),text:s.text,done:false,weekIdx,type:s.type,freq,carryover:false});
+    if(shouldRunTodayForStrategy(freq,dateStr,s.text)) tasks.push({id:genId(),text:s.text,done:false,weekIdx,type:s.type,freq,carryover:false});
   }
   return tasks;
 }
@@ -3142,15 +3465,24 @@ function getWeekIdxForDate(dateStr){
 function checkWeekRollover(){
   if(!S.curriculum)return;
   const today=todayStr();const last=S.lastSeenDate;
-  if(!last||last===today)return;
+  if(!last){S.lastSeenDate=today;saveS();return;}
+  if(last===today)return; // 今日すでに処理済み
+
   const lastWi=getWeekIdxForDate(last),todayWi=getCurWeek();
-  if(lastWi===todayWi)return;
+
+  if(lastWi===todayWi){
+    // 同じ週内 → lastSeenDateだけ更新して終わり
+    S.lastSeenDate=today;saveS();return;
+  }
+
+  // 週またぎ → 未完了タスクを収集してからlastSeenDateを更新
   const seen=new Set();const incomplete=[];
   for(const[date,tasks]of Object.entries(S.dayTasks||{})){
     if(getWeekIdxForDate(date)!==lastWi)continue;
     for(const t of tasks){if(!t.done&&!seen.has(t.text)){seen.add(t.text);incomplete.push({...t})}}
   }
-  if(incomplete.length===0){S.lastSeenDate=today;saveS();return}
+  S.lastSeenDate=today;saveS(); // 収集後に更新
+  if(incomplete.length===0)return;
   showCarryoverPopup(incomplete,todayWi);
 }
 function showCarryoverPopup(tasks,targetWi){
@@ -3194,8 +3526,8 @@ function renderDayTasks(){
   document.getElementById('day-pct-lbl').textContent=pct+'%';
   document.getElementById('day-pbar').style.width=pct+'%';
   const hideDone=document.getElementById('hide-done-day')?.checked||false;
-  const tagCls={threads:'tt-th',note:'tt-nt','custom-threads':'tt-cu','custom-note':'tt-cu'};
-  const tagLbl={threads:'Threads',note:'note','custom-threads':'カスタム','custom-note':'カスタム'};
+  const tagCls={threads:'tt-th',note:'tt-nt','custom-threads':'tt-cu','custom-note':'tt-cu','custom-day':'tt-cu'};
+  const tagLbl={threads:'Threads',note:'note','custom-threads':'カスタム','custom-note':'カスタム','custom-day':'カスタム'};
   const taskHtml=t=>`<div class="day-task ${t.done?'done':''} ${t.carryover?'carryover':''}" onclick="togDayTask(${(S.dayTasks[today]||[]).indexOf(t)})">
     <div class="dt-ck">${t.done?chkSvg():''}</div>
     <div style="flex:1;min-width:0">
@@ -3203,7 +3535,7 @@ function renderDayTasks(){
       ${STRATEGY_SUBTEXTS[t.text]?`<div style="font-size:10px;color:var(--text3);margin-top:1px">${STRATEGY_SUBTEXTS[t.text]}</div>`:''}
     </div>
     <span class="ttag ${tagCls[t.type]||'tt-th'}">${tagLbl[t.type]||'Threads'}</span>
-    <button onclick="event.stopPropagation();showHint('${t.text.replace(/'/g,"\\'")}')" style="background:none;border:none;color:var(--text3);font-size:13px;font-weight:700;cursor:pointer;padding:0 0 0 6px;line-height:1;flex-shrink:0">?</button>
+    <button onclick="event.stopPropagation();showHint('${t.text.replace(/'/g,"\\'")}',${t.carryover?'true':'false'})" style="background:none;border:none;color:var(--text3);font-size:13px;font-weight:700;cursor:pointer;padding:0 0 0 6px;line-height:1;flex-shrink:0">?</button>
   </div>`;
   document.getElementById('day-tasks-list').innerHTML=tasks.length===0
     ?`<div class="empty-state" style="padding:20px"><span class="empty-state-icon" style="font-size:28px">✅</span><div class="empty-state-title">今日のタスクはありません</div></div>`
@@ -3228,6 +3560,29 @@ function togDayTask(i){
 
 function syncDayToWeek(dayTask){
   const week=S.curriculum[dayTask.weekIdx];if(!week)return;
+
+  // 毎日系施策（freq>=5）はゲージ方式で管理
+  if((dayTask.freq||1)>=5){
+    if(!week.dailyProgress) week.dailyProgress={};
+    const key=dayTask.text;
+    const cur=week.dailyProgress[key]||0;
+    if(dayTask.done){
+      week.dailyProgress[key]=Math.min(cur+1, 7);
+    } else {
+      week.dailyProgress[key]=Math.max(cur-1, 0);
+    }
+    // 7日達成で自動完了（threadsCheckedに追加）
+    const stratKey='threadsStrategies';
+    const arr=week[stratKey]||[];
+    const idx=arr.indexOf(key);
+    if(idx>=0){
+      const checked=week.threadsChecked=week.threadsChecked||[];
+      if(week.dailyProgress[key]>=7 && !checked.includes(idx)) checked.push(idx);
+      else if(week.dailyProgress[key]<7){const p=checked.indexOf(idx);if(p>=0)checked.splice(p,1);}
+    }
+    return;
+  }
+
   const keyMap={'threads':'threadsChecked','note':'noteChecked','custom-threads':'customThreadsChecked','custom-note':'customNoteChecked'};
   const stratKey=dayTask.type==='threads'?'threadsStrategies':dayTask.type==='note'?'noteStrategies':dayTask.type==='custom-threads'?'customThreadsStrategies':'customNoteStrategies';
   const arr=week[stratKey]||[];const idx=arr.indexOf(dayTask.text);if(idx<0)return;
@@ -3235,13 +3590,49 @@ function syncDayToWeek(dayTask){
   if(dayTask.done&&!checkedArr.includes(idx))checkedArr.push(idx);
   else if(!dayTask.done){const p=checkedArr.indexOf(idx);if(p>=0)checkedArr.splice(p,1)}
 }
-function openDayAddModal(){document.getElementById('day-custom-inp').value='';openModal('modal-day-add')}
+function updateDayTypeStyle(){
+  const isThreads=document.querySelector('input[name="day-task-type"]:checked')?.value==='custom-threads';
+  document.getElementById('lbl-type-threads').style.borderColor=isThreads?'var(--accent)':'var(--border2)';
+  document.getElementById('lbl-type-note').style.borderColor=!isThreads?'var(--green)':'var(--border2)';
+  document.getElementById('dot-threads').style.background=isThreads?'var(--accent)':'var(--bg3)';
+  document.getElementById('dot-note').style.background=!isThreads?'var(--green)':'var(--bg3)';
+  document.getElementById('txt-note').style.color=!isThreads?'var(--green)':'var(--text3)';
+}
+function openDayAddModal(){
+  document.getElementById('day-custom-inp').value='';
+  // デフォルトをThreadsにリセット
+  const r=document.querySelector('input[name="day-task-type"][value="custom-threads"]');
+  if(r){r.checked=true;updateDayTypeStyle();}
+  openModal('modal-day-add');
+}
 function addCustomDayTask(){
   const text=document.getElementById('day-custom-inp').value.trim();
   if(!text){showToast('タスク内容を入力してください');return}
-  const today=todayStr();if(!S.dayTasks)S.dayTasks={};if(!S.dayTasks[today])S.dayTasks[today]=[];
-  S.dayTasks[today].push({id:genId(),text,done:false,weekIdx:getCurWeek(),type:'custom-day',freq:1,carryover:false});
-  saveS();closeModal('modal-day-add');renderDayTasks();showToast('カスタムタスクを追加しました ✓');
+  const type=document.querySelector('input[name="day-task-type"]:checked')?.value||'custom-threads';
+  const cw=getCurWeek();
+  const week=S.curriculum&&S.curriculum[cw];
+
+  // WEEKのカスタム施策にも追加（タスクタブに反映・永続化）
+  if(week){
+    if(type==='custom-threads'){
+      if(!week.customThreadsStrategies)week.customThreadsStrategies=[];
+      if(!week.customThreadsStrategies.includes(text)) week.customThreadsStrategies.push(text);
+      if(!week.customThreadsChecked)week.customThreadsChecked=[];
+    } else {
+      if(!week.customNoteStrategies)week.customNoteStrategies=[];
+      if(!week.customNoteStrategies.includes(text)) week.customNoteStrategies.push(text);
+      if(!week.customNoteChecked)week.customNoteChecked=[];
+    }
+  }
+
+  // DAYタスクにも即時追加
+  const today=todayStr();
+  if(!S.dayTasks)S.dayTasks={};
+  if(!S.dayTasks[today])S.dayTasks[today]=[];
+  S.dayTasks[today].push({id:genId(),text,done:false,weekIdx:cw,type,freq:1,carryover:false});
+
+  saveS();closeModal('modal-day-add');renderDayTasks();renderCurriculum();
+  showToast('カスタムタスクを追加しました ✓');
 }
 
 // ══ CURRICULUM ══
@@ -3257,8 +3648,33 @@ function renderCurriculum(){
   });
   const restartBtn=document.getElementById('btn-restart');
   if(restartBtn) restartBtn.style.display=allDone?'block':'none';
-  // #33 ヒントボタン付きタスクアイテム
+  // 通常施策アイテム
   const mkI=(t,i,type,done)=>`<div class="si ${done?'done':''} ${type.includes('custom')?'si-custom':''}" style="display:flex;align-items:flex-start;gap:7px" onclick="togTask(${i===undefined?'undefined':i},'${type}',${i})"><div class="si-ck" style="flex-shrink:0;margin-top:1px">${done?chkSvg():''}</div><span class="si-txt" style="flex:1">${type.includes('custom')?'🔧 ':''}${t}</span><button class="hint-btn" onclick="event.stopPropagation();showHint('${t.replace(/'/g,"\\'")}')" title="施策の説明">?</button></div>`;
+
+  // 毎日施策ゲージアイテム（施策名の右横にインラインゲージ）
+  const mkGauge=(t,weekData)=>{
+    const progress=(weekData.dailyProgress&&weekData.dailyProgress[t])||0;
+    const full=progress>=7;
+    const pct=Math.round(progress/7*100);
+    const countColor=full?'var(--green)':'var(--accent2)';
+    const fillBg=full?'linear-gradient(90deg,var(--green),#5dffc0)':'linear-gradient(90deg,var(--accent),var(--accent2))';
+    const countTxt=full?'✓':`${progress}/7`;
+    const labelStyle=full?'text-decoration:line-through;color:var(--text3)':'color:var(--text)';
+    const esc=t.replace(/'/g,"\\'");
+    return`<div class="si ${full?'done':''}" style="display:flex;align-items:center;gap:7px">
+      <div class="si-ck" style="flex-shrink:0">${full?chkSvg():''}</div>
+      <div style="flex:1;min-width:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <span class="si-txt" style="${labelStyle}">${t}</span>
+          <span style="font-size:10px;font-weight:700;font-family:var(--fn);color:${countColor};flex-shrink:0;margin-left:6px">${countTxt}</span>
+        </div>
+        <div style="height:3px;background:var(--bg2);border-radius:2px;overflow:hidden">
+          <div style="height:100%;width:${pct}%;background:${fillBg};border-radius:2px;transition:width .4s cubic-bezier(.22,1,.36,1)"></div>
+        </div>
+      </div>
+      <button class="hint-btn" onclick="showHint('${esc}')">?</button>
+    </div>`;
+  };
   document.getElementById('cur-list').innerHTML=S.curriculum.map((week,idx)=>{
     const thF=(week.threadsStrategies||[]).filter(Boolean);const ntF=(week.noteStrategies||[]).filter(Boolean);
     const cthF=(week.customThreadsStrategies||[]).filter(Boolean);const cntF=(week.customNoteStrategies||[]).filter(Boolean);
@@ -3267,7 +3683,7 @@ function renderCurriculum(){
     const pct=tot>0?Math.round(dn/tot*100):0;const isCur=idx===cw;
     const skipped=week.skipped;
     const dateRange=`${week.start.slice(5).replace('/','/').replace(/^0/,'')}〜${week.end.slice(5).replace('/','/').replace(/^0/,'')}`;
-    return`<div class="ws ${isCur?'open':''}" id="ws${idx}" style="${skipped?'opacity:.6':''}">
+    return`<div class="ws ${isCur?'open ws-current':''}" id="ws${idx}" style="${skipped?'opacity:.6':''}">
       <div class="wsh" onclick="togWS(${idx})">
         <div>
           <div class="wnum">${isCur?'▶ 今週 · ':''}WEEK ${week.week} <span class="pb ${PHASE_CLS[week.phase]}" style="margin-left:4px">${PHASE_NAMES[week.phase]}</span> <span style="font-size:9px;color:var(--text3);margin-left:4px">${dateRange}</span>${skipped?'<span style="font-size:9px;color:var(--text3);margin-left:4px">スキップ済</span>':''}</div>
@@ -3287,7 +3703,10 @@ function renderCurriculum(){
             ${pct<100?`<button class="ewb" style="color:var(--text3)" onclick="event.stopPropagation();skipWeek(${idx})">スキップ</button>`:''}
           </div>
         </div>
-        ${thF.map((t,i)=>mkI(t,i,'threads',(week.threadsChecked||[]).includes(i))).join('')}
+        ${thF.map((t,i)=>{
+          const freq=WEEK_TO_DAY_FREQ[t]||1;
+          return freq>=5 ? mkGauge(t,week) : mkI(t,i,'threads',(week.threadsChecked||[]).includes(i));
+        }).join('')}
         ${cthF.map((t,i)=>mkI(t,i,'custom-threads',(week.customThreadsChecked||[]).includes(i))).join('')}
         <div class="ssl" style="margin-top:12px"><span style="color:var(--green)">note施策</span></div>
         ${ntF.map((t,i)=>mkI(t,i,'note',(week.noteChecked||[]).includes(i))).join('')}
@@ -3297,6 +3716,12 @@ function renderCurriculum(){
   }).join('');
 }
 function togWS(idx){document.getElementById('ws'+idx).classList.toggle('open')}
+
+function scrollToCurrentWeek(){
+  const cw=getCurWeek();
+  const el=document.getElementById('ws'+cw);
+  if(el) setTimeout(()=>el.scrollIntoView({behavior:'smooth',block:'center'}),150);
+}
 function togTask(wi,type,i){
   const week=S.curriculum[wi];
   const keyMap={threads:'threadsChecked',note:'noteChecked','custom-threads':'customThreadsChecked','custom-note':'customNoteChecked'};
@@ -3323,16 +3748,19 @@ function calcTotalAchievedDays(){
   return Object.values(S.dayTasks).filter(tasks=>tasks.some(t=>t.done)).length;
 }
 
-// D3 停滞検知
+// D3 停滞検知（lastSeenDateとは別に停滞判定）
 function checkStagnation(){
   if(!S.curriculum) return;
-  if(S.stagnationDismissed===todayStr()) return; // 今日既に閉じた
+  if(S.stagnationDismissed===todayStr()) return;
   const last=S.lastSeenDate;
   if(!last) return;
-  const daysSince=Math.floor((new Date()-new Date(last+'T00:00:00'))/(1000*60*60*24));
+  const today=new Date();today.setHours(0,0,0,0);
+  const lastD=new Date(last+'T00:00:00');
+  const daysSince=Math.floor((today-lastD)/(1000*60*60*24));
   const banner=document.getElementById('stagnation-banner');
   const msg=document.getElementById('stagnation-msg');
   if(!banner||!msg) return;
+  // lastSeenDateは毎日更新されるので、daysSince>=2なら実際にアクセスしていない
   if(daysSince>=7){
     msg.textContent=`${daysSince}日ぶりですね。お久しぶりです！無理せず少しずつ再開しましょう。`;
     banner.style.display='flex';
@@ -3344,6 +3772,20 @@ function checkStagnation(){
   }
 }
 
+function dismissRecordRemind(){
+  const cw=getCurWeek();
+  S.recordRemindDismissed=`${cw}_${new Date().toISOString().slice(0,7)}`;
+  saveS();
+  const b=document.getElementById('record-remind-banner');
+  if(b)b.style.display='none';
+}
+function showOnbSummary(){
+  if(!S.diff) return;
+  const cfg=DIFF_CFG[S.diff];
+  const el=document.getElementById('onb-sum-plan');
+  if(el) el.textContent=`${cfg.emoji} ${cfg.label}プラン · ${cfg.months}ヶ月 · ${S.weeks}週間`;
+  openModal('modal-onb-summary');
+}
 function dismissStagnation(){
   S.stagnationDismissed=todayStr();
   saveS();
@@ -3609,8 +4051,8 @@ function updateModalCounts(){document.getElementById('modal-th-cnt').textContent
 function addCthInput(){const c=document.getElementById('modal-cth-new');const div=document.createElement('div');div.className='modal-custom-item';div.innerHTML=`<input class="modal-custom-inp" type="text" placeholder="カスタムThreads施策を入力"><button class="modal-del-btn" onclick="this.parentElement.remove()">削除</button>`;c.appendChild(div)}
 function addCntInput(){const c=document.getElementById('modal-cnt-new');const div=document.createElement('div');div.className='modal-custom-item';div.innerHTML=`<input class="modal-custom-inp" type="text" placeholder="カスタムnote施策を入力"><button class="modal-del-btn" onclick="this.parentElement.remove()">削除</button>`;c.appendChild(div)}
 function saveStrategyModal(){
-  if(modalThChecked.length<1||modalThChecked.length>6){document.getElementById('modal-th-err').textContent='1〜6個選んでください';return}
-  if(modalNtChecked.length<1||modalNtChecked.length>6){document.getElementById('modal-nt-err').textContent='1〜6個選んでください';return}
+  if(modalThChecked.length<1){document.getElementById('modal-th-err').textContent='1個以上選んでください';return}
+  if(modalNtChecked.length<1){document.getElementById('modal-nt-err').textContent='1個以上選んでください';return}
   const week=S.curriculum[editIdx];
   week.threadsStrategies=modalThChecked.map(i=>THREADS_ALL[i]);
   week.noteStrategies=modalNtChecked.map(i=>NOTE_ALL[i]);
@@ -3652,6 +4094,20 @@ function selChart(el){
 
 function renderGraph(){
   if(!S.curriculum)return;
+
+  // データ未入力チェック
+  const hasAnyData=S.curriculum.some(w=>
+    (w.followers||0)>0||(w.views||0)>0||calcWeekSalesTotal(S.curriculum.indexOf(w))>0
+  );
+  const emptyEl=document.getElementById('graph-empty-state');
+  const chartEl=document.getElementById('mainChart');
+  if(!hasAnyData){
+    if(emptyEl)emptyEl.style.display='flex';
+    if(chartEl)chartEl.style.display='none';
+    return;
+  }
+  if(emptyEl)emptyEl.style.display='none';
+  if(chartEl)chartEl.style.display='block';
   const labels=S.curriculum.map(w=>`W${w.week}`);
   const cfg_map={
     followers:{label:'フォロワー数',   color:'#7c6aff',bg:'rgba(124,106,255,0.12)',data:S.curriculum.map(w=>w.followers||0),            cb:v=>v.toLocaleString()},
@@ -3715,7 +4171,7 @@ function buildShareText(){
   return tmpl
     .replace(/\{week\}/g,cw+1)
     .replace(/\{total_weeks\}/g,S.weeks)
-    .replace(/\{followers\}/g,latFw.toLocaleString()+'人')
+    .replace(/\{followers\}/g,latFw.toLocaleString())
     .replace(/\{sales\}/g,totalS+'本')
     .replace(/\{revenue\}/g,'¥'+totalR.toLocaleString())
     .replace(/\{plan\}/g,cfg.emoji+' '+cfg.label)
@@ -3727,9 +4183,18 @@ function copyShare(){
 }
 
 // ══ MODAL UTILS ══
-function openModal(id){document.getElementById(id).classList.add('vis')}
-function closeModal(id){document.getElementById(id).classList.remove('vis')}
-['modal-strategy','modal-work','modal-price','modal-day-add','modal-reset','modal-import-confirm','modal-redo-onb','modal-weekly-report','modal-launch'].forEach(id=>{
+function openModal(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.style.display='';  // インラインスタイルをクリア
+  el.classList.add('vis');
+}
+function closeModal(id){
+  const el=document.getElementById(id);
+  if(!el)return;
+  el.classList.remove('vis');
+}
+['modal-strategy','modal-work','modal-price','modal-day-add','modal-reset','modal-import-confirm','modal-redo-onb','modal-weekly-report','modal-launch','modal-onb-summary'].forEach(id=>{
   const el=document.getElementById(id);
   if(el)el.addEventListener('click',function(e){if(e.target===this)closeModal(id)});
 });
@@ -3849,13 +4314,34 @@ function showCelebrationBadge(title,sub){
   badge.style.opacity='0';
   badge.innerHTML=`<div class="celebrate-badge-text">${title}</div><div class="celebrate-badge-sub">${sub}</div>`;
   el.appendChild(badge);
-  setTimeout(()=>badge.remove(),3000);
+  setTimeout(()=>badge.remove(),4800);
+}
+
+function calcTaskStreak(){
+  // 今日を含む連続タスク完了日数を計算
+  const today=todayStr();
+  let streak=0;
+  let d=new Date(today+'T00:00:00');
+  while(true){
+    const ds=`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}`;
+    const tasks=S.dayTasks&&S.dayTasks[ds];
+    if(!tasks||tasks.length===0) break;
+    const allDone=tasks.every(t=>t.done);
+    if(!allDone) break;
+    streak++;
+    d.setDate(d.getDate()-1);
+    if(streak>365) break; // 安全装置
+  }
+  return streak;
 }
 
 function celebrate(type){
   launchConfetti();
-  if(type==='day') showCelebrationBadge('🎉 今日のタスク完了！','お疲れさまでした！');
-  else if(type==='week') showCelebrationBadge('🏆 今週のタスク完了！','素晴らしい達成です！');
+  if(type==='day'){
+    const streak=calcTaskStreak();
+    const streakTxt=streak>=2?`🔥 ${streak}日連続タスク達成！`:'お疲れさまでした！';
+    showCelebrationBadge('🎉 今日のタスク完了！',streakTxt);
+  } else if(type==='week') showCelebrationBadge('🏆 今週のタスク完了！','素晴らしい達成です！');
 }
 
 // ══ TOGGLE SWITCH ══
@@ -3940,11 +4426,16 @@ function closeTabTip(){
 // ══ INIT ══
 ['threnote_v1','threnote_v2','threnote_v3','threnote_v4','tncompass_v1','curriculumState'].forEach(k=>localStorage.removeItem(k));
 loadS();
+migrateData(); // スキーマバージョンチェック・自動マイグレーション
 // ライトモード復元
 if(S.lightMode) document.body.classList.add('light-mode');
-initHome();
 // 全スクリーンをまず非表示
 document.querySelectorAll('.screen').forEach(s=>{s.classList.remove('active');s.style.display='none';});
+// モーダル全て非表示を確実に
+document.querySelectorAll('.modal-bg').forEach(m=>{m.style.display='none';});
+initHome();
+// body を表示（初期化完了後）
+document.body.style.visibility='visible';
 // スプラッシュ → ホーム
 runSplash(()=>{
   const homeEl=document.getElementById('scr-home');
